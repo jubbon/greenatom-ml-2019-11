@@ -36,3 +36,23 @@
                 dependencies:
                   - invoke
 
+      - role: mondrik.vscode-workspace-terminal
+        uid: notebooks
+        title: Jupyter notebooks
+        description: Терминал для запуска ноутбуков Jupyter
+        cwd: "{{ current_directory }}/notebooks"
+        history:
+          - jupyter notebook
+        anaconda:
+          origin: /opt/anaconda/anaconda-python-3.7
+          python:
+            version: 3.7.4
+            packages:
+              conda:
+                channels:
+                  - conda-forge
+                dependencies:
+                  - jupyter
+              pip:
+                - mimesis
+                - Faker
