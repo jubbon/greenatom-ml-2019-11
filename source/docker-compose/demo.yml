@@ -1,6 +1,9 @@
 version: '3'
 
 services:
+  clickhouse:
+    image: yandex/clickhouse-server
+
   engine:
     image: citylix-greenatom-ml/engine:develop
     build: ../images/engine
