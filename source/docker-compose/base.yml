@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  base:
+    image: citylix-greenatom-ml/base:develop
+    build: ../images/base
+
