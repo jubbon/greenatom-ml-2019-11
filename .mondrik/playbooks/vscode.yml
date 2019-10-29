@@ -25,6 +25,8 @@
         title: Приложение
         description: Терминал для разработки приложения
         cwd: "{{ current_directory }}/source"
+        history:
+          - docker-compose --file ./docker-compose/kafka.yml up -d kafka
         anaconda:
           origin: /opt/anaconda/anaconda-python-3.7
           python:
