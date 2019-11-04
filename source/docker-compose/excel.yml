@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  excel:
+    image: citylix-greenatom-ml/excel:develop
+    build: ../images/excel
+    volumes:
+      - ../../data/excel:/data
