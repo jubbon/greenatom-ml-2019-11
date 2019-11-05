@@ -18,7 +18,15 @@ def generate(output):
     workbook = xlsxwriter.Workbook(output)
 
     # Штатное расписание
-    positions = departments()
+    units, positions = departments()
+    worksheet_units = workbook.add_worksheet("Оргструктура")
+    worksheet_units.write(0, 0, "Тип")
+    worksheet_units.write(0, 1, "Номер")
+    worksheet_units.write(0, 2, "Родительская структура")
+    for i, unit in enumerate(units, 1):
+        worksheet_units.write(i, 0, unit[0])
+        worksheet_units.write(i, 1, unit[1])
+        worksheet_units.write(i, 2, unit[2] + ' ' + unit[3])
 
     # Персонал
     worksheet_staff = workbook.add_worksheet("Персонал")

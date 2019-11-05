@@ -63,7 +63,8 @@ DEPARTMENTS_HIERARCHY = [
 def handle(root: dict, deps: list):
     '''
     '''
-    result = list()
+    units = list()
+    positions = list()
     if deps:
         random = Random()
         for dep in deps:
@@ -83,23 +84,26 @@ def handle(root: dict, deps: list):
                     "title": title,
                     "name": name
                 }
-
+                units.append(
+                    (title, name, root.get("title", ""), root.get("name", "")))
                 jobs = dep.get("jobs")
                 if jobs:
                     position = jobs.get("head")
                     if position:
-                        result.append((title, name, position))
+                        positions.append((title, name, position))
                     for job in jobs.get("others", list()):
                         position = job["title"]
                         count = job.get("count", (0, 0))
                         for _ in range(randint(*count)):
-                            result.append((title, name, position))
+                            positions.append((title, name, position))
                 # Обработка вложенных департаментов
-                result.extend(handle(data, dep.get("nested", list())))
-    return result
+                child_units, child_positions = handle(data, dep.get("nested", list()))
+                units.extend(child_units)
+                positions.extend(child_positions)
+    return units, positions
 
 
 def departments():
     '''
     '''
-    return handle(None, DEPARTMENTS_HIERARCHY)
+    return handle({}, DEPARTMENTS_HIERARCHY)
