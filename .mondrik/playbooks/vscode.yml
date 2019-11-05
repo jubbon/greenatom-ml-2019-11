@@ -58,3 +58,26 @@
               pip:
                 - mimesis
                 - Faker
+
+      - role: mondrik.vscode-workspace-terminal
+        uid: deeppavlov
+        title: DeepPavlov NLP project
+        description: Терминал для работы с DeepPavlov
+        cwd: "{{ current_directory }}"
+        history:
+          - python -m deeppavlov install ner_rus_bert
+          - python -m deeppavlov download ner_rus_bert
+          - python -m deeppavlov riseapi ner_rus_bert --port 5005
+        anaconda:
+          origin: /opt/anaconda/anaconda-python-3.7
+          python:
+            version: 3.7.4
+            packages:
+              conda:
+                channels:
+                  - conda-forge
+                dependencies:
+                  - tensorflow==1.14.0
+              pip:
+                - email-validator
+                - deeppavlov
