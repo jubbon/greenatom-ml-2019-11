@@ -12,9 +12,25 @@ SKILLS = [
     "finance"
 ]
 
+SKILL_VALUES = {
+    0: 50,
+    1: 9,
+    2: 8,
+    3: 7,
+    4: 6,
+    5: 5,
+    6: 4,
+    7: 3,
+    8: 2,
+    9: 1
+}
+
 
 def generator(positions: list, locale: str):
     '''
     '''
+    skill_values = []
+    for skill_level, skill_prob in SKILL_VALUES.items():
+        skill_values.extend([skill_level, ] * skill_prob)
     for position in positions:
-        yield OrderedDict({skill: random.randint(0, 10) for skill in SKILLS})
+        yield OrderedDict({skill: random.choice(skill_values) for skill in SKILLS})
