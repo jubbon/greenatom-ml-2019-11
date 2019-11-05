@@ -24,3 +24,9 @@ services:
      - ../images/www:/usr/src/app
     ports:
       - 80:8501
+
+  simulator:
+    image: citylix-greenatom-ml/simulator:develop
+    build: ../images/simulator
+    volumes:
+      - ../images/simulator:/usr/src/app
