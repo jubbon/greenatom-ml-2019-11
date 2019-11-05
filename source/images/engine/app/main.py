@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from bus.ping import app as app_ping
+from bus.app import app
+from bus import models  # noqa
 
 
 def main():

@@ -3,7 +3,7 @@
 
 import time
 import asyncio
-from bus.ping import ping
+from bus.models import ping
 
 
 async def send_value(interval: int) -> None:
