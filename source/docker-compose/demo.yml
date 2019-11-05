@@ -4,8 +4,14 @@ services:
   engine:
     image: citylix-greenatom-ml/engine:develop
     build: ../images/engine
+    environment:
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 9000
+      BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/engine:/usr/src/app
+    links:
+      - clickhouse:clickhouse
     depends_on:
       - kafka
 

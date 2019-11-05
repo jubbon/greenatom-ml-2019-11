@@ -8,4 +8,7 @@ from bus import models  # noqa
 def main():
     '''
     '''
-    app_ping.main()
+    from db import init_db
+    init_db("hr", "events")
+
+    app.main()
