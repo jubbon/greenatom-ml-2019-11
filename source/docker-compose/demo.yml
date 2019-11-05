@@ -17,6 +17,16 @@ services:
     depends_on:
       - kafka
 
+  fetcher.lync:
+    image: citylix-greenatom-ml/fetcher.lync:develop
+    build: ../images/fetcher.lync
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetcher.lync:/usr/src/app
+    depends_on:
+      - kafka
+
   www:
     image: citylix-greenatom-ml/www:develop
     build: ../images/www
