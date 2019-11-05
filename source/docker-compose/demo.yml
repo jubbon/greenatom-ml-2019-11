@@ -37,7 +37,8 @@ services:
     image: citylix-greenatom-ml/www:develop
     build: ../images/www
     volumes:
-     - ../images/www:/usr/src/app
+      - ../images/www:/usr/src/app
+      - ../../data/excel:/data
     ports:
       - 80:8501
 
