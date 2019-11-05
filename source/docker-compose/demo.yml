@@ -29,6 +29,8 @@ services:
   fetcher.ping:
     image: citylix-greenatom-ml/fetcher.ping:develop
     build: ../images/fetcher.ping
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/fetcher.ping:/usr/src/app
     depends_on:
