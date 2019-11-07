@@ -1,17 +1,6 @@
 version: '3'
 
 services:
-  deeppavlov:
-    image: deeppavlov/base-cpu
-    environment:
-      CONFIG: ner_rus_bert
-    volumes:
-      - ../../logs:/logs
-      - ../../data/deeppavlov/.deeppavlov:/root/.deeppavlov
-      - ../../data/deeppavlov/venv:/venv
-    ports:
-      - 5000:5000
-
   engine:
     image: citylix-greenatom-ml/engine:develop
     build: ../images/engine
