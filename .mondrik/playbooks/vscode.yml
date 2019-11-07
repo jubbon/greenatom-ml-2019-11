@@ -59,25 +59,34 @@
                 - mimesis
                 - Faker
 
-      - role: mondrik.vscode-workspace-terminal
+      - role: mondrik.vscode-workspace-terminals-group
         uid: deeppavlov
-        title: DeepPavlov NLP project
-        description: Терминал для работы с DeepPavlov
-        cwd: "{{ current_directory }}"
-        history:
-          - python -m deeppavlov install ner_rus_bert
-          - python -m deeppavlov download ner_rus_bert
-          - python -m deeppavlov riseapi ner_rus_bert --port 5005
-        anaconda:
+        python:
+          version: 3.7.4
           origin: /opt/anaconda/anaconda-python-3.7
-          python:
-            version: 3.7.4
-            packages:
-              conda:
-                channels:
-                  - conda-forge
-                dependencies:
-                  - tensorflow==1.14.0
-              pip:
-                - email-validator
-                - deeppavlov
+          packages:
+            conda:
+              channels:
+                - conda-forge
+              dependencies:
+                - tensorflow==1.14.0
+            pip:
+              - email-validator
+              - deeppavlov
+        terminals:
+          - uid: deeppavlov_ner_rus_bert
+            title: DeepPavlov - распознавание сущностей
+            description: Терминал для распознавания сущностей с DeepPavlov
+            cwd: "{{ current_directory }}"
+            history:
+              - python -m deeppavlov install ner_rus_bert
+              - python -m deeppavlov download ner_rus_bert
+              - python -m deeppavlov riseapi ner_rus_bert --port 5005
+          - uid: deeppavlov_ner_ontonotes
+            title: DeepPavlov - распознавание тональности
+            description: Терминал для распознавания тональности текста с DeepPavlov
+            cwd: "{{ current_directory }}"
+            history:
+              - python -m deeppavlov install ner_ontonotes
+              - python -m deeppavlov download ner_ontonotes
+              - python -m deeppavlov riseapi ner_ontonotes --port 5006
