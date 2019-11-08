@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import random
 
 import streamlit as st
 
@@ -25,12 +26,38 @@ def filter_by_units(root_unit=""):
     return selected_units
 
 
+def fullname(person):
+    '''
+    '''
+    return person["fullname"] if person else " "
+
+
 def filter_by_persons(unit=None):
     '''
     '''
     person_names = list()
-    for unit_uid, person in persons(unit):
-        person_names.append(person["fullname"])
+    for _, person in persons(unit):
+        person_names.append(person)
     if not person_names:
-        return ""
-    return st.sidebar.selectbox("Сотрудник", ["", ] + sorted(person_names))
+        return {}
+    return st.sidebar.selectbox(
+        "Сотрудник",
+        options=["", ] + sorted(person_names, key=lambda p: p["fullname"]),
+        format_func=fullname)
+
+
+def person_card(person):
+    '''
+    '''
+    if person:
+        st.sidebar.image(
+            f"/images/person-0{random.choice((1,2,3,4))}.jpeg",
+            use_column_width=True)
+        st.sidebar.markdown(
+            f'''
+            **ФИО:** {person["fullname"]}
+
+            **Возраст:** {person["Дата рождения"]}
+
+            **Должность:** {person["Должность"]}'''
+        )

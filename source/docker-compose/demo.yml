@@ -41,6 +41,7 @@ services:
     volumes:
       - ../images/www:/usr/src/app
       - ../../data/excel:/data
+      - ../../data/images:/images
     ports:
       - 80:8501
 
