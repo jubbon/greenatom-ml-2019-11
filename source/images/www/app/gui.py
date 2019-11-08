@@ -5,6 +5,7 @@
 import streamlit as st
 
 from data.unit import units
+from data.staff import persons
 
 
 def filter_by_units(root_unit=""):
@@ -22,3 +23,15 @@ def filter_by_units(root_unit=""):
     if selected_unit:
         selected_units += filter_by_units(selected_unit)
     return selected_units
+
+
+def filter_by_persons(unit=None):
+    '''
+    '''
+    person_names = list()
+    for unit_uid, person in persons(unit):
+        person_name = " ".join([person["Фамилия"], person["Имя"], person["Отчество"]])
+        person_names.append(person_name)
+    if not person_names:
+        return ""
+    return st.sidebar.selectbox("Сотрудник", ["", ] + sorted(person_names))
