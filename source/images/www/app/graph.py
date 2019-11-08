@@ -27,7 +27,7 @@ def load_nodes() -> dict:
     return nodes
 
 
-def load_graph():
+def load_graph(unit=None, person_fullname=None):
     '''
     '''
     G = nx.Graph()
@@ -35,7 +35,16 @@ def load_graph():
     nodes = load_nodes()
     for node_id, node in nodes.items():
         node_type = node.get("type")
-        attrs = dict(type=node_type)
+
+        # Признак доступности узла при фильтрации
+        node_enabled = True
+        if node_type == "staff":
+            if person_fullname and person_fullname != node.get("fullname"):
+                node_enabled = False
+        attrs = dict(
+            type=node_type,
+            enabled=node_enabled
+            )
         G.add_node(node_id, **attrs)
 
     for node_id, node in nodes.items():

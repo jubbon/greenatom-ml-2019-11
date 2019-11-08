@@ -30,8 +30,7 @@ def filter_by_persons(unit=None):
     '''
     person_names = list()
     for unit_uid, person in persons(unit):
-        person_name = " ".join([person["Фамилия"], person["Имя"], person["Отчество"]])
-        person_names.append(person_name)
+        person_names.append(person["fullname"])
     if not person_names:
         return ""
     return st.sidebar.selectbox("Сотрудник", ["", ] + sorted(person_names))

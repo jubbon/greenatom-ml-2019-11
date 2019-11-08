@@ -50,25 +50,34 @@ def render(graph):
 
     node_size = {}
     node_color = {}
+    node_alpha = {}
     for node, extra in graph.nodes(data=True):
         node_type = extra.get("type")
+        node_enabled = extra.get("enabled")
         color = "black"
         size = 10
-        if node_type == "skill":
+        alpha = 1 if node_enabled else 0.05
+        if node_type == "staff":
+            pass
+        elif node_type == "skill":
             color = "red"
             size = 20
         elif node_type == "unit":
             color = "blue"
             size = 14
+        node_alpha[node] = alpha
         node_size[node] = size
         node_color[node] = color
     nx.set_node_attributes(graph, node_size, "node_size")
     nx.set_node_attributes(graph, node_color, "node_color")
+    nx.set_node_attributes(graph, node_alpha, "node_alpha")
 
     graph_renderer = from_networkx(graph, nx.spring_layout, scale=2, center=(0, 0))
     graph_renderer.node_renderer.glyph = Circle(
         size="node_size",
-        fill_color="node_color"
+        fill_color="node_color",
+        fill_alpha="node_alpha",
+        line_alpha="node_alpha"
     )
     graph_renderer.edge_renderer.glyph = MultiLine(
         line_color="edge_color",

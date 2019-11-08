@@ -22,6 +22,8 @@ def load(filename):
     for index, row in df.iterrows():
         person = row.to_dict()
         person_uid = person['Табельный номер']
+        fullname = " ".join([person["Фамилия"], person["Имя"], person["Отчество"]])
+        person.update(fullname=fullname)
         data[person_uid] = person
 
 

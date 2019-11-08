@@ -24,7 +24,7 @@ def main():
     #     st.write(f'Информация по сотруднику {title}:')
     #     st.write(f'Вероятность увольнения: 56%')
 
-    graph = load_graph()
+    graph = load_graph(selected_units[-1], selected_person)
     blocks = [
         "/".join(selected_units),
         selected_person,
