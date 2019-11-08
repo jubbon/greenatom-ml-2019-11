@@ -6,19 +6,8 @@ import networkx as nx
 
 from .unit import load as load_units, units
 from .staff import load as load_staff, persons
+from .skill import load as load_skills, skills, get_skills
 
-
-def load_skills(filename):
-    '''
-    '''
-    sheet_name = 'Компетенции'
-    print(f"Loading skills from sheet '{sheet_name}'", flush=True)
-    df = pd.read_excel(
-        filename,
-        sheet_name=sheet_name,
-        dtype={'Табельный номер': str}
-    )
-    return df
 
 
 def load_data(filename):
@@ -26,6 +15,7 @@ def load_data(filename):
     '''
     load_units(filename)
     load_staff(filename)
+    load_skills(filename)
 
 
 def load_nodes(filename):
@@ -37,17 +27,10 @@ def load_nodes(filename):
         nodes.setdefault(unit_uid, dict(type='unit')).update(unit)
 
     for person_uid, person in persons():
-        nodes.setdefault(person_uid, dict(type='staff')).update(person)
+        person_skills = get_skills(person_uid)
+        nodes.setdefault(person_uid, dict(type='staff')).update(person, skills=person_skills)
 
-    df_skills = load_skills(filename)
-    for index, row in df_skills.iterrows():
-        skills = row.to_dict()
-        staff_uid = skills.pop('Табельный номер')
-        nodes.setdefault(staff_uid, dict(type='staff')).update(skills=skills)
-
-    for skill_name in df_skills.columns.to_list():
-        if skill_name == 'Табельный номер':
-            continue
+    for skill_name in skills():
         nodes.setdefault(skill_name, dict()).update(type="skill")
     return nodes
 
