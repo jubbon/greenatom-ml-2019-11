@@ -10,7 +10,7 @@ from bokeh.models.graphs import from_networkx
 from bokeh.palettes import Spectral4
 
 
-def graph_via_bokeh(graph):
+def render(graph):
     '''
     '''
     plot = figure(

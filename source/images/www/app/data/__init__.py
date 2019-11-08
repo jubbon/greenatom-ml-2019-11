@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pandas as pd
-import networkx as nx
-
-from .unit import load as load_units, units
-from .staff import load as load_staff, persons
-from .skill import load as load_skills, skills, get_skills
-
+from .unit import load as load_units
+from .staff import load as load_staff
+from .skill import load as load_skills
 
 
 def load_data(filename):
@@ -16,51 +12,3 @@ def load_data(filename):
     load_units(filename)
     load_staff(filename)
     load_skills(filename)
-
-
-def load_nodes(filename):
-    '''
-    '''
-    nodes = dict()
-    for unit_uid, unit in units(level=-1):
-        print(f"unit_uid: {unit_uid}, unit: {unit}", flush=True)
-        nodes.setdefault(unit_uid, dict(type='unit')).update(unit)
-
-    for person_uid, person in persons():
-        person_skills = get_skills(person_uid)
-        nodes.setdefault(person_uid, dict(type='staff')).update(person, skills=person_skills)
-
-    for skill_name in skills():
-        nodes.setdefault(skill_name, dict()).update(type="skill")
-    return nodes
-
-
-def load_graph(filename):
-    '''
-    '''
-    G = nx.Graph()
-
-    nodes = load_nodes(filename)
-    # print(nodes, flush=True)
-    for node_id, node in nodes.items():
-        node_type = node.get("type")
-        attrs = dict(type=node_type)
-        G.add_node(node_id, **attrs)
-
-    for node_id, node in nodes.items():
-        node_type = node.get("type")
-        if node_type == "staff":
-            # Подразделение
-            unit = node.get("Подразделение")
-            if unit:
-                G.add_edge(node_id, unit, type='unit')
-            # Компетенции
-            for skill_name, skill_value in node.get("skills", dict()).items():
-                if skill_value:
-                    G.add_edge(node_id, skill_name, type='skill', value=1)
-        elif node_type == "unit":
-            unit = node.get("Тип") + ' ' + node.get("Номер")
-            parent = node.get("Родительская структура")
-            if unit and parent:
-                G.add_edge(unit, parent, type='unit')
-    return G
