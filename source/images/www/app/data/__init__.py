@@ -4,6 +4,8 @@
 import pandas as pd
 import networkx as nx
 
+from .unit import load as load_units, units
+
 
 def load_staff(filename):
     '''
@@ -31,27 +33,20 @@ def load_skills(filename):
     return df
 
 
-def load_units(filename):
+def load_data(filename):
     '''
     '''
-    sheet_name = 'Оргструктура'
-    print(f"Loading units from sheet '{sheet_name}'", flush=True)
-    df = pd.read_excel(
-        filename,
-        sheet_name=sheet_name
-    )
-    return df
+    load_units(filename)
+
 
 
 def load_nodes(filename):
     '''
     '''
     nodes = dict()
-    df_units = load_units(filename)
-    for index, row in df_units.iterrows():
-        unit = row.to_dict()
-        unit_name = unit["Тип"] + ' ' + unit["Номер"]
-        nodes.setdefault(unit_name, dict(type='unit')).update(row.to_dict())
+    for unit_uid, unit in units(level=-1):
+        print(f"unit_uid: {unit_uid}, unit: {unit}", flush=True)
+        nodes.setdefault(unit_uid, dict(type='unit')).update(unit)
 
     df_staff = load_staff(filename)
     for index, row in df_staff.iterrows():

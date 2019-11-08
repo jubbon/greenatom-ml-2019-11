@@ -8,11 +8,18 @@ from graph import get_graph
 from vis.plotly import graph_via_plotly
 from vis.bokeh import graph_via_bokeh
 
+from data import load_data
+from gui import filter_by_units
+
 
 def main():
     '''
     '''
-    # st.title("SmartHR")
+    load_data('/data/hr.xls')
+
+    selected_units = filter_by_units()
+    st.text("/".join(selected_units))
+
     title = st.sidebar.text_input('Введите ФИО сотрудника', '')
     if title:
         st.write(f'Информация по сотруднику {title}:')
