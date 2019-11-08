@@ -10,6 +10,9 @@ from bokeh.models.graphs import from_networkx
 from bokeh.palettes import Spectral4
 
 
+from .schemas import NODE_ATTRS, EDGE_ATTRS
+
+
 def render(graph):
     '''
     '''
@@ -28,46 +31,28 @@ def render(graph):
     edge_width = {}
     for start_node, end_node, extra in graph.edges(data=True):
         edge_type = extra.get("type")
-        color = "black"
-        if edge_type == "skill":
-            color = "gray"
-        elif edge_type == "unit":
-            color = "blue"
-        edge_color[(start_node, end_node)] = color
-
-        alpha = 1
-        if edge_type == "skill":
-            alpha = extra.get("value", 0) / 10.
-        elif edge_type == "unit":
-            alpha = 0.7
-        edge_alpha[(start_node, end_node)] = alpha
-
-        width = 1
-        edge_width[(start_node, end_node)] = width
+        EdgeAttrs = EDGE_ATTRS[edge_type]
+        enabled = extra.get("enabled", True)
+        edge_width[(start_node, end_node)] = EdgeAttrs.width(enabled, extra)
+        edge_color[(start_node, end_node)] = EdgeAttrs.color(enabled, extra)
+        edge_alpha[(start_node, end_node)] = EdgeAttrs.alpha(enabled, extra)
+    nx.set_edge_attributes(graph, edge_width, "edge_width")
     nx.set_edge_attributes(graph, edge_color, "edge_color")
     nx.set_edge_attributes(graph, edge_alpha, "edge_alpha")
-    nx.set_edge_attributes(graph, edge_width, "edge_width")
 
     node_size = {}
     node_color = {}
     node_alpha = {}
     for node, extra in graph.nodes(data=True):
         node_type = extra.get("type")
-        node_enabled = extra.get("enabled")
-        color = "black"
-        size = 10
-        alpha = 1 if node_enabled else 0.05
-        if node_type == "staff":
-            pass
-        elif node_type == "skill":
-            color = "red"
-            size = 20
-        elif node_type == "unit":
-            color = "blue"
-            size = 14
-        node_alpha[node] = alpha
-        node_size[node] = size
-        node_color[node] = color
+        if not node_type or node_type not in NODE_ATTRS:
+            print(f"Unknown node type '{node_type}' for node '{node}'", flush=True)
+            continue
+        NodeAttrs = NODE_ATTRS[node_type]
+        enabled = extra.get("enabled", True)
+        node_alpha[node] = NodeAttrs.alpha(enabled, extra)
+        node_size[node] = NodeAttrs.size(enabled, extra)
+        node_color[node] = NodeAttrs.color(enabled, extra)
     nx.set_node_attributes(graph, node_size, "node_size")
     nx.set_node_attributes(graph, node_color, "node_color")
     nx.set_node_attributes(graph, node_alpha, "node_alpha")
