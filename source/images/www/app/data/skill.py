@@ -1,12 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from dataclasses import dataclass, asdict
+from typing import Dict
 
 import pandas as pd
 
 
 data = {}
 names_ = list()
+
+
+@dataclass
+class PersonSkills:
+    person_uid: str
+    skills: Dict[str, int]
+
+    def to_dict(self) -> dict:
+        return self.skills
+
 
 def load(filename):
     '''
@@ -20,18 +32,23 @@ def load(filename):
     )
     for index, row in df.iterrows():
         skill = row.to_dict()
-        person_uid = skill['Табельный номер']
-        data[person_uid] = skill
+        person_uid = skill.pop('Табельный номер')
+        skills = PersonSkills(
+            person_uid=person_uid,
+            skills=skill
+        )
+        data[person_uid] = skills
+
     for skill_name in df.columns.to_list():
         if skill_name == 'Табельный номер':
             continue
         names_.append(skill_name)
 
 
-def get_skills(person_uid: str) -> dict:
+def get_skills(person_uid: str) -> PersonSkills:
     ''' Return skills for person
     '''
-    return data.get(person_uid, {})
+    return data[person_uid]
 
 
 def skills():

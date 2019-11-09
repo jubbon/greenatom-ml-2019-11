@@ -29,7 +29,7 @@ def filter_by_units(root_unit=""):
 def fullname(person):
     '''
     '''
-    return person["fullname"] if person else " "
+    return person.fullname if person else " "
 
 
 def filter_by_persons(unit=None):
@@ -42,7 +42,7 @@ def filter_by_persons(unit=None):
         return {}
     return st.sidebar.selectbox(
         "Сотрудник",
-        options=["", ] + sorted(person_names, key=lambda p: p["fullname"]),
+        options=["", ] + sorted(person_names, key=lambda p: p.fullname),
         format_func=fullname)
 
 
@@ -55,9 +55,9 @@ def person_card(person):
             use_column_width=True)
         st.sidebar.markdown(
             f'''
-            **ФИО:** {person["fullname"]}
+            **ФИО:** {person.fullname}
 
-            **Возраст:** {person["Дата рождения"]}
+            **Возраст:** {person.ages}
 
-            **Должность:** {person["Должность"]}'''
+            **Должность:** {person.job}'''
         )

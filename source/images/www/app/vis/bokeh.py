@@ -16,10 +16,16 @@ from .schemas import NODE_ATTRS, EDGE_ATTRS
 def render(graph):
     '''
     '''
+    tooltips = [
+        ("", "@desc")
+    ]
+
     plot = figure(
         title="Граф взаимодействия",
         x_range=Range1d(-3.1, 3.1),
-        y_range=Range1d(-3.1, 3.1)
+        y_range=Range1d(-3.1, 3.1),
+        tooltips=tooltips,
+        toolbar_location="above"
         )
     plot.xgrid.visible = False
     plot.ygrid.visible = False
@@ -32,7 +38,9 @@ def render(graph):
     for start_node, end_node, extra in graph.edges(data=True):
         edge_type = extra.get("type")
         EdgeAttrs = EDGE_ATTRS[edge_type]
-        enabled = extra.get("enabled", True)
+        # enabled = edge_enabled[node]
+        # enabled = extra.get("enabled", True)
+        enabled = True
         edge_width[(start_node, end_node)] = EdgeAttrs.width(enabled, extra)
         edge_color[(start_node, end_node)] = EdgeAttrs.color(enabled, extra)
         edge_alpha[(start_node, end_node)] = EdgeAttrs.alpha(enabled, extra)
@@ -43,13 +51,14 @@ def render(graph):
     node_size = {}
     node_color = {}
     node_alpha = {}
+    node_enabled = nx.get_node_attributes(graph, 'enabled')
     for node, extra in graph.nodes(data=True):
         node_type = extra.get("type")
         if not node_type or node_type not in NODE_ATTRS:
             print(f"Unknown node type '{node_type}' for node '{node}'", flush=True)
             continue
         NodeAttrs = NODE_ATTRS[node_type]
-        enabled = extra.get("enabled", True)
+        enabled = node_enabled[node]
         node_alpha[node] = NodeAttrs.alpha(enabled, extra)
         node_size[node] = NodeAttrs.size(enabled, extra)
         node_color[node] = NodeAttrs.color(enabled, extra)
