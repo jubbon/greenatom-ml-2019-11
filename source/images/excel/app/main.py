@@ -39,6 +39,7 @@ def generate(output):
     worksheet_staff.write(0, 6, "Подразделение")
     worksheet_staff.write(0, 7, "Должность")
     worksheet_staff.write(0, 8, "Статус")
+    worksheet_staff.write(0, 9, "Дата выхода на работу")
 
     worksheet_skills = workbook.add_worksheet("Компетенции")
     skill_columns = dict()
@@ -56,6 +57,7 @@ def generate(output):
         worksheet_staff.write(i, 6, staff.department)
         worksheet_staff.write(i, 7, staff.position)
         worksheet_staff.write(i, 8, staff.status)
+        worksheet_staff.write(i, 9, str(staff.first_workingday))
 
         worksheet_skills.write(i, 0, staff.uid)
 

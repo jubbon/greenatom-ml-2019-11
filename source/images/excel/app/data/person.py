@@ -24,7 +24,9 @@ class Human:
     department: str
     position: str
     # Текущий статус (0-работает, 1-уволен)
-    status: int = 0
+    status: int
+    # Первый день на работе
+    first_workingday: date
 
 
 def generator(positions: list, locale: str):
@@ -34,20 +36,26 @@ def generator(positions: list, locale: str):
     datetime = Datetime(locale)
     person = Person(locale)
     ru = RussiaSpecProvider()
+    today = date.today()
     while positions:
         gender = random.choice([
             Gender.MALE,
             Gender.FEMALE])
         position = positions.pop(random.randint(0, len(positions)-1))
         status = 1 if random.random() < 0.1 else 0
+        birthday = datetime.date(start=1950, end=2000)
+        first_workingday = datetime.date(
+            start=birthday.year + 18,
+            end=today.year - 1)
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
             first_name=person.name(gender=gender),
             patronymic=ru.patronymic(gender=gender),
             gender='муж' if gender == Gender.MALE else 'жен',
-            birthday=datetime.date(start=1950, end=2000),
+            birthday=birthday,
             department=position[0] + ' ' + position[1],
             position=position[2],
-            status=status
+            status=status,
+            first_workingday=first_workingday,
         )
