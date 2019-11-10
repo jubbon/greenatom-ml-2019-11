@@ -23,6 +23,8 @@ class Human:
     birthday: date
     department: str
     position: str
+    # Текущий статус (0-работает, 1-уволен)
+    status: int = 0
 
 
 def generator(positions: list, locale: str):
@@ -37,6 +39,7 @@ def generator(positions: list, locale: str):
             Gender.MALE,
             Gender.FEMALE])
         position = positions.pop(random.randint(0, len(positions)-1))
+        status = 1 if random.random() < 0.1 else 0
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
@@ -45,5 +48,6 @@ def generator(positions: list, locale: str):
             gender='муж' if gender == Gender.MALE else 'жен',
             birthday=datetime.date(start=1950, end=2000),
             department=position[0] + ' ' + position[1],
-            position=position[2]
+            position=position[2],
+            status=status
         )
