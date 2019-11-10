@@ -27,6 +27,8 @@ class Human:
     status: int
     # Первый день на работе
     first_workingday: date
+    # Дата последнего повышения
+    promotion_workingday: date
 
 
 def generator(positions: list, locale: str):
@@ -47,6 +49,9 @@ def generator(positions: list, locale: str):
         first_workingday = datetime.date(
             start=birthday.year + 18,
             end=today.year - 1)
+        promotion_workingday = datetime.date(
+            start=today.year-3,
+            end=today.year)
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
@@ -58,4 +63,5 @@ def generator(positions: list, locale: str):
             position=position[2],
             status=status,
             first_workingday=first_workingday,
+            promotion_workingday=promotion_workingday
         )
