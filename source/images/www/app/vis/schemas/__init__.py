@@ -6,7 +6,11 @@ class StaffNode:
     ''' Attributes for staff node
     '''
     @classmethod
-    def color(cls, enabled: bool, extra) -> str:
+    def fill_color(cls, enabled: bool, extra) -> str:
+        return "white" if extra["is_dismissed"] else "black"
+
+    @classmethod
+    def line_color(cls, enabled: bool, extra) -> str:
         return "black"
 
     @classmethod
@@ -22,7 +26,11 @@ class UnitNode:
     ''' Attributes for unit node
     '''
     @classmethod
-    def color(cls, enabled: bool, extra) -> str:
+    def fill_color(cls, enabled: bool, extra) -> str:
+        return "blue"
+
+    @classmethod
+    def line_color(cls, enabled: bool, extra) -> str:
         return "blue"
 
     @classmethod
@@ -38,7 +46,11 @@ class SkillNode:
     ''' Attributes for skill node
     '''
     @classmethod
-    def color(cls, enabled: bool, extra) -> str:
+    def fill_color(cls, enabled: bool, extra) -> str:
+        return "red"
+
+    @classmethod
+    def line_color(cls, enabled: bool, extra) -> str:
         return "red"
 
     @classmethod

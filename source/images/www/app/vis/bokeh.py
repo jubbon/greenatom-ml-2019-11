@@ -49,7 +49,8 @@ def render(graph):
     nx.set_edge_attributes(graph, edge_alpha, "edge_alpha")
 
     node_size = {}
-    node_color = {}
+    node_fill_color = {}
+    node_line_color = {}
     node_alpha = {}
     node_enabled = nx.get_node_attributes(graph, 'enabled')
     for node, extra in graph.nodes(data=True):
@@ -61,15 +62,18 @@ def render(graph):
         enabled = node_enabled[node]
         node_alpha[node] = NodeAttrs.alpha(enabled, extra)
         node_size[node] = NodeAttrs.size(enabled, extra)
-        node_color[node] = NodeAttrs.color(enabled, extra)
+        node_fill_color[node] = NodeAttrs.fill_color(enabled, extra)
+        node_line_color[node] = NodeAttrs.line_color(enabled, extra)
     nx.set_node_attributes(graph, node_size, "node_size")
-    nx.set_node_attributes(graph, node_color, "node_color")
+    nx.set_node_attributes(graph, node_fill_color, "node_fill_color")
+    nx.set_node_attributes(graph, node_line_color, "node_line_color")
     nx.set_node_attributes(graph, node_alpha, "node_alpha")
 
     graph_renderer = from_networkx(graph, nx.spring_layout, scale=2, center=(0, 0))
     graph_renderer.node_renderer.glyph = Circle(
         size="node_size",
-        fill_color="node_color",
+        fill_color="node_fill_color",
+        line_color="node_line_color",
         fill_alpha="node_alpha",
         line_alpha="node_alpha"
     )

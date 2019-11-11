@@ -19,6 +19,7 @@ class Person:
     birthday: date
     unit: str
     job: str
+    status: int
 
     @property
     def fullname(self) -> str:
@@ -37,11 +38,16 @@ class Person:
     def desc(self) -> str:
         return f"{self.fullname} ({self.ages} лет)"
 
+    @property
+    def is_dismissed(self) -> bool:
+        return self.status == 1
+
     def to_dict(self):
         data = asdict(self)
         data.update(
             fullname=self.fullname,
-            ages=self.ages
+            ages=self.ages,
+            is_dismissed=self.is_dismissed
         )
         return data
 
@@ -67,7 +73,8 @@ def load(filename):
             patronymic=person['Отчество'],
             birthday=date.fromisoformat(person['Дата рождения']),
             unit=person['Подразделение'],
-            job=person['Должность']
+            job=person['Должность'],
+            status=person['Статус']
         )
 
 
