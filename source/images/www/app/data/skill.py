@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from collections import Counter
 from dataclasses import dataclass, asdict
 from typing import Dict
 
@@ -10,6 +11,7 @@ import pandas as pd
 
 data = {}
 names_ = list()
+counter_ = Counter()
 
 
 @dataclass
@@ -41,8 +43,9 @@ def load(filename):
         person_uid = skill.pop('Табельный номер')
         skills = PersonSkills(
             person_uid=person_uid,
-            skills=skill
+            skills={k: int(v) for k, v in skill.items()}
         )
+        counter_.update(skill)
         data[person_uid] = skills
 
     for skill_name in df.columns.to_list():
@@ -61,4 +64,5 @@ def skills():
     '''
     '''
     for skill_name in names_:
-        yield skill_name
+        skill_level = round(counter_[skill_name] / len(data), 1)
+        yield skill_name, skill_level

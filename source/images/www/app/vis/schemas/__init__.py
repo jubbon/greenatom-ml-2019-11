@@ -59,7 +59,7 @@ class SkillNode:
 
     @classmethod
     def size(cls, enabled: bool, extra) -> int:
-        return 20
+        return round(4 * extra["level"] + 1)
 
 
 class UnitEdge:

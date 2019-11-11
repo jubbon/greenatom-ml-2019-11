@@ -26,9 +26,10 @@ def load_nodes() -> dict:
             desc=person.desc,
             skills=person_skills.to_dict())
 
-    for skill_name in skills():
+    for skill_name, skill_level in skills():
         nodes.setdefault(skill_name, dict(type='skill')).update(
-            desc=skill_name)
+            level=skill_level,
+            desc=f"{skill_name} (уровень {skill_level})")
     return nodes
 
 
@@ -59,8 +60,9 @@ def load_graph(unit=None, person=None):
                 G.add_edge(node_id, unit, type='unit')
             # Компетенции
             for skill_name, skill_value in node.get("skills", dict()).items():
+                assert skill_value in range(0, 10)
                 if skill_value:
-                    G.add_edge(node_id, skill_name, type='skill', value=1)
+                    G.add_edge(node_id, skill_name, type='skill', value=skill_value)
         elif node_type == "unit":
             unit = node.get("fullname")
             parent = node.get("parent")
