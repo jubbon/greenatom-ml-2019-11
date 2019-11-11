@@ -33,7 +33,7 @@ def load_nodes() -> dict:
     return nodes
 
 
-def load_graph(unit=None, person=None):
+def load_graph():
     '''
     '''
     G = nx.Graph()
@@ -79,18 +79,15 @@ def filter_graph_for_person(graph, person):
     if person:
         unit = get_unit(person.unit)
         parent_units = list(parents(unit))
-        enabled_units = list([unit["unit_uid"], ]) + [unit["unit_uid"] for unit in parent_units]
+        enabled_units = list([unit.fullname, ]) + [unit.fullname for unit in parent_units]
 
     node_enabled = dict()
-    node_extras = nx.get_node_attributes(graph, 'extra')
-    for node_uid, extra in node_extras.items():
-        node_type = extra["type"]
+    node_fullname = nx.get_node_attributes(graph, 'fullname')
+    node_types = nx.get_node_attributes(graph, 'type')
+    for node_uid, fullname in node_fullname.items():
+        node_type = node_types[node_uid]
         if node_type == "unit":
-            unit_uid = extra["unit_uid"]
-            if enabled_units and unit_uid not in enabled_units:
+            if enabled_units and fullname not in enabled_units:
                 node_enabled[node_uid] = False
-            else:
-                node_enabled[node_uid] = True
     nx.set_node_attributes(graph, node_enabled, name="enabled")
-
     return graph

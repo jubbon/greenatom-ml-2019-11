@@ -24,8 +24,8 @@ def main():
     person_card(active_person)
     graph = load_graph()
     print(f"Loaded graph with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
-    # if active_person:
-    #     graph = filter_graph_for_person(graph, active_person)
+    if active_person:
+        graph = filter_graph_for_person(graph, active_person)
     blocks = [
         "/".join(selected_units),
         # render_graph(graph, engine="plotly"),
