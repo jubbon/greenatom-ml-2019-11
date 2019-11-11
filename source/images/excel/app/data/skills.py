@@ -9,6 +9,8 @@ SKILLS = [
     "tech:programming:python",
     "tech:programming:C",
     "tech:programming:JavaScript",
+    "tech:devops",
+    "other:presentation",
     "finance"
 ]
 
