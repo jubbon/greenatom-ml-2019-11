@@ -9,66 +9,78 @@ from data.staff import persons
 from data.skill import skills, get_skills
 
 
-def load_nodes() -> dict:
-    ''' Load grapf nodes
+def nodes(node_type=None) -> dict:
+    ''' Generate nodes
     '''
-    nodes = dict()
-    for unit_uid, unit in units(level=-1):
-        nodes.setdefault(unit_uid, dict(type='unit')).update(
-            unit.to_dict(),
-            desc=unit.desc)
+    if not node_type or node_type == "unit":
+        for unit_uid, unit in units(level=-1):
+            data = dict(type="unit")
+            data.update(unit.to_dict(), desc=unit.desc)
+            yield unit_uid, data
 
-    for person_uid, person in persons():
-        person_skills = get_skills(person_uid)
-        nodes.setdefault(person_uid, dict(type='staff')).update(
-            person.to_dict(),
-            level=person_skills.mean(),
-            desc=person.desc,
-            skills=person_skills.to_dict())
+    if not node_type or node_type == "staff":
+        for person_uid, person in persons():
+            person_skills = get_skills(person_uid)
+            data = dict(type="staff")
+            data.update(
+                person.to_dict(),
+                level=person_skills.mean(),
+                desc=person.desc,
+                skills=person_skills.to_dict()
+            )
+            yield person_uid, data
 
-    for skill_name, skill_level in skills():
-        nodes.setdefault(skill_name, dict(type='skill')).update(
-            level=skill_level,
-            desc=f"{skill_name} (уровень {skill_level})")
-    return nodes
+    if not node_type or node_type == "skill":
+        for skill_name, skill_level in skills():
+            data = dict(type="skill")
+            data.update(
+                level=skill_level,
+                desc=f"{skill_name} (уровень {skill_level})"
+            )
+            yield skill_name, data
 
 
-def load_graph():
+def load_graphs():
     '''
     '''
-    G = nx.Graph()
+    graphs = {
+        "staff-unit": nx.Graph(),
+        "staff-skill": nx.Graph(),
+        "skill-staff-unit": nx.Graph()
+    }
 
-    nodes = load_nodes()
-    for node_id, node in nodes.items():
-        node_type = node.get("type")
-
+    for node_uid, node in nodes():
         # # Признак доступности узла при фильтрации
         # node_enabled = True
         # if node_type == "staff":
         #     if person and person["Табельный номер"] != node.get("Табельный номер"):
         #         node_enabled = False
-        attrs = node
-        attrs.update(type=node_type, enabled=True)
-        G.add_node(node_id, **attrs)
+        node_type = node["type"]
+        node.update(enabled=True)
+        for graph_name, graph in graphs.items():
+            node_types = graph_name.split("-")
+            if node_type in node_types:
+                graph.add_node(node_uid, **node)
 
-    for node_id, node in nodes.items():
-        node_type = node.get("type")
         if node_type == "staff":
             # Подразделение
             unit = node["unit"]
             if unit:
-                G.add_edge(node_id, unit, type='unit')
+                for graph_name in ("staff-unit", "skill-staff-unit"):
+                    graphs[graph_name].add_edge(node_uid, unit, type='unit')
             # Компетенции
             for skill_name, skill_value in node.get("skills", dict()).items():
                 assert skill_value in range(0, 10)
                 if skill_value:
-                    G.add_edge(node_id, skill_name, type='skill', value=skill_value)
+                    for graph_name in ("staff-skill", "skill-staff-unit"):
+                        graphs[graph_name].add_edge(node_uid, skill_name, type='skill', value=skill_value)
         elif node_type == "unit":
             unit = node.get("fullname")
             parent = node.get("parent")
             if unit and parent:
-                G.add_edge(unit, parent, type='unit')
-    return G
+                for graph_name in ("staff-unit", "skill-staff-unit"):
+                    graphs[graph_name].add_edge(unit, parent, type='unit')
+    return graphs
 
 
 def filter_graph_for_person(graph, person):
