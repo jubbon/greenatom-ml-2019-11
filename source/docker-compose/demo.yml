@@ -17,21 +17,21 @@ services:
 
   fetcher.ping:
     image: citylix-greenatom-ml/fetcher.ping:develop
-    build: ../images/fetcher.ping
+    build: ../images/fetchers/fetcher.ping
     environment:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
-      - ../images/fetcher.ping:/usr/src/app
+      - ../images/fetchers/fetcher.ping:/usr/src/app
     depends_on:
       - kafka
 
   fetcher.lync:
     image: citylix-greenatom-ml/fetcher.lync:develop
-    build: ../images/fetcher.lync
+    build: ../images/fetchers/fetcher.lync
     environment:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
-      - ../images/fetcher.lync:/usr/src/app
+      - ../images/fetchers/fetcher.lync:/usr/src/app
     depends_on:
       - kafka
 
