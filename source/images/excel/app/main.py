@@ -4,7 +4,7 @@
 import click
 import xlsxwriter
 
-from data import persons
+from data import persons, filter_by_last_name
 from data import skills
 from data import departments
 
@@ -47,7 +47,8 @@ def generate(output):
     skill_columns = dict()
     for i, (staff, skill) in enumerate(
         zip(
-            persons(positions, locale='ru'),
+            filter_by_last_name(
+                persons(positions, locale='ru')),
             skills(positions, locale='ru')
             ), 1):
         worksheet_staff.write(i, 0, staff.uid)

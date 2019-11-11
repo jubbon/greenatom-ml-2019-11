@@ -47,6 +47,15 @@ def random_date(start: date, end: date, locale: str) -> date:
         return date
 
 
+def filter_by_last_name(persons):
+    ''' Выполняет фильтрацию по фамилии
+    '''
+    for person in persons:
+        if person.last_name.startswith("Ё"):
+            continue
+        yield person
+
+
 def generator(positions: list, locale: str):
     '''
     '''
