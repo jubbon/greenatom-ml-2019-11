@@ -19,7 +19,7 @@ class StaffNode:
 
     @classmethod
     def size(cls, enabled: bool, extra) -> int:
-        return 10
+        return round(4 * extra["level"] + 1)
 
 
 class UnitNode:

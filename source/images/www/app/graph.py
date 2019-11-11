@@ -22,6 +22,7 @@ def load_nodes() -> dict:
         person_skills = get_skills(person_uid)
         nodes.setdefault(person_uid, dict(type='staff')).update(
             person.to_dict(),
+            level=person_skills.mean(),
             desc=person.desc,
             skills=person_skills.to_dict())
 

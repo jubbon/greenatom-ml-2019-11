@@ -4,6 +4,7 @@
 from dataclasses import dataclass, asdict
 from typing import Dict
 
+import numpy as np
 import pandas as pd
 
 
@@ -15,6 +16,11 @@ names_ = list()
 class PersonSkills:
     person_uid: str
     skills: Dict[str, int]
+
+    def mean(self) -> float:
+        '''
+        '''
+        return round(np.mean(list(self.skills.values())), 1)
 
     def to_dict(self) -> dict:
         return self.skills
