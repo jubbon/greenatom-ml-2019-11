@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import date
-import random
+from datetime import date, timedelta
 from dataclasses import dataclass
+from functools import partial
+import random
 
 from mimesis import Generic
 from mimesis import Datetime
@@ -33,6 +34,19 @@ class Human:
     last_workingday: date = None
 
 
+def random_date(start: date, end: date, locale: str) -> date:
+    ''' Generate random date between start date and end date
+    '''
+    if end <= start:
+        raise RuntimeError("Bad date range")
+    datetime = Datetime(locale)
+    while True:
+        date = datetime.date(start=start.year, end=end.year)
+        if date < start or date >= end:
+            continue
+        return date
+
+
 def generator(positions: list, locale: str):
     '''
     '''
@@ -41,22 +55,27 @@ def generator(positions: list, locale: str):
     person = Person(locale)
     ru = RussiaSpecProvider()
     today = date.today()
+    get_random_date = partial(random_date, locale=locale)
     while positions:
         gender = random.choice([
             Gender.MALE,
             Gender.FEMALE])
         position = positions.pop(random.randint(0, len(positions)-1))
         status = 1 if random.random() < 0.1 else 0
-        birthday = datetime.date(start=1950, end=2000)
-        first_workingday = datetime.date(
-            start=birthday.year + 18,
-            end=today.year - 1)
-        promotion_workingday = datetime.date(
-            start=today.year-3,
-            end=today.year)
-        last_workingday = datetime.date(
-            start=promotion_workingday.year,
-            end=today.year)
+        birthday = datetime.date(start=1950, end=1998)
+
+        first_workingday = get_random_date(
+            start=birthday + timedelta(days=18*365),
+            end=today - timedelta(days=2*365))
+        promotion_workingday = get_random_date(
+            start=first_workingday + timedelta(days=6*30),
+            end=today - timedelta(days=6*30))
+        last_workingday = get_random_date(
+            start=promotion_workingday + timedelta(days=2*30),
+            end=today - timedelta(days=2*30))
+        assert first_workingday < promotion_workingday, f"{first_workingday} < {promotion_workingday}"
+        assert last_workingday is None or promotion_workingday < last_workingday, f"{promotion_workingday} < {last_workingday}"
+
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
