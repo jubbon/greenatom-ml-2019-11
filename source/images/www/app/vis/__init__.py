@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-def render_graph(graph, engine: str):
+def render_graph(graph, engine: str, center=(0, 0)):
     '''
     '''
     assert graph
@@ -13,4 +13,4 @@ def render_graph(graph, engine: str):
         from .plotly import render
     else:
         raise RuntimeError("Unknown render engine")
-    return render(graph)
+    return render(graph, center=center)

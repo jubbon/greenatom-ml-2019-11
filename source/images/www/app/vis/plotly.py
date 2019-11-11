@@ -5,7 +5,7 @@ import networkx as nx
 import plotly.graph_objects as go
 
 
-def render(graph):
+def render(graph, center=(0, 0)):
     '''
     '''
     assert graph

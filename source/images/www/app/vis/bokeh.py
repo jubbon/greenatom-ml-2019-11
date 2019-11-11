@@ -13,7 +13,7 @@ from bokeh.palettes import Spectral4
 from .schemas import NODE_ATTRS, EDGE_ATTRS
 
 
-def render(graph):
+def render(graph, center=(0, 0)):
     '''
     '''
     tooltips = [
@@ -69,7 +69,7 @@ def render(graph):
     nx.set_node_attributes(graph, node_line_color, "node_line_color")
     nx.set_node_attributes(graph, node_alpha, "node_alpha")
 
-    graph_renderer = from_networkx(graph, nx.spring_layout, scale=2, center=(0, 0))
+    graph_renderer = from_networkx(graph, nx.spring_layout, scale=2, center=center)
     graph_renderer.node_renderer.glyph = Circle(
         size="node_size",
         fill_color="node_fill_color",
