@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 from datetime import date
 from dataclasses import dataclass, asdict
+import random
 
 import pandas as pd
 
@@ -17,9 +19,11 @@ class Person:
     firstname: str
     patronymic: str
     birthday: date
+    gender: str
     unit: str
     job: str
     status: int
+    image_number: int
 
     @property
     def fullname(self) -> str:
@@ -41,6 +45,14 @@ class Person:
     @property
     def is_dismissed(self) -> bool:
         return self.status == 1
+
+    @property
+    def image_filename(self) -> str:
+        filename = os.path.join(
+            os.getenv("IMAGE_DIR", "."),
+            "male" if self.gender == "муж" else "female",
+            "{:03}.jpeg".format(self.image_number))
+        return filename
 
     def to_dict(self):
         data = asdict(self)
@@ -72,9 +84,11 @@ def load(filename):
             firstname=person['Имя'],
             patronymic=person['Отчество'],
             birthday=date.fromisoformat(person['Дата рождения']),
+            gender=person['Пол'],
             unit=person['Подразделение'],
             job=person['Должность'],
-            status=person['Статус']
+            status=person['Статус'],
+            image_number=random.randint(1, 22)
         )
 
 

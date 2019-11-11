@@ -50,9 +50,7 @@ def person_card(person):
     '''
     '''
     if person:
-        st.sidebar.image(
-            f"/images/person-0{random.choice((1,2,3,4))}.jpeg",
-            use_column_width=True)
+        st.sidebar.image(person.image_filename, use_column_width=True)
         st.sidebar.markdown(
             f'''
             **ФИО:** {person.fullname}

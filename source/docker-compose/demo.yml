@@ -40,10 +40,11 @@ services:
     build: ../images/www
     environment:
       DATA_DIR: /data/playbooks/demo
+      IMAGE_DIR: /data/images
     volumes:
       - ../images/www:/usr/src/app
       - ../../data/playbooks:/data/playbooks
-      - ../../data/images:/images
+      - ../../data/images:/data/images
     ports:
       - 80:8501
 
