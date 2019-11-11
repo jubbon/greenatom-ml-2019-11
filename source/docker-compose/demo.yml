@@ -35,6 +35,12 @@ services:
     depends_on:
       - kafka
 
+  smtp:
+    image: citylix-greenatom-ml/smtp:develop
+    build: ../images/smtp
+    volumes:
+      - ../images/smtp:/usr/src/app
+
   www:
     image: citylix-greenatom-ml/www:develop
     build: ../images/www
