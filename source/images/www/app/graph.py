@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 import networkx as nx
+import streamlit as st
 
 from data.unit import get_unit, units, parents
 from data.staff import persons
@@ -40,6 +40,7 @@ def nodes(node_type=None) -> dict:
             yield skill_name, data
 
 
+@st.cache
 def load_graphs():
     '''
     '''
