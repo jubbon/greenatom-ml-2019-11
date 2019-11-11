@@ -35,6 +35,46 @@ services:
     depends_on:
       - kafka
 
+  fetcher.vk:
+    image: citylix-greenatom-ml/fetcher.vk:develop
+    build: ../images/fetchers/fetcher.vk
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetchers/fetcher.vk:/usr/src/app
+    depends_on:
+      - kafka
+
+  fetcher.ok:
+    image: citylix-greenatom-ml/fetcher.ok:develop
+    build: ../images/fetchers/fetcher.ok
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetchers/fetcher.ok:/usr/src/app
+    depends_on:
+      - kafka
+
+  fetcher.fb:
+    image: citylix-greenatom-ml/fetcher.fb:develop
+    build: ../images/fetchers/fetcher.fb
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetchers/fetcher.fb:/usr/src/app
+    depends_on:
+      - kafka
+
+  fetcher.instagram:
+    image: citylix-greenatom-ml/fetcher.instagram:develop
+    build: ../images/fetchers/fetcher.instagram
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetchers/fetcher.instagram:/usr/src/app
+    depends_on:
+      - kafka
+
   smtp:
     image: citylix-greenatom-ml/smtp:develop
     build: ../images/smtp
