@@ -8,7 +8,7 @@ build:
 generate:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/excel.yml build excel \
-	&& docker-compose --file ./docker-compose/excel.yml run excel python app /data/hr.xls
+	&& docker-compose --file ./docker-compose/excel.yml run excel python app /data/playbooks/demo/hr.xls
 
 up:
 	cd ./source \

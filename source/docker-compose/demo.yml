@@ -38,9 +38,11 @@ services:
   www:
     image: citylix-greenatom-ml/www:develop
     build: ../images/www
+    environment:
+      DATA_DIR: /data/playbooks/demo
     volumes:
       - ../images/www:/usr/src/app
-      - ../../data/excel:/data
+      - ../../data/playbooks:/data/playbooks
       - ../../data/images:/images
     ports:
       - 80:8501

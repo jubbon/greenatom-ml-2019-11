@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 
 import streamlit as st
 
@@ -17,7 +18,9 @@ from gui import person_card
 def main():
     '''
     '''
-    load_data('/data/hr.xls')
+    data_dir = os.getenv("DATA_DIR", ".")
+    excel_filename = os.path.join(data_dir, "hr.xls")
+    load_data(excel_filename)
 
     selected_units = filter_by_units()
     active_person = filter_by_persons(selected_units[-1])

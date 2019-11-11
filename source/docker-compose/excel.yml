@@ -4,5 +4,7 @@ services:
   excel:
     image: citylix-greenatom-ml/excel:develop
     build: ../images/excel
+    environment:
+      DATA_DIR: /data/playbooks/demo
     volumes:
-      - ../../data/excel:/data
+      - ../../data/playbooks:/data/playbooks
