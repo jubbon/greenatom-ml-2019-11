@@ -47,7 +47,7 @@ class SkillNode:
     '''
     @classmethod
     def fill_color(cls, enabled: bool, extra) -> str:
-        return "red"
+        return "white"
 
     @classmethod
     def line_color(cls, enabled: bool, extra) -> str:
