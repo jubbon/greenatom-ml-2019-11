@@ -33,4 +33,8 @@ def generator(positions: list, locale: str):
     for skill_level, skill_prob in SKILL_VALUES.items():
         skill_values.extend([skill_level, ] * skill_prob)
     for position in positions:
-        yield OrderedDict({skill: random.choice(skill_values) for skill in SKILLS})
+        while True:
+            skills = OrderedDict({skill: random.choice(skill_values) for skill in SKILLS})
+            if any(map(lambda skill: skills[skill], skills)):
+                yield skills
+                break
