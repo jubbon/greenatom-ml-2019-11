@@ -42,6 +42,8 @@ def generate(output):
     worksheet_staff.write(0, 9, "Дата выхода на работу")
     worksheet_staff.write(0, 10, "Дата последнего повышения")
     worksheet_staff.write(0, 11, "Дата увольнения")
+    worksheet_staff.write(0, 12, "Количество командировок за год")
+    worksheet_staff.write(0, 13, "Дней в командировках за год")
 
     worksheet_skills = workbook.add_worksheet("Компетенции")
     skill_columns = dict()
@@ -63,6 +65,8 @@ def generate(output):
         worksheet_staff.write(i, 9, str(staff.first_workingday))
         worksheet_staff.write(i, 10, str(staff.promotion_workingday))
         worksheet_staff.write(i, 11, "" if staff.last_workingday is None else str(staff.last_workingday))
+        worksheet_staff.write(i, 12, staff.business_trip_count)
+        worksheet_staff.write(i, 13, staff.business_trip_days)
 
         worksheet_skills.write(i, 0, staff.uid)
 

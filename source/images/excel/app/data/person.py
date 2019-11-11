@@ -31,7 +31,11 @@ class Human:
     # Дата последнего повышения
     promotion_workingday: date
     # Дата увольнения
-    last_workingday: date = None
+    last_workingday: date
+    # Количество командировок за последний год
+    business_trip_count: int
+    # Суммарное количество дней в командировках за последний год
+    business_trip_days: int
 
 
 def random_date(start: date, end: date, locale: str) -> date:
@@ -85,6 +89,8 @@ def generator(positions: list, locale: str):
         assert first_workingday < promotion_workingday, f"{first_workingday} < {promotion_workingday}"
         assert last_workingday is None or promotion_workingday < last_workingday, f"{promotion_workingday} < {last_workingday}"
 
+        business_trip_count = random.choice([0]*30+[1]*20+[2]*16+[3]*13+[4]*8+[5]*5+[6]*4+[7]*3+[8]*2+[9]*1+[10])
+        business_trip_days = random.randint(business_trip_count, 7 * business_trip_count)
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
@@ -97,5 +103,7 @@ def generator(positions: list, locale: str):
             status=status,
             first_workingday=first_workingday,
             promotion_workingday=promotion_workingday,
-            last_workingday=last_workingday if status == 1 else None
+            last_workingday=last_workingday if status == 1 else None,
+            business_trip_count=business_trip_count,
+            business_trip_days=business_trip_days
         )
