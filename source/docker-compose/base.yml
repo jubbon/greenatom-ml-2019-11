@@ -6,5 +6,11 @@ services:
     build: ../images/bases/base
 
   chrome-selenium:
-    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base-chrome-selenium:${DOCKER_IMAGE_TAG}
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/chrome-selenium:${DOCKER_IMAGE_TAG}
     build: ../images/bases/chrome-selenium
+
+  base-chrome-selenium:
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base-chrome-selenium:${DOCKER_IMAGE_TAG}
+    build:
+      context: ../images/bases/base
+      dockerfile: Dockerfile-chrome-selenium

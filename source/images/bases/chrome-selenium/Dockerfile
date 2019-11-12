@@ -1,4 +1,4 @@
-FROM cr.yandex/crphj01dfoo9goar48sq/citylix-greenatom-ml/base:latest
+FROM python:3.7.5
 
 # install google chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
