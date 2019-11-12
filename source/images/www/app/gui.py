@@ -3,6 +3,7 @@
 
 import random
 
+import pandas as pd
 import streamlit as st
 
 from data.unit import units
@@ -59,3 +60,22 @@ def person_card(person):
 
             **Должность:** {person.job}'''
         )
+
+
+def skill_card(window, person):
+    '''
+    '''
+    assert person
+    window.subheader("Компетенции сотрудника")
+
+    person_skills = {k: v for k, v in person.skills() if v}
+    df_skills = pd.DataFrame(
+        person_skills.values(),
+        index=person_skills.keys(),
+        columns=["Уровень", ])
+    window.dataframe(df_skills)
+
+    if window.button("Подобрать экспертов", key="find_experts"):
+        window.text(f"Письмо с рекомендованными экспертами было отправлено", flush=True)
+    else:
+        print(f"Не выбрали помощь экспертов", flush=True)

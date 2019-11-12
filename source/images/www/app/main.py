@@ -13,6 +13,7 @@ from data import load_data
 from gui import filter_by_units
 from gui import filter_by_persons
 from gui import person_card
+from gui import skill_card
 
 
 def main():
@@ -33,11 +34,13 @@ def main():
             graph = filter_graph_for_person(graph, active_person)
         filtered_graphs[graph_name] = graph
 
-    blocks = [
-        "/".join(selected_units),
-        render_graph(filtered_graphs["skill-staff-unit"], engine="bokeh"),
-        render_graph(filtered_graphs["staff-unit"], engine="bokeh"),
-        render_graph(filtered_graphs["staff-skill"], engine="bokeh"),
-    ]
-    for block in blocks:
-        st.write(block)
+    if active_person:
+        # Выбран сотрудник
+        st.title(active_person.fullname)
+        skill_card(st, active_person)
+    elif selected_units:
+        # Выбрано подразделение
+        st.title("/".join(selected_units))
+
+    for graph_name in ("skill-staff-unit", "staff-unit", "staff-skill"):
+        st.write(render_graph(filtered_graphs[graph_name], engine="bokeh"))

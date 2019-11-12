@@ -8,6 +8,8 @@ import random
 
 import pandas as pd
 
+from .skill import get_skills
+
 
 data = {}
 
@@ -53,6 +55,13 @@ class Person:
             "male" if self.gender == "муж" else "female",
             "{:03}.jpeg".format(self.image_number))
         return filename
+
+    def skills(self):
+        '''
+        '''
+        person_skills = get_skills(self.uid).to_dict()
+        for skill_name, skill_value in person_skills.items():
+            yield skill_name, skill_value
 
     def to_dict(self):
         data = asdict(self)
