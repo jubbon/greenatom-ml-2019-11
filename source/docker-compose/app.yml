@@ -102,8 +102,12 @@ services:
   smtp:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/smtp:${DOCKER_IMAGE_TAG}
     build: ../images/smtp
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/smtp:/usr/src/app
+    depends_on:
+      - kafka
 
   www:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/www:${DOCKER_IMAGE_TAG}
@@ -111,12 +115,15 @@ services:
     environment:
       DATA_DIR: /data/playbooks/demo
       IMAGE_DIR: /data/images
+      BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/www:/usr/src/app
       - ../../data/playbooks:/data/playbooks
       - ../../data/images:/data/images
     ports:
       - 80:8501
+    depends_on:
+      - kafka
 
   predictor:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/predictor:${DOCKER_IMAGE_TAG}
