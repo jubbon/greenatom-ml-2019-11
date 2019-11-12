@@ -17,7 +17,8 @@ upload:
 train:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/data.yml build \
-	&& docker-compose --file ./docker-compose/data.yml run data python app train 100
+	&& docker-compose --file ./docker-compose/data.yml run data python app train 100 \
+	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml run predictor python app
 
 demo:
 	cd ./source \
