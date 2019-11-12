@@ -118,6 +118,15 @@ services:
     ports:
       - 80:8501
 
+  predictor:
+    image: citylix-greenatom-ml/predictor:develop
+    build: ../images/predictor
+    environment:
+      DATA_DIR: /data/playbooks
+    volumes:
+      - ../images/predictor:/usr/src/app
+      - ../../data/playbooks/train:/data/playbooks
+
   simulator:
     image: citylix-greenatom-ml/simulator:develop
     build: ../images/simulator
