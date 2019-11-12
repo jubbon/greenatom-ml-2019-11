@@ -62,6 +62,20 @@ def brief_card(window, person):
     )
 
 
+def info_card(window, person):
+    '''
+    '''
+    assert person
+    window.subheader("Общая информация")
+
+    data = person.to_dict()
+    df = pd.DataFrame(
+        data.values(),
+        index=data.keys(),
+        columns=["", ])
+    window.dataframe(df)
+
+
 def skill_card(window, person):
     '''
     '''
