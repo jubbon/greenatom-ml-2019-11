@@ -99,6 +99,17 @@ def skill_card(window, person):
         print(f"Не выбрали помощь экспертов", flush=True)
 
 
+def dismiss_card(window, person):
+    '''
+    '''
+    assert person
+    window.subheader("Увольнение")
+    if window.button(
+        "Рассчитать вероятность увольнения",
+        key="predict_dismiss"):
+        window.markdown(f"Вероятность увольнения в ближайшие 3 месяца составляет **27%**")
+
+
 def graph_card(window, person):
     '''
     '''

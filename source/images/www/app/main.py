@@ -11,6 +11,7 @@ from gui import filter_by_persons
 from gui import brief_card
 from gui import info_card
 from gui import skill_card
+from gui import dismiss_card
 from gui import graph_card
 
 
@@ -30,6 +31,7 @@ def main():
         brief_card(st.sidebar, active_person)
         info_card(st, active_person)
         skill_card(st, active_person)
+        dismiss_card(st, active_person)
         graph_card(st, active_person)
     elif selected_units:
         # Выбрано подразделение
