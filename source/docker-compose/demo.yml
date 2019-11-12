@@ -42,6 +42,7 @@ services:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/fetchers/fetcher.vk:/usr/src/app
+      - ../../data/screenshots:/data/screenshots
     depends_on:
       - kafka
 
@@ -52,6 +53,7 @@ services:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/fetchers/fetcher.ok:/usr/src/app
+      - ../../data/screenshots:/data/screenshots
     depends_on:
       - kafka
 
@@ -62,6 +64,7 @@ services:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/fetchers/fetcher.fb:/usr/src/app
+      - ../../data/screenshots:/data/screenshots
     depends_on:
       - kafka
 
@@ -72,6 +75,7 @@ services:
       BROKER_URL: "kafka://kafka:9092"
     volumes:
       - ../images/fetchers/fetcher.instagram:/usr/src/app
+      - ../../data/screenshots:/data/screenshots
     depends_on:
       - kafka
 
