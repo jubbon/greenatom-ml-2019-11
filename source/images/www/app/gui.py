@@ -47,19 +47,19 @@ def filter_by_persons(unit=None):
         format_func=fullname)
 
 
-def person_card(person):
+def brief_card(window, person):
     '''
     '''
-    if person:
-        st.sidebar.image(person.image_filename, use_column_width=True)
-        st.sidebar.markdown(
-            f'''
-            **ФИО:** {person.fullname}
+    assert person
+    window.image(person.image_filename, use_column_width=True)
+    window.markdown(
+        f'''
+        **ФИО:** {person.fullname}
 
-            **Возраст:** {person.ages}
+        **Возраст:** {person.ages}
 
-            **Должность:** {person.job}'''
-        )
+        **Должность:** {person.job}'''
+    )
 
 
 def skill_card(window, person):

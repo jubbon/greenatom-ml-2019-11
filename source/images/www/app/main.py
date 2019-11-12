@@ -12,7 +12,7 @@ from vis import render_graph
 from data import load_data
 from gui import filter_by_units
 from gui import filter_by_persons
-from gui import person_card
+from gui import brief_card
 from gui import skill_card
 
 
@@ -25,7 +25,7 @@ def main():
 
     selected_units = filter_by_units()
     active_person = filter_by_persons(selected_units[-1])
-    person_card(active_person)
+
     graphs = load_graphs()
     filtered_graphs = dict()
     for graph_name, graph in graphs.items():
@@ -37,6 +37,7 @@ def main():
     if active_person:
         # Выбран сотрудник
         st.title(active_person.fullname)
+        brief_card(st.sidebar, active_person)
         skill_card(st, active_person)
     elif selected_units:
         # Выбрано подразделение
