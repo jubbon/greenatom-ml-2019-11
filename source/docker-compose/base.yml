@@ -2,9 +2,9 @@ version: '3'
 
 services:
   base:
-    image: citylix-greenatom-ml/base:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base:${DOCKER_IMAGE_TAG}
     build: ../images/bases/base
 
   chrome-selenium:
-    image: citylix-greenatom-ml/base-chrome-selenium:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base-chrome-selenium:${DOCKER_IMAGE_TAG}
     build: ../images/bases/chrome-selenium

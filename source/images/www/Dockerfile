@@ -1,4 +1,4 @@
-FROM python:3.7.5
+FROM cr.yandex/crphj01dfoo9goar48sq/citylix-greenatom-ml/base:latest
 
 WORKDIR /usr/src/app
 

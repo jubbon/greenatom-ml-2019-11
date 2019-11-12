@@ -1,4 +1,4 @@
-FROM citylix-greenatom-ml/base:develop
+FROM cr.yandex/crphj01dfoo9goar48sq/citylix-greenatom-ml/base:latest
 
 WORKDIR /usr/src/app
 

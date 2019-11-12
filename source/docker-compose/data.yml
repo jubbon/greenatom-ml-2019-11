@@ -2,7 +2,7 @@ version: '3'
 
 services:
   data:
-    image: citylix-greenatom-ml/data:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/data:${DOCKER_IMAGE_TAG}
     build: ../images/data
     environment:
       DATA_DIR: /data/playbooks

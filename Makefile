@@ -1,9 +1,18 @@
+export DOCKER_IMAGE_REGISTRY=cr.yandex/crphj01dfoo9goar48sq
+export DOCKER_IMAGE_TAG=latest
+
 build:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/base.yml build \
 	&& docker-compose --file ./docker-compose/data.yml build \
 	&& docker-compose --file ./docker-compose/deeppavlov.yml build \
 	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml build
+
+upload:
+	cd ./source \
+	&& docker-compose --file ./docker-compose/base.yml push \
+	&& docker-compose --file ./docker-compose/data.yml push \
+	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml push --ignore-push-failures
 
 train:
 	cd ./source \

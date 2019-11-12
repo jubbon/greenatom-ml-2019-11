@@ -2,7 +2,7 @@ version: '3'
 
 services:
   engine:
-    image: citylix-greenatom-ml/engine:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/engine:${DOCKER_IMAGE_TAG}
     build: ../images/engine
     environment:
       CLICKHOUSE_HOST: clickhouse
@@ -16,7 +16,7 @@ services:
       - kafka
 
   fetcher.ping:
-    image: citylix-greenatom-ml/fetcher.ping:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.ping:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.ping
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -26,7 +26,7 @@ services:
       - kafka
 
   fetcher.lync:
-    image: citylix-greenatom-ml/fetcher.lync:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.lync:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.lync
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -36,7 +36,7 @@ services:
       - kafka
 
   fetcher.active_directory:
-    image: citylix-greenatom-ml/fetcher.active_directory:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.active_directory:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.active_directory
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -46,7 +46,7 @@ services:
       - kafka
 
   fetcher.exchange:
-    image: citylix-greenatom-ml/fetcher.exchange:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.exchange:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.exchange
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -56,7 +56,7 @@ services:
       - kafka
 
   fetcher.vk:
-    image: citylix-greenatom-ml/fetcher.vk:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.vk:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.vk
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -67,7 +67,7 @@ services:
       - kafka
 
   fetcher.ok:
-    image: citylix-greenatom-ml/fetcher.ok:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.ok:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.ok
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -78,7 +78,7 @@ services:
       - kafka
 
   fetcher.fb:
-    image: citylix-greenatom-ml/fetcher.fb:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.fb:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.fb
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -89,7 +89,7 @@ services:
       - kafka
 
   fetcher.instagram:
-    image: citylix-greenatom-ml/fetcher.instagram:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/fetcher.instagram:${DOCKER_IMAGE_TAG}
     build: ../images/fetchers/fetcher.instagram
     environment:
       BROKER_URL: "kafka://kafka:9092"
@@ -100,13 +100,13 @@ services:
       - kafka
 
   smtp:
-    image: citylix-greenatom-ml/smtp:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/smtp:${DOCKER_IMAGE_TAG}
     build: ../images/smtp
     volumes:
       - ../images/smtp:/usr/src/app
 
   www:
-    image: citylix-greenatom-ml/www:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/www:${DOCKER_IMAGE_TAG}
     build: ../images/www
     environment:
       DATA_DIR: /data/playbooks/demo
@@ -119,7 +119,7 @@ services:
       - 80:8501
 
   predictor:
-    image: citylix-greenatom-ml/predictor:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/predictor:${DOCKER_IMAGE_TAG}
     build: ../images/predictor
     environment:
       DATA_DIR: /data/playbooks
@@ -128,7 +128,7 @@ services:
       - ../../data/playbooks/train:/data/playbooks
 
   simulator:
-    image: citylix-greenatom-ml/simulator:develop
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/simulator:${DOCKER_IMAGE_TAG}
     build: ../images/simulator
     volumes:
       - ../images/simulator:/usr/src/app
