@@ -1,4 +1,4 @@
-FROM citylix-greenatom-ml/base:develop
+FROM citylix-greenatom-ml/base-chrome-selenium:develop
 
 WORKDIR /usr/src/app
 

@@ -3,5 +3,8 @@ version: '3'
 services:
   base:
     image: citylix-greenatom-ml/base:develop
-    build: ../images/base
+    build: ../images/bases/base
 
+  chrome-selenium:
+    image: citylix-greenatom-ml/base-chrome-selenium:develop
+    build: ../images/bases/chrome-selenium
