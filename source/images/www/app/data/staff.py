@@ -96,7 +96,7 @@ def load(filename):
             unit=person['Подразделение'],
             job=person['Должность'],
             status=person['Статус'],
-            image_number=int(uid) % 23
+            image_number=int(uid) % 22 + 1
         )
 
 
