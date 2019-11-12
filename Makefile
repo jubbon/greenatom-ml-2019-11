@@ -1,14 +1,14 @@
 build:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/base.yml build \
-	&& docker-compose --file ./docker-compose/excel.yml build \
+	&& docker-compose --file ./docker-compose/data.yml build \
 	&& docker-compose --file ./docker-compose/deeppavlov.yml build \
 	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml build
 
 data:
 	cd ./source \
-	&& docker-compose --file ./docker-compose/excel.yml build excel \
-	&& docker-compose --file ./docker-compose/excel.yml run excel python app /data/playbooks/demo/hr.xls
+	&& docker-compose --file ./docker-compose/data.yml build \
+	&& docker-compose --file ./docker-compose/data.yml run data python app /data/playbooks/demo/hr.xls
 
 up:
 	cd ./source \
