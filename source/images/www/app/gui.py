@@ -94,7 +94,7 @@ def skill_card(window, person):
     window.dataframe(df_skills)
 
     if window.button("Подобрать экспертов", key="find_experts"):
-        window.text(f"Письмо с рекомендованными экспертами было отправлено", flush=True)
+        window.text(f"Письмо с рекомендованными экспертами было успешно отправлено")
     else:
         print(f"Не выбрали помощь экспертов", flush=True)
 
