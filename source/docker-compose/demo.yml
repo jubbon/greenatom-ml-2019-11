@@ -35,6 +35,16 @@ services:
     depends_on:
       - kafka
 
+  fetcher.active_directory:
+    image: citylix-greenatom-ml/fetcher.active_directory:develop
+    build: ../images/fetchers/fetcher.active_directory
+    environment:
+      BROKER_URL: "kafka://kafka:9092"
+    volumes:
+      - ../images/fetchers/fetcher.active_directory:/usr/src/app
+    depends_on:
+      - kafka
+
   fetcher.vk:
     image: citylix-greenatom-ml/fetcher.vk:develop
     build: ../images/fetchers/fetcher.vk
