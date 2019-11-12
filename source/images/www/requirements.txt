@@ -1,5 +1,5 @@
 python-dateutil==2.8.0
-streamlit==0.49.0
+streamlit==0.50.2
 networkx==2.4
 plotly==4.2.1
 bokeh==1.4.0
