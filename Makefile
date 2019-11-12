@@ -5,7 +5,7 @@ build:
 	&& docker-compose --file ./docker-compose/deeppavlov.yml build \
 	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml build
 
-generate:
+data:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/excel.yml build excel \
 	&& docker-compose --file ./docker-compose/excel.yml run excel python app /data/playbooks/demo/hr.xls
