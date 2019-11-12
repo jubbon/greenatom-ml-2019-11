@@ -9,6 +9,10 @@ import streamlit as st
 from data.unit import units
 from data.staff import persons
 
+from graph import load_graphs
+from graph import filter_graph_for_person
+from vis import render_graph
+
 
 def filter_by_units(root_unit=""):
     '''
@@ -93,3 +97,21 @@ def skill_card(window, person):
         window.text(f"Письмо с рекомендованными экспертами было отправлено", flush=True)
     else:
         print(f"Не выбрали помощь экспертов", flush=True)
+
+
+def graph_card(window, person):
+    '''
+    '''
+    assert person
+    window.subheader("Графы взаимодействия")
+
+    graphs = load_graphs()
+    filtered_graphs = dict()
+    for graph_name, graph in graphs.items():
+        print(f"Loaded graph '{graph_name}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
+        if person:
+            graph = filter_graph_for_person(graph, person)
+        filtered_graphs[graph_name] = graph
+
+    for graph_name in ("skill-staff-unit", "staff-unit", "staff-skill"):
+        window.write(render_graph(filtered_graphs[graph_name], engine="bokeh"))
