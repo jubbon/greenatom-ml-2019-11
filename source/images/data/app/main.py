@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import click
 import xlsxwriter
 
 from data import persons, filter_by_last_name
 from data import skills
 from data import departments
+from utils import make_sure_directory_exists
 
 
-@click.command()
-@click.argument('output', type=click.File('wb'))
-def generate(output):
+def generate_excel(filename: str):
     ''' Generate Excel file with fake staff
     '''
-    print(f"Generating file", flush=True)
-    workbook = xlsxwriter.Workbook(output)
+    print(f"Generating file '{filename}'", flush=True)
+
+    workbook = xlsxwriter.Workbook(
+        make_sure_directory_exists(filename))
 
     # Штатное расписание
     units, positions = departments()
@@ -81,3 +83,23 @@ def generate(output):
 
     workbook.close()
     print(f"Created {i} entries", flush=True)
+
+
+@click.command()
+@click.argument('output', type=str)
+@click.argument('count', type=int, default=1)
+def generate(output: str, count: int):
+    ''' Generate Excel file with fake staff
+    '''
+    playbooks = list()
+    if output == "train":
+        for i in range(count):
+            playbooks.append(os.path.join("train", f"{i:02}"))
+    else:
+        playbooks.append(output)
+    for playbook in playbooks:
+        output_filename = os.path.join(
+            os.getenv("DATA_DIR", "."),
+            playbook,
+            "hr.xls")
+        generate_excel(output_filename)

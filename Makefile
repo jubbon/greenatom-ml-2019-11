@@ -5,10 +5,15 @@ build:
 	&& docker-compose --file ./docker-compose/deeppavlov.yml build \
 	&& docker-compose --file ./docker-compose/demo.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml build
 
-data:
+train:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/data.yml build \
-	&& docker-compose --file ./docker-compose/data.yml run data python app /data/playbooks/demo/hr.xls
+	&& docker-compose --file ./docker-compose/data.yml run data python app train 100
+
+demo:
+	cd ./source \
+	&& docker-compose --file ./docker-compose/data.yml build \
+	&& docker-compose --file ./docker-compose/data.yml run data python app demo
 
 up:
 	cd ./source \

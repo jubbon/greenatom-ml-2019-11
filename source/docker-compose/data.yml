@@ -5,6 +5,6 @@ services:
     image: citylix-greenatom-ml/data:develop
     build: ../images/data
     environment:
-      DATA_DIR: /data/playbooks/demo
+      DATA_DIR: /data/playbooks
     volumes:
       - ../../data/playbooks:/data/playbooks
