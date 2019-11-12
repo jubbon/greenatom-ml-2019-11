@@ -42,3 +42,30 @@ make up
 ```sh
 make down
 ```
+
+## Описание компонентов системы
+Все компоненты системы разбиты по отдельным Docker-контейнерам. При этом, каждый Docker-контейнер
+содержит один и только один компонент сервиса. Контейнеры, равно как и компоненты, подразделяются
+на две группы - системные контейнеры и непосредственно контейнеры с логикой сервиса. К системным
+компонентам относятся следующие:
+ - **kafka** (контейнер *bitnami/kafka*)
+ - **zookeeper** (контейнер *bitnami/zookeeper*)
+ - **clickhouse** (контейнер *yandex/clickhouse-server*)
+ - **deeppavlov_ner_ontonotes** (контейнер *deeppavlov/base-cpu*)
+ - **deeppavlov_ner_rus_bert** (контейнер *deeppavlov/base-cpu*)
+
+К компонентам, реализующим непосредственно логику сервиса, относятся:
+ - **data** (контейнер *citylix-greenatom-ml/data*)
+ - **predictor** (контейнер *citylix-greenatom-ml/predictor*)
+ - **engine** (контейнер *citylix-greenatom-ml/engine*)
+ - **simulator** (контейнер *citylix-greenatom-ml/simulator*)
+ - **fetcher.ping** (контейнер *citylix-greenatom-ml/fetcher.ping*)
+ - **fetcher.lync** (контейнер *citylix-greenatom-ml/fetcher.lync*)
+ - **fetcher.active_directory** (контейнер *citylix-greenatom-ml/fetcher.active_directory*)
+ - **fetcher.exchange** (контейнер *citylix-greenatom-ml/fetcher.exchange*)
+ - **fetcher.vk** (контейнер *citylix-greenatom-ml/fetcher.vk*)
+ - **fetcher.ok** (контейнер *citylix-greenatom-ml/fetcher.ok*)
+ - **fetcher.fb** (контейнер *citylix-greenatom-ml/fetcher.fb*)
+ - **fetcher.instagram** (контейнер *citylix-greenatom-ml/fetcher.instagram*)
+ - **smtp** (контейнер *citylix-greenatom-ml/smtp*)
+ - **www** (контейнер *citylix-greenatom-ml/www*)
