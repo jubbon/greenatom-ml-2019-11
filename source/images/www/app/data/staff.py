@@ -4,7 +4,6 @@
 import os
 from datetime import date
 from dataclasses import dataclass, asdict
-import random
 
 import pandas as pd
 
@@ -97,7 +96,7 @@ def load(filename):
             unit=person['Подразделение'],
             job=person['Должность'],
             status=person['Статус'],
-            image_number=random.randint(1, 22)
+            image_number=int(uid) % 23
         )
 
 
