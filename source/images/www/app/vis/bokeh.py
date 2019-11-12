@@ -21,7 +21,8 @@ def render(graph, center=(0, 0)):
     ]
 
     plot = figure(
-        title="Граф взаимодействия",
+        title="",
+        width=800,
         x_range=Range1d(-3.1, 3.1),
         y_range=Range1d(-3.1, 3.1),
         tooltips=tooltips,
