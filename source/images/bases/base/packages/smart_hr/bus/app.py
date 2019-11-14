@@ -6,5 +6,5 @@ import faust
 
 app = faust.App(
     "SmartHR",
-    broker=os.getenv("BROKER_URL", "kafka://localhost")
+    broker=os.getenv("BROKER_URL", "kafka://localhost"),
 )

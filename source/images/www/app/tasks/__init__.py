@@ -4,7 +4,7 @@
 import json
 import subprocess
 
-from bus.models.email import EMail
+from smart_hr.bus.models.email import EMail
 
 
 def _send(app, topic, value):
@@ -32,4 +32,4 @@ def send_email(to, subject, text):
     assert subject
     assert text
     email = EMail(to=to, subject=subject, text=text)
-    return _send("bus.models.email", "email", email)
+    return _send("smart_hr.bus.models.email", "email", email)

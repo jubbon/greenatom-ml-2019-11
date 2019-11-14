@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from bus.app import app
-from bus import models  # noqa
+from smart_hr.bus.app import app
+from smart_hr.bus.models.ping import topic
+
+
+@app.agent(topic)
+async def handler(messages):
+    async for message in messages:
+        print(message, flush=True)
+        yield "OK"
 
 
 def main():

@@ -3,7 +3,7 @@
 
 import time
 import asyncio
-from bus.models import ping
+from smart_hr.bus.models.employee import dismiss_probabilities
 
 
 async def send_value(interval: int) -> None:

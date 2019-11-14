@@ -6,8 +6,8 @@ import os
 from email.message import EmailMessage
 from smtplib import SMTP_SSL
 
-from bus.app import app
-from bus.models.email import topic
+from smart_hr.bus.app import app
+from smart_hr.bus.models.email import topic
 
 
 @app.agent(topic)

@@ -5,7 +5,7 @@ import asyncio
 from datetime import datetime
 from uuid import uuid4
 
-from bus.models.lync import handler, Message
+from smart_hr.bus.models.lync import handler, Message
 
 
 async def fetch_messages(every: int) -> None:
