@@ -9,12 +9,7 @@ from smart_hr.data import load_data
 
 from gui import filter_by_units
 from gui import filter_by_persons
-from gui import brief_card
-from gui import info_card
-from gui import family_card
-from gui import skill_card
-from gui import dismiss_card
-from gui import graph_card
+from gui import widgets
 
 
 def main():
@@ -31,12 +26,12 @@ def main():
     if active_person:
         # Выбран сотрудник
         st.title(active_person.fullname)
-        brief_card(st.sidebar, active_person)
-        info_card(st, active_person, locale=locale)
-        family_card(st, active_person, locale=locale)
-        skill_card(st, active_person)
-        dismiss_card(st, active_person)
-        graph_card(st, active_person)
+        widgets.employee.brief(st.sidebar, active_person)
+        widgets.employee.info(st, active_person, locale=locale)
+        widgets.employee.family(st, active_person, locale=locale)
+        widgets.employee.skill(st, active_person)
+        widgets.employee.dismiss(st, active_person)
+        widgets.employee.graph(st, active_person)
     elif selected_units:
         # Выбрано подразделение
         st.title("/".join(selected_units))
