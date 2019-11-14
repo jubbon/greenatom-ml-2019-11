@@ -4,9 +4,9 @@
 import networkx as nx
 import streamlit as st
 
-from data.unit import get_unit, units, parents
-from data.staff import persons
-from data.skill import skills, get_skills
+from smart_hr.data.unit import get_unit, units, parents
+from smart_hr.data.staff import persons
+from smart_hr.data.skill import skills, get_skills
 
 
 def nodes(node_type=None) -> dict:

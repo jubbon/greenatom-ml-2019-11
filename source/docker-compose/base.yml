@@ -5,6 +5,10 @@ services:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base:${DOCKER_IMAGE_TAG}
     build: ../images/bases/base
 
+  base-data:
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/base-data:${DOCKER_IMAGE_TAG}
+    build: ../images/bases/base-data
+
   chrome-selenium:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/chrome-selenium:${DOCKER_IMAGE_TAG}
     build: ../images/bases/chrome-selenium

@@ -5,7 +5,8 @@ import os
 
 import streamlit as st
 
-from data import load_data
+from smart_hr.data import load_data
+
 from gui import filter_by_units
 from gui import filter_by_persons
 from gui import brief_card

@@ -6,8 +6,8 @@ import random
 import pandas as pd
 import streamlit as st
 
-from data.unit import units
-from data.staff import persons
+from smart_hr.data.unit import units
+from smart_hr.data.staff import persons
 
 from graph import load_graphs
 from graph import filter_graph_for_person
