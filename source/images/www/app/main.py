@@ -32,7 +32,7 @@ def main():
         # Выбран сотрудник
         st.title(active_person.fullname)
         brief_card(st.sidebar, active_person)
-        info_card(st, active_person)
+        info_card(st, active_person, locale=locale)
         family_card(st, active_person, locale=locale)
         skill_card(st, active_person)
         dismiss_card(st, active_person)

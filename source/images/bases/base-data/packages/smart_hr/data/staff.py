@@ -42,6 +42,20 @@ class FamilyRelations:
 
 @dataclass
 class Person:
+    _meta: ClassVar = {
+        "ru": {
+            "uid": "Табельный номер",
+            "lastname": "Фамилия",
+            "firstname": "Имя",
+            "patronymic": "Отчество",
+            "birthday": "Дата рождения",
+            "gender": "Пол",
+            "unit": "Подразделение",
+            "job": "Должность",
+            "fullname": "ФИО",
+            "ages": "Полных лет"
+        }
+    }
     uid: str
     lastname: str
     firstname: str
@@ -92,7 +106,7 @@ class Person:
         for skill_name, skill_value in person_skills.items():
             yield skill_name, skill_value
 
-    def to_dict(self):
+    def to_dict(self, locale=None):
         data = asdict(self)
         data.pop("family")
         data.update(
@@ -100,6 +114,11 @@ class Person:
             ages=self.ages,
             is_dismissed=self.is_dismissed
         )
+        if locale:
+            data = {
+                self._meta.get(locale, {}).get(k, k): v
+                for k, v
+                in data.items()}
         return data
 
 

@@ -68,13 +68,13 @@ def brief_card(window, person):
     )
 
 
-def info_card(window, person):
+def info_card(window, person, locale=None):
     '''
     '''
     assert person
     window.subheader("Общая информация")
 
-    data = person.to_dict()
+    data = person.to_dict(locale)
     df = pd.DataFrame(
         data.values(),
         index=data.keys(),

@@ -4,6 +4,7 @@
 from collections import Counter
 from dataclasses import dataclass, asdict
 from typing import Dict
+from typing import ClassVar
 
 import numpy as np
 import pandas as pd
@@ -16,6 +17,20 @@ counter_ = Counter()
 
 @dataclass
 class PersonSkills:
+    _meta: ClassVar = {
+        "ru": {
+            "finance": "Финансы",
+            "lastname": "Фамилия",
+            "firstname": "Имя",
+            "patronymic": "Отчество",
+            "birthday": "Дата рождения",
+            "gender": "Пол",
+            "unit": "Подразделение",
+            "job": "Должность",
+            "fullname": "ФИО",
+            "ages": "Полных лет"
+        }
+    }
     person_uid: str
     skills: Dict[str, int]
 
@@ -24,8 +39,14 @@ class PersonSkills:
         '''
         return round(np.mean(list(self.skills.values())), 1)
 
-    def to_dict(self) -> dict:
-        return self.skills
+    def to_dict(self, locale=None) -> dict:
+        data = self.skills
+        if locale:
+            data = {
+                self._meta.get(locale, {}).get(k, k): v
+                for k, v
+                in data.items()}
+        return data
 
 
 def load(filename):
