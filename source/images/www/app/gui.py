@@ -82,6 +82,20 @@ def info_card(window, person):
     window.dataframe(df)
 
 
+def family_card(window, person, locale=None):
+    '''
+    '''
+    assert person
+    window.subheader("Семейные отношения")
+
+    data = person.family.to_dict(locale)
+    df = pd.DataFrame(
+        data.values(),
+        index=data.keys(),
+        columns=["", ])
+    window.dataframe(df)
+
+
 def skill_card(window, person):
     '''
     '''

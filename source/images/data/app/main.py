@@ -47,6 +47,12 @@ def generate_excel(filename: str):
     worksheet_staff.write(0, 12, "Количество командировок за год")
     worksheet_staff.write(0, 13, "Дней в командировках за год")
 
+    worksheet_family = workbook.add_worksheet("Семейные отношения")
+    worksheet_family.write(0, 0, "Табельный номер")
+    worksheet_family.write(0, 1, "Статус")
+    worksheet_family.write(0, 2, "Количество детей")
+    worksheet_family.write(0, 3, "Местный специалист")
+
     worksheet_skills = workbook.add_worksheet("Компетенции")
     skill_columns = dict()
     for i, (staff, skill) in enumerate(
@@ -77,6 +83,12 @@ def generate_excel(filename: str):
                 i,
                 skill_columns.setdefault(skill_name, len(skill_columns)+1),
                 skill_value)
+
+        worksheet_family.write(i, 0, staff.uid)
+        worksheet_family.write(i, 1, staff.family.status)
+        worksheet_family.write(i, 2, staff.family.children_count)
+        worksheet_family.write(i, 3, staff.family.local)
+
     worksheet_skills.write(0, 0, "Табельный номер")
     for skill_name, column_number in skill_columns.items():
         worksheet_skills.write(0, column_number, skill_name)

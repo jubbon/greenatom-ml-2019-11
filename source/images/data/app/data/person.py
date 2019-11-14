@@ -15,6 +15,16 @@ from mimesis.builtins import RussiaSpecProvider
 
 
 @dataclass
+class FamilyRelations:
+    # Семейный статус
+    status: str
+    # Количество несовершеннолетних детей
+    children_count: int
+    # Родился в данной местности
+    local: bool
+
+
+@dataclass
 class Human:
     uid: str
     last_name: str
@@ -36,6 +46,9 @@ class Human:
     business_trip_count: int
     # Суммарное количество дней в командировках за последний год
     business_trip_days: int
+
+    # Семейные отношения
+    family: FamilyRelations
 
 
 def random_date(start: date, end: date, locale: str) -> date:
@@ -91,6 +104,12 @@ def generator(positions: list, locale: str):
 
         business_trip_count = random.choice([0]*30+[1]*20+[2]*16+[3]*13+[4]*8+[5]*5+[6]*4+[7]*3+[8]*2+[9]*1+[10])
         business_trip_days = random.randint(business_trip_count, 7 * business_trip_count)
+
+        family = FamilyRelations(
+            status=random.choice([0]*30+[1]*10+[2]*1),
+            children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
+            local=random.choice([0]*1+[1]*2)
+        )
         yield Human(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
@@ -105,5 +124,6 @@ def generator(positions: list, locale: str):
             promotion_workingday=promotion_workingday,
             last_workingday=last_workingday if status == 1 else None,
             business_trip_count=business_trip_count,
-            business_trip_days=business_trip_days
+            business_trip_days=business_trip_days,
+            family=family
         )

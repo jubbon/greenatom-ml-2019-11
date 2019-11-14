@@ -117,6 +117,7 @@ services:
     build: ../images/www
     environment:
       DATA_DIR: /data/playbooks/demo
+      LOCALE: ru
       IMAGE_DIR: /data/images
       BROKER_URL: "kafka://kafka:9092"
     volumes:

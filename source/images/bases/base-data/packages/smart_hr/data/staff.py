@@ -4,6 +4,7 @@
 import os
 from datetime import date
 from dataclasses import dataclass, asdict
+from typing import ClassVar
 
 import pandas as pd
 
@@ -11,6 +12,32 @@ from .skill import get_skills
 
 
 data = {}
+
+
+@dataclass
+class FamilyRelations:
+    _meta: ClassVar = {
+        "ru": {
+            "status": "Текущий статус",
+            "children_count": "Количество детей",
+            "local": "Уроженец данной местности",
+        }
+    }
+    # Семейный статус
+    status: str
+    # Количество несовершеннолетних детей
+    children_count: int
+    # Уроженец данной местности
+    local: bool
+
+    def to_dict(self, locale=None):
+        data = asdict(self)
+        if locale:
+            data = {
+                self._meta.get(locale, {}).get(k, k): v
+                for k, v
+                in data.items()}
+        return data
 
 
 @dataclass
@@ -25,6 +52,9 @@ class Person:
     job: str
     status: int
     image_number: int
+
+    # Семейные отношения
+    family: FamilyRelations
 
     @property
     def fullname(self) -> str:
@@ -64,12 +94,36 @@ class Person:
 
     def to_dict(self):
         data = asdict(self)
+        data.pop("family")
         data.update(
             fullname=self.fullname,
             ages=self.ages,
             is_dismissed=self.is_dismissed
         )
         return data
+
+
+def load_family_relations(filename):
+    '''
+    '''
+    data = dict()
+    sheet_name = 'Семейные отношения'
+    print(f"Loading family relations from sheet '{sheet_name}'", flush=True)
+    df = pd.read_excel(
+        filename,
+        sheet_name=sheet_name,
+        dtype={'Табельный номер': str}
+    )
+
+    for index, row in df.iterrows():
+        fr = row.to_dict()
+        uid = fr['Табельный номер']
+        data[uid] = FamilyRelations(
+            status=fr["Статус"],
+            children_count=fr["Количество детей"],
+            local=fr["Местный специалист"]
+        )
+    return data
 
 
 def load(filename):
@@ -83,6 +137,9 @@ def load(filename):
         sheet_name=sheet_name,
         dtype={'Табельный номер': str}
     )
+
+    frs = load_family_relations(filename)
+
     for index, row in df.iterrows():
         person = row.to_dict()
         uid = person['Табельный номер']
@@ -96,7 +153,8 @@ def load(filename):
             unit=person['Подразделение'],
             job=person['Должность'],
             status=person['Статус'],
-            image_number=int(uid) % 22 + 1
+            image_number=int(uid) % 22 + 1,
+            family=frs[uid]
         )
 
 
