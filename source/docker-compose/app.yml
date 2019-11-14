@@ -104,6 +104,9 @@ services:
     build: ../images/smtp
     environment:
       BROKER_URL: "kafka://kafka:9092"
+      SMTP_SERVER: smtp.mail.ru
+      SMTP_USERNAME: SmartHR@inbox.ru
+      SMTP_PASSWORD: greenatomhackathon
     volumes:
       - ../images/smtp:/usr/src/app
     depends_on:

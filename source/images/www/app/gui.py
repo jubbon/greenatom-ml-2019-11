@@ -13,6 +13,8 @@ from graph import load_graphs
 from graph import filter_graph_for_person
 from vis import render_graph
 
+from tasks import send_email
+
 
 def filter_by_units(root_unit=""):
     '''
@@ -94,7 +96,12 @@ def skill_card(window, person):
     window.dataframe(df_skills)
 
     if window.button("Подобрать экспертов", key="find_experts"):
-        window.text(f"Письмо с рекомендованными экспертами было успешно отправлено")
+        to = "kulikov@sarov.info"
+        subject = "[SmartHR] Рекомендованные эксперты"
+        text = f"Рекомендованные эксперты для сотрудника {person.fullname}"
+        res = send_email(to=to, subject=subject, text=text)
+        if res:
+            window.text(f"Письмо с рекомендованными экспертами было успешно отправлено на адрес '{to}'")
     else:
         print(f"Не выбрали помощь экспертов", flush=True)
 
