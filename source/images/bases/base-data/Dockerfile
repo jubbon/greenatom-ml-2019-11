@@ -8,7 +8,7 @@ WORKDIR /usr/src/packages
 
 ENV PYTHONPATH /usr/src/packages
 
-COPY ./packages .
-
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r ./requirements.txt
+
+COPY ./packages .
