@@ -23,9 +23,9 @@ def filter_by_units(root_unit=""):
     selected_unit = st.sidebar.selectbox(
         "" if root_unit else "Выберите подразделение",
         ["", ] + unit_uids)
-    selected_units = [selected_unit, ]
+    selected_units = []
     if selected_unit:
-        selected_units += filter_by_units(selected_unit)
+        selected_units = [selected_unit, ] + filter_by_units(selected_unit)
     return selected_units
 
 
@@ -41,8 +41,8 @@ def filter_by_persons(unit=None):
     person_names = list()
     for _, person in persons(unit):
         person_names.append(person)
-    if not person_names:
-        return {}
+    # if not person_names:
+    #     return {}
     return st.sidebar.selectbox(
         "Сотрудник",
         options=["", ] + sorted(person_names, key=lambda p: p.fullname),
