@@ -1,0 +1,1 @@
+![Демонстрация](./media/SmartHR.webm)
