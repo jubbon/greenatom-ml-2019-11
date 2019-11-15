@@ -158,7 +158,6 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                 family=family
             )
 
-            if not filters or all(filter(lambda f: f(employee), filters)):
+            if not filters or all(map(lambda f: f(employee), filters)):
                 yield employee
                 break
-            print("Повторная генерация", flush=True)

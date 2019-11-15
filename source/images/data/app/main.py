@@ -96,6 +96,8 @@ def generate_excel(filename: str, locale: str):
                 filters=[filter_by_last_name,])),
             skills(positions, locale=locale)
             ), 1):
+
+        assert staff.last_name[0] != "Ё", staff.last_name
         worksheet_staff.write(i, 0, staff.uid)
         worksheet_staff.write(i, 1, staff.last_name)
         worksheet_staff.write(i, 2, staff.first_name)
@@ -128,6 +130,8 @@ def generate_excel(filename: str, locale: str):
         worksheet_family.write(i, 1, staff.family.status)
         worksheet_family.write(i, 2, staff.family.children_count)
         worksheet_family.write(i, 3, staff.family.local)
+
+    assert i == len(positions), f"{i} != {len(positions)}"
 
     worksheet_skills.write(0, 0, "Табельный номер")
     for skill_name, column_number in skill_columns.items():
