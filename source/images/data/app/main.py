@@ -11,7 +11,7 @@ from data import departments
 from utils import make_sure_directory_exists
 
 
-def generate_excel(filename: str):
+def generate_excel(filename: str, locale: str):
     ''' Generate Excel file with fake staff
     '''
     print(f"Generating file '{filename}'", flush=True)
@@ -58,8 +58,8 @@ def generate_excel(filename: str):
     for i, (staff, skill) in enumerate(
         zip(
             filter_by_last_name(
-                persons(positions, locale='ru')),
-            skills(positions, locale='ru')
+                persons(positions, locale=locale)),
+            skills(positions, locale=locale)
             ), 1):
         worksheet_staff.write(i, 0, staff.uid)
         worksheet_staff.write(i, 1, staff.last_name)
@@ -98,9 +98,10 @@ def generate_excel(filename: str):
 
 
 @click.command()
+@click.option('--locale', type=str, default='ru')
 @click.argument('output', type=str)
 @click.argument('count', type=int, default=1)
-def generate(output: str, count: int):
+def generate(output: str, count: int, locale: str):
     ''' Generate Excel file with fake staff
     '''
     playbooks = list()
@@ -114,4 +115,4 @@ def generate(output: str, count: int):
             os.getenv("DATA_DIR", "."),
             playbook,
             "hr.xls")
-        generate_excel(output_filename)
+        generate_excel(output_filename, locale)
