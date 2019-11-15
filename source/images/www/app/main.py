@@ -7,9 +7,6 @@ import streamlit as st
 
 from smart_hr.data import load_data
 
-from gui import filter_by_units
-from gui import filter_by_persons
-from gui import filter_by_projects
 from gui import widgets
 
 
@@ -21,22 +18,20 @@ def main():
     excel_filename = os.path.join(data_dir, "hr.xls")
     load_data(excel_filename)
 
-    selected_units = filter_by_units()
-    selected_project = filter_by_projects(selected_units[-1] if selected_units else None)
-    active_person = filter_by_persons(selected_units[-1] if selected_units else None)
-    if active_person:
+    units, project, employee = widgets.filters(st.sidebar)
+    if employee:
         # Выбран сотрудник
         st.title("Информация о сотруднике")
-        st.header(active_person.fullname)
-        widgets.employee.brief(st.sidebar, active_person)
-        widgets.employee.info(st, active_person, locale=locale)
-        widgets.employee.family(st, active_person, locale=locale)
-        widgets.employee.skill(st, active_person)
-        widgets.employee.dismiss(st, active_person)
-        widgets.employee.graph(st, active_person)
-    elif selected_units:
+        st.header(employee.fullname)
+        widgets.employee.brief(st.sidebar, employee)
+        widgets.employee.info(st, employee, locale=locale)
+        widgets.employee.family(st, employee, locale=locale)
+        widgets.employee.skill(st, employee)
+        widgets.employee.dismiss(st, employee)
+        widgets.employee.graph(st, employee)
+    elif units:
         # Выбрано подразделение
         st.title("Информация о подразделении")
-        st.header("/".join(selected_units))
-        widgets.unit.info(st, selected_units, locale=locale)
-        widgets.unit.employees(st, selected_units, locale=locale)
+        st.header("/".join(units).title())
+        widgets.unit.info(st, units, locale=locale)
+        widgets.unit.employees(st, units, locale=locale)
