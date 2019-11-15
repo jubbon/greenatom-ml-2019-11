@@ -22,7 +22,6 @@ class Unit:
         ''' Руководитель подразделения
         '''
         for employee in get_employees(None):
-            print(f"Checking {employee}", flush=True)
             if employee.is_head and employee.unit == self.fullname:
                 return employee
 
