@@ -9,6 +9,8 @@ from typing import ClassVar
 import numpy as np
 import pandas as pd
 
+from .unit import leafs
+
 
 data = {}
 names_ = list()
@@ -24,6 +26,13 @@ class Project:
 
     def __hash__(self):
         return hash(self.name)
+
+    def units(self):
+        '''
+        '''
+        for unit in leafs():
+            if unit.projects.get(self.name, 0) == 1:
+                yield unit
 
     def to_dict(self, locale=None) -> dict:
         data = self.skills

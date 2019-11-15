@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import dataclass, asdict
+from typing import Dict
 
 import pandas as pd
 
@@ -14,6 +15,7 @@ class Unit:
     unit_type: str
     name: str
     parent: str
+    projects: Dict[str, int]
 
     @property
     def fullname(self):
@@ -42,10 +44,15 @@ def load(filename):
     )
     for index, row in df.iterrows():
         unit = row.to_dict()
+        unit_type = unit.pop("Тип")
+        name = unit.pop("Номер")
+        parent = unit.pop("Родительская структура").strip()
+        projects = {k: int(v) for k, v in unit.items() if not k.startswith("Unnamed")}
         unit = Unit(
-            unit_type=unit["Тип"],
-            name=unit["Номер"],
-            parent=unit["Родительская структура"].strip()
+            unit_type=unit_type,
+            name=name,
+            parent=parent,
+            projects=projects
         )
         data[unit.fullname] = unit
 
@@ -68,6 +75,23 @@ def units(root_uid=None, level=0):
         yield unit_uid, unit
         if level:
             yield from units(root_uid=unit_uid, level=level-1)
+
+
+def leafs(root_uid=None):
+    '''
+    '''
+    all_units = dict()
+    for unit_uid, unit in data.items():
+        all_units[unit_uid] = unit
+
+    for unit_uid, unit in data.items():
+        if not unit.parent:
+            del all_units[unit_uid]
+        elif unit.parent in all_units:
+            del all_units[unit.parent]
+
+    for unit_uid, unit in all_units.items():
+        yield unit
 
 
 def parents(unit):
