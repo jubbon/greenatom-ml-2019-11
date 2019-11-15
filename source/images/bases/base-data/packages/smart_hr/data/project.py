@@ -1,20 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from collections import Counter
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import OrderedDict
-from typing import ClassVar
 
-import numpy as np
 import pandas as pd
 
 from .unit import leafs
+from .staff import persons
 
 
 data = {}
-names_ = list()
-counter_ = Counter()
 
 
 @dataclass()
@@ -33,6 +29,14 @@ class Project:
         for unit in leafs():
             if unit.projects.get(self.name, 0) == 1:
                 yield unit
+
+    def employees(self):
+        ''' Сотрудник, участвующие в проекте
+        '''
+        for _, employee in persons():
+            involvement = employee.projects.get(self.name, 0)
+            if involvement > 0:
+                yield employee, involvement
 
     def to_dict(self, locale=None) -> dict:
         data = self.skills

@@ -5,6 +5,7 @@ import os
 from datetime import date
 from dataclasses import dataclass, asdict
 from typing import ClassVar
+from typing import Dict
 
 import pandas as pd
 
@@ -67,6 +68,9 @@ class Person:
     is_head: bool
     status: int
     image_number: int
+
+    # Вовлеченность в проекты
+    projects: Dict[str, int]
 
     # Семейное положение
     family: FamilyRelations
@@ -146,6 +150,26 @@ def load_family_relations(filename):
     return data
 
 
+def load_projects(filename):
+    '''
+    '''
+    data = dict()
+    sheet_name = 'Вовлеченность'
+    print(f"Loading involvement from sheet '{sheet_name}'", flush=True)
+    df = pd.read_excel(
+        filename,
+        sheet_name=sheet_name,
+        dtype={'Табельный номер': str}
+    )
+
+    for index, row in df.iterrows():
+        involvement = row.to_dict()
+        uid = involvement.pop('Табельный номер')
+        projects = {k: int(v) for k, v in involvement.items() if not k.startswith("Unnamed")}
+        data[uid] = projects
+    return data
+
+
 def load(filename):
     '''
     '''
@@ -159,6 +183,7 @@ def load(filename):
     )
 
     frs = load_family_relations(filename)
+    projects = load_projects(filename)
 
     for index, row in df.iterrows():
         person = row.to_dict()
@@ -175,6 +200,7 @@ def load(filename):
             is_head=person['Руководитель'] == 'Да',
             status=person['Статус'],
             image_number=int(uid) % 22 + 1,
+            projects=projects[uid],
             family=frs[uid]
         )
 
