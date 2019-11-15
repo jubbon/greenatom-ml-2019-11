@@ -29,6 +29,14 @@ def main():
         widgets.employee.skill(st, employee)
         widgets.employee.dismiss(st, employee)
         widgets.employee.graph(st, employee)
+    elif project:
+        # Выбран проект
+        st.title("Информация о проекте")
+        st.header(project.name)
+        widgets.project.info(st, project, locale=locale)
+        widgets.project.skills(st, project, locale=locale)
+        widgets.project.units(st, project, locale=locale)
+        widgets.project.employees(st, project, locale=locale)
     elif units:
         # Выбрано подразделение
         st.title("Информация о подразделении")
