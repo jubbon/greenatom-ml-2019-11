@@ -87,12 +87,12 @@ def handle(root: dict, deps: list, projs: list):
                 }
                 jobs = dep.get("jobs")
                 if jobs:
-                    position = jobs.get("head")
-                    if position:
-                        positions.append((title, name, position, "head"))
-                    for job in jobs.get("others", list()):
-                        position = job["title"]
-                        count = job.get("count", (0, 0))
+                    head = jobs.get("head")
+                    if head:
+                        positions.append((title, name, head, "head"))
+                    for other in jobs.get("others", list()):
+                        position = other["title"]
+                        count = other.get("count", (0, 0))
                         for _ in range(randint(*count)):
                             positions.append((title, name, position, "other"))
                 # Обработка вложенных департаментов

@@ -70,16 +70,13 @@ def random_date(start: date, end: date, locale: str) -> date:
         return date
 
 
-def filter_by_last_name(persons):
+def filter_by_last_name(employee):
     ''' Выполняет фильтрацию по фамилии
     '''
-    for person in persons:
-        if person.last_name.startswith("Ё"):
-            continue
-        yield person
+    return not employee.last_name.startswith("Ё")
 
 
-def generator(units: list, positions: list, projects: list, locale: str):
+def generator(units: list, positions: list, projects: list, locale: str, filters: None):
     '''
     '''
     # generic = Generic(locale)
@@ -88,78 +85,80 @@ def generator(units: list, positions: list, projects: list, locale: str):
     ru = RussiaSpecProvider()
     today = date.today()
     get_random_date = partial(random_date, locale=locale)
-    while positions:
-        gender = random.choice([
-            Gender.MALE,
-            Gender.FEMALE])
-        position = positions.pop(random.randint(0, len(positions)-1))
+    for position in positions:
         department = position[0] + ' ' + position[1]
+        while True:
+            gender = random.choice([Gender.MALE, Gender.FEMALE])
+            status = 1 if random.random() < 0.1 else 0
+            birthday = datetime.date(start=1950, end=1998)
 
-        status = 1 if random.random() < 0.1 else 0
-        birthday = datetime.date(start=1950, end=1998)
+            first_workingday = get_random_date(
+                start=birthday + timedelta(days=18*365),
+                end=today - timedelta(days=2*365))
+            promotion_workingday = get_random_date(
+                start=first_workingday + timedelta(days=6*30),
+                end=today - timedelta(days=6*30))
+            last_workingday = get_random_date(
+                start=promotion_workingday + timedelta(days=2*30),
+                end=today - timedelta(days=2*30))
+            assert first_workingday < promotion_workingday, f"{first_workingday} < {promotion_workingday}"
+            assert last_workingday is None or promotion_workingday < last_workingday, f"{promotion_workingday} < {last_workingday}"
 
-        first_workingday = get_random_date(
-            start=birthday + timedelta(days=18*365),
-            end=today - timedelta(days=2*365))
-        promotion_workingday = get_random_date(
-            start=first_workingday + timedelta(days=6*30),
-            end=today - timedelta(days=6*30))
-        last_workingday = get_random_date(
-            start=promotion_workingday + timedelta(days=2*30),
-            end=today - timedelta(days=2*30))
-        assert first_workingday < promotion_workingday, f"{first_workingday} < {promotion_workingday}"
-        assert last_workingday is None or promotion_workingday < last_workingday, f"{promotion_workingday} < {last_workingday}"
+            business_trip_count = random.choice([0]*30+[1]*20+[2]*16+[3]*13+[4]*8+[5]*5+[6]*4+[7]*3+[8]*2+[9]*1+[10])
+            business_trip_days = random.randint(business_trip_count, 7 * business_trip_count)
 
-        business_trip_count = random.choice([0]*30+[1]*20+[2]*16+[3]*13+[4]*8+[5]*5+[6]*4+[7]*3+[8]*2+[9]*1+[10])
-        business_trip_days = random.randint(business_trip_count, 7 * business_trip_count)
+            involvement = dict()
+            available_projects = list()
+            for unit in units:
+                if unit[0] != position[0]:
+                    continue
+                if unit[1] != position[1]:
+                    continue
+                available_projects = unit[4]
+                break
+            projects_count = random.choice([1]*5+[2]*1)
+            if projects_count == 1:
+                project = random.choice(available_projects)
+                involvement[project.name] = 100
+            else:
+                involvement_schema = random.choice((
+                    (10, 90),
+                    (20, 80),
+                    (30, 70),
+                    (40, 60),
+                    (50, 50),
+                    (33, 67),
+                    (25, 75)))
+                for i in range(2):
+                    project = random.choice(projects)
+                    involvement[project.name] = involvement.setdefault(project.name, 0) + involvement_schema[i]
 
-        involvement = dict()
-        available_projects = list()
-        for unit in units:
-            if unit[0] != position[0]:
-                continue
-            if unit[1] != position[1]:
-                continue
-            available_projects = unit[4]
-            break
-        projects_count = random.choice([1]*5+[2]*1)
-        if projects_count == 1:
-            project = random.choice(available_projects)
-            involvement[project.name] = 100
-        else:
-            involvement_schema = random.choice((
-                (10, 90),
-                (20, 80),
-                (30, 70),
-                (40, 60),
-                (50, 50),
-                (33, 67),
-                (25, 75)))
-            for i in range(2):
-                project = random.choice(projects)
-                involvement[project.name] = involvement.setdefault(project.name, 0) + involvement_schema[i]
+            family = FamilyRelations(
+                status=random.choice([0]*30+[1]*10+[2]*1),
+                children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
+                local=random.choice([0]*1+[1]*2)
+            )
+            employee = Employee(
+                uid=person.identifier(mask='#####'),
+                last_name=person.last_name(gender=gender),
+                first_name=person.name(gender=gender),
+                patronymic=ru.patronymic(gender=gender),
+                gender='муж' if gender == Gender.MALE else 'жен',
+                birthday=birthday,
+                department=department,
+                position=position[2],
+                is_head=position[3] == "head",
+                status=status,
+                first_workingday=first_workingday,
+                promotion_workingday=promotion_workingday,
+                last_workingday=last_workingday if status == 1 else None,
+                business_trip_count=business_trip_count,
+                business_trip_days=business_trip_days,
+                involvement=involvement,
+                family=family
+            )
 
-        family = FamilyRelations(
-            status=random.choice([0]*30+[1]*10+[2]*1),
-            children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
-            local=random.choice([0]*1+[1]*2)
-        )
-        yield Employee(
-            uid=person.identifier(mask='#####'),
-            last_name=person.last_name(gender=gender),
-            first_name=person.name(gender=gender),
-            patronymic=ru.patronymic(gender=gender),
-            gender='муж' if gender == Gender.MALE else 'жен',
-            birthday=birthday,
-            department=department,
-            position=position[2],
-            is_head=position[3] == "head",
-            status=status,
-            first_workingday=first_workingday,
-            promotion_workingday=promotion_workingday,
-            last_workingday=last_workingday if status == 1 else None,
-            business_trip_count=business_trip_count,
-            business_trip_days=business_trip_days,
-            involvement=involvement,
-            family=family
-        )
+            if not filters or all(filter(lambda f: f(employee), filters)):
+                yield employee
+                break
+            print("Повторная генерация", flush=True)

@@ -87,8 +87,13 @@ def generate_excel(filename: str, locale: str):
     skill_columns = dict()
     for i, (staff, skill) in enumerate(
         zip(
-            filter_by_last_name(
-                persons(units, positions, projects, locale=locale)),
+            (
+            persons(
+                units,
+                positions,
+                projects,
+                locale=locale,
+                filters=[filter_by_last_name,])),
             skills(positions, locale=locale)
             ), 1):
         worksheet_staff.write(i, 0, staff.uid)
