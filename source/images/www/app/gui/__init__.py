@@ -9,6 +9,7 @@ import streamlit as st
 from smart_hr.data.unit import units
 from smart_hr.data.unit import get_employees
 from smart_hr.data.staff import persons
+from smart_hr.data.project import projects
 
 
 
@@ -46,3 +47,19 @@ def filter_by_persons(unit=None):
         "Сотрудник",
         options=["", ] + sorted(person_names, key=lambda p: p.fullname),
         format_func=fullname)
+
+
+def projectname(project):
+    '''
+    '''
+    return project.name if project else " "
+
+
+def filter_by_projects(unit=None):
+    '''
+    '''
+    filtered_projects = list(projects(unit))
+    return st.sidebar.selectbox(
+        "Проект",
+        options=["", ] + sorted(filtered_projects, key=lambda p: p.name),
+        format_func=projectname)
