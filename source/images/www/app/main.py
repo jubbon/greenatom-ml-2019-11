@@ -5,9 +5,9 @@ import os
 
 import streamlit as st
 
-from smart_hr.data import load_data
 
 from gui import widgets
+from data import load_data
 
 
 def main():
@@ -15,8 +15,7 @@ def main():
     '''
     locale = os.getenv("LOCALE")
     data_dir = os.getenv("DATA_DIR", ".")
-    excel_filename = os.path.join(data_dir, "hr.xls")
-    load_data(excel_filename)
+    load_data(data_dir)
 
     units, project, employee = widgets.filters(st.sidebar)
     if employee:
