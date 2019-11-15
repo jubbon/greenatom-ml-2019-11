@@ -70,6 +70,12 @@ def generate_excel(filename: str, locale: str):
     worksheet_staff.write(0, 12, "Количество командировок за год")
     worksheet_staff.write(0, 13, "Дней в командировках за год")
 
+    # Вовлеченность в проекты
+    worksheet_involvement = workbook.add_worksheet("Вовлеченность")
+    worksheet_involvement.write(0, 0, "Табельный номер")
+    for n, project in enumerate(projects):
+        worksheet_involvement.write(0, 1 + n, project.name)
+
     worksheet_family = workbook.add_worksheet("Семейное положение")
     worksheet_family.write(0, 0, "Табельный номер")
     worksheet_family.write(0, 1, "Статус")
@@ -81,7 +87,7 @@ def generate_excel(filename: str, locale: str):
     for i, (staff, skill) in enumerate(
         zip(
             filter_by_last_name(
-                persons(positions, locale=locale)),
+                persons(units, positions, projects, locale=locale)),
             skills(positions, locale=locale)
             ), 1):
         worksheet_staff.write(i, 0, staff.uid)
@@ -99,8 +105,12 @@ def generate_excel(filename: str, locale: str):
         worksheet_staff.write(i, 12, staff.business_trip_count)
         worksheet_staff.write(i, 13, staff.business_trip_days)
 
-        worksheet_skills.write(i, 0, staff.uid)
+        worksheet_involvement.write(i, 0, staff.uid)
+        for n, project in enumerate(projects):
+            project_name = project.name
+            worksheet_involvement.write(i, 1 + n, staff.involvement.get(project_name, 0))
 
+        worksheet_skills.write(i, 0, staff.uid)
         for skill_name, skill_value in skill.items():
             worksheet_skills.write(
                 i,
