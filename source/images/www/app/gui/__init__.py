@@ -7,6 +7,7 @@
 import streamlit as st
 
 from smart_hr.data.unit import units
+from smart_hr.data.unit import get_employees
 from smart_hr.data.staff import persons
 
 
@@ -38,9 +39,7 @@ def fullname(person):
 def filter_by_persons(unit=None):
     '''
     '''
-    person_names = list()
-    for _, person in persons(unit):
-        person_names.append(person)
+    person_names = list(get_employees(unit))
     # if not person_names:
     #     return {}
     return st.sidebar.selectbox(

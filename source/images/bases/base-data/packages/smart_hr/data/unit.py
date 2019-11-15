@@ -84,7 +84,7 @@ def get_employees(unit=None):
     '''
     from .staff import persons
     print(f"Getting employees for unit '{unit}'", flush=True)
-    for employee in persons(unit):
+    for _, employee in persons(unit):
         yield employee
     for unit_uid, _ in units(unit, level=1):
         yield from get_employees(unit=unit_uid)
