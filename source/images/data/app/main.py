@@ -47,7 +47,7 @@ def generate_excel(filename: str):
     worksheet_staff.write(0, 12, "Количество командировок за год")
     worksheet_staff.write(0, 13, "Дней в командировках за год")
 
-    worksheet_family = workbook.add_worksheet("Семейные отношения")
+    worksheet_family = workbook.add_worksheet("Семейное положение")
     worksheet_family.write(0, 0, "Табельный номер")
     worksheet_family.write(0, 1, "Статус")
     worksheet_family.write(0, 2, "Количество детей")

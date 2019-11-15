@@ -47,7 +47,7 @@ class Human:
     # Суммарное количество дней в командировках за последний год
     business_trip_days: int
 
-    # Семейные отношения
+    # Семейное положение
     family: FamilyRelations
 
 

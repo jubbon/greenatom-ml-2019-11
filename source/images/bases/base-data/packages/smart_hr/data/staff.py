@@ -67,7 +67,7 @@ class Person:
     status: int
     image_number: int
 
-    # Семейные отношения
+    # Семейное положение
     family: FamilyRelations
 
     @property
@@ -126,7 +126,7 @@ def load_family_relations(filename):
     '''
     '''
     data = dict()
-    sheet_name = 'Семейные отношения'
+    sheet_name = 'Семейное положение'
     print(f"Loading family relations from sheet '{sheet_name}'", flush=True)
     df = pd.read_excel(
         filename,
