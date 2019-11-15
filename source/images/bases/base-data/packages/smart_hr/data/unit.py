@@ -18,6 +18,15 @@ class Unit:
     projects: Dict[str, int]
 
     @property
+    def head(self):
+        ''' Руководитель подразделения
+        '''
+        for employee in get_employees(None):
+            print(f"Checking {employee}", flush=True)
+            if employee.is_head and employee.unit == self.fullname:
+                return employee
+
+    @property
     def fullname(self):
         return " ".join([self.unit_type, self.name])
 

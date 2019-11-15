@@ -35,6 +35,8 @@ class Employee:
     birthday: date
     department: str
     position: str
+    # Руководящая должность
+    is_head: bool
     # Текущий статус (0-работает, 1-уволен)
     status: int
     # Первый день на работе
@@ -151,6 +153,7 @@ def generator(units: list, positions: list, projects: list, locale: str):
             birthday=birthday,
             department=department,
             position=position[2],
+            is_head=position[3] == "head",
             status=status,
             first_workingday=first_workingday,
             promotion_workingday=promotion_workingday,

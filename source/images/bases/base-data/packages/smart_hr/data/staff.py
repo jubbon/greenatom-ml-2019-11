@@ -64,6 +64,7 @@ class Person:
     gender: str
     unit: str
     job: str
+    is_head: bool
     status: int
     image_number: int
 
@@ -171,6 +172,7 @@ def load(filename):
             gender=person['Пол'],
             unit=person['Подразделение'],
             job=person['Должность'],
+            is_head=person['Руководитель'] == 'Да',
             status=person['Статус'],
             image_number=int(uid) % 22 + 1,
             family=frs[uid]

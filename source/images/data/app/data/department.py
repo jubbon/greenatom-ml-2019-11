@@ -89,12 +89,12 @@ def handle(root: dict, deps: list, projs: list):
                 if jobs:
                     position = jobs.get("head")
                     if position:
-                        positions.append((title, name, position))
+                        positions.append((title, name, position, "head"))
                     for job in jobs.get("others", list()):
                         position = job["title"]
                         count = job.get("count", (0, 0))
                         for _ in range(randint(*count)):
-                            positions.append((title, name, position))
+                            positions.append((title, name, position, "other"))
                 # Обработка вложенных департаментов
                 child_units, child_positions, child_projects = handle(data, dep.get("nested", list()), projs)
 
