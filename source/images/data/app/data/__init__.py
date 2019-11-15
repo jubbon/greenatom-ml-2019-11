@@ -3,5 +3,6 @@
 
 
 from .department import departments # noqa
+from .project import projects # noqa
 from .person import generator as persons, filter_by_last_name # noqa
 from .skills import generator as skills # noqa

@@ -60,11 +60,12 @@ DEPARTMENTS_HIERARCHY = [
 ]
 
 
-def handle(root: dict, deps: list):
+def handle(root: dict, deps: list, projs: list):
     '''
     '''
     units = list()
     positions = list()
+    projects = set()
     if deps:
         random = Random()
         for dep in deps:
@@ -84,8 +85,6 @@ def handle(root: dict, deps: list):
                     "title": title,
                     "name": name
                 }
-                units.append(
-                    (title, name, root.get("title", ""), root.get("name", "")))
                 jobs = dep.get("jobs")
                 if jobs:
                     position = jobs.get("head")
@@ -97,13 +96,31 @@ def handle(root: dict, deps: list):
                         for _ in range(randint(*count)):
                             positions.append((title, name, position))
                 # Обработка вложенных департаментов
-                child_units, child_positions = handle(data, dep.get("nested", list()))
+                child_units, child_positions, child_projects = handle(data, dep.get("nested", list()), projs)
+
+                projects_ = set()
+                if not child_units:
+                    # Проекты в подразделении
+                    projects_count = random.randint(1, 2)
+                    while len(projects_) < projects_count:
+                        projects_.add(random.choice(projs))
+                else:
+                    projects_.update(child_projects)
+                units.append((
+                    title,
+                    name,
+                    root.get("title", ""),
+                    root.get("name", ""),
+                    list(projects_)))
+
                 units.extend(child_units)
                 positions.extend(child_positions)
-    return units, positions
+                projects.update(projects_)
+
+    return units, positions, list(projects)
 
 
-def departments():
+def departments(projs):
     '''
     '''
-    return handle({}, DEPARTMENTS_HIERARCHY)
+    return handle({}, DEPARTMENTS_HIERARCHY, projs)

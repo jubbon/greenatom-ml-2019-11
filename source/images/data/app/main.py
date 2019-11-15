@@ -4,10 +4,13 @@
 import os
 import click
 import xlsxwriter
+import random
 
 from data import persons, filter_by_last_name
 from data import skills
+from data.skills import names as skill_names
 from data import departments
+from data.project import projects as all_projects
 from utils import make_sure_directory_exists
 
 
@@ -19,16 +22,36 @@ def generate_excel(filename: str, locale: str):
     workbook = xlsxwriter.Workbook(
         make_sure_directory_exists(filename))
 
+    # Проекты
+    projects_count = random.randint(15, 25)
+    projects = list(all_projects(count=projects_count, locale="ru"))
+
     # Штатное расписание
-    units, positions = departments()
+    units, positions, _ = departments(projects)
+
     worksheet_units = workbook.add_worksheet("Оргструктура")
     worksheet_units.write(0, 0, "Тип")
     worksheet_units.write(0, 1, "Номер")
     worksheet_units.write(0, 2, "Родительская структура")
+    for n, project in enumerate(projects):
+        worksheet_units.write(0, 5 + n, project.name)
+
     for i, unit in enumerate(units, 1):
         worksheet_units.write(i, 0, unit[0])
         worksheet_units.write(i, 1, unit[1])
         worksheet_units.write(i, 2, unit[2] + ' ' + unit[3])
+        for n, project in enumerate(projects):
+            worksheet_units.write(i, 5 + n, "1" if project in unit[4] else "0")
+
+    # Проекты
+    worksheet_projects = workbook.add_worksheet("Проекты")
+    worksheet_projects.write(0, 0, "Название")
+    for n, skill_name in enumerate(skill_names(), 1):
+        worksheet_projects.write(0, n, skill_name)
+    for i, project in enumerate(projects, 1):
+        worksheet_projects.write(i, 0, project.name)
+        for n, skill_name in enumerate(skill_names(), 1):
+            worksheet_projects.write(i, n, project.skills.get(skill_name, 0))
 
     # Персонал
     worksheet_staff = workbook.add_worksheet("Персонал")

@@ -40,3 +40,8 @@ def generator(positions: list, locale: str):
             if any(map(lambda skill: skills[skill], skills)):
                 yield skills
                 break
+
+def names():
+    '''
+    '''
+    return SKILLS
