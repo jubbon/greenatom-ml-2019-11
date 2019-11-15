@@ -25,7 +25,7 @@ class FamilyRelations:
 
 
 @dataclass
-class Human:
+class Employee:
     uid: str
     last_name: str
     first_name: str
@@ -110,7 +110,7 @@ def generator(positions: list, locale: str):
             children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
             local=random.choice([0]*1+[1]*2)
         )
-        yield Human(
+        yield Employee(
             uid=person.identifier(mask='#####'),
             last_name=person.last_name(gender=gender),
             first_name=person.name(gender=gender),
