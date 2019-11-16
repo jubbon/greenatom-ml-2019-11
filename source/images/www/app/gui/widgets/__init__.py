@@ -24,7 +24,7 @@ def graph(window, graph_names: list, unit=None, project=None, employee=None, eng
     window.subheader("Графы взаимодействия")
 
     graph_names = window.multiselect('', graph_names, ())
-    for graph_uid, graph_title,  graph in load_graphs(graph_names):
+    for graph_uid, graph_title, graph in load_graphs(graph_names):
         print(f"Loaded graph '{graph_uid}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
         if employee:
             print(f"Filtering graph for {employee}", flush=True)
