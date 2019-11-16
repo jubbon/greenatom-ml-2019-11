@@ -14,10 +14,12 @@ def main():
     '''
     '''
     locale = os.getenv("LOCALE")
+    engine = os.getenv("VIS_ENGINE", "bokeh")
     data_dir = os.getenv("DATA_DIR", ".")
     load_data(data_dir)
 
     units, project, employee = widgets.filters(st.sidebar)
+    graph_names = ["skill-staff-unit", "staff-unit", "staff-skill", "project-staff"]
     if employee:
         # Выбран сотрудник
         st.title("Информация о сотруднике")
@@ -27,7 +29,7 @@ def main():
         widgets.employee.family(st, employee, locale=locale)
         widgets.employee.skill(st, employee)
         widgets.employee.dismiss(st, employee)
-        widgets.employee.graph(st, employee)
+        widgets.graph(st, graph_names, employee=employee, engine=engine)
     elif project:
         # Выбран проект
         st.title("Информация о проекте")
@@ -44,5 +46,5 @@ def main():
         widgets.unit.employees(st, units, locale=locale)
     else:
         # Начальная страница
-        graph_names = ["skill-staff-unit", "staff-unit", "staff-skill", "project-staff"]
-        widgets.graph(st, graph_names, engine="bokeh")
+        widgets.graph(st, graph_names, engine=engine)
+

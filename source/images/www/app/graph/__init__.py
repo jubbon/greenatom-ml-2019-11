@@ -3,7 +3,7 @@
 
 import networkx as nx
 
-from smart_hr.data.unit import get_unit, units, parents
+from smart_hr.data.unit import units
 from smart_hr.data.staff import persons
 from smart_hr.data.skill import skills, get_skills
 from smart_hr.data.project import projects
@@ -115,25 +115,3 @@ def load_graphs(uids: list):
             continue
         config = GRAPHS[uid]
         yield uid, config.get("title", uid), load_graph(uid, config)
-
-
-def filter_graph_for_person(graph, person):
-    '''
-    '''
-    assert person
-    enabled_units = None
-    if person:
-        unit = get_unit(person.unit)
-        parent_units = list(parents(unit))
-        enabled_units = list([unit.fullname, ]) + [unit.fullname for unit in parent_units]
-
-    node_enabled = dict()
-    node_fullname = nx.get_node_attributes(graph, 'fullname')
-    node_types = nx.get_node_attributes(graph, 'type')
-    for node_uid, fullname in node_fullname.items():
-        node_type = node_types[node_uid]
-        if node_type == "unit":
-            if enabled_units and fullname not in enabled_units:
-                node_enabled[node_uid] = False
-    nx.set_node_attributes(graph, node_enabled, name="enabled")
-    return graph

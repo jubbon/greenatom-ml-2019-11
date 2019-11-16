@@ -13,7 +13,7 @@ from smart_hr.data.project import projects
 
 from graph import load_graphs
 from graph import render_graph
-from graph import filter_graph_for_person
+from graph.filters.employee import filter_graph as filter_graph_for_employee
 
 
 def graph(window, graph_names: list, employee=None, engine="bokeh"):
@@ -25,7 +25,8 @@ def graph(window, graph_names: list, employee=None, engine="bokeh"):
     for graph_uid, graph_title,  graph in load_graphs(graph_names):
         print(f"Loaded graph '{graph_uid}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
         if employee:
-            graph = filter_graph_for_person(graph, employee)
+            print(f"Filtering graph for {employee}", flush=True)
+            graph = filter_graph_for_employee(graph, employee)
 
         # k = window.slider('k:', 0.001, 1.0, step=0.001, key=f"{graph_uid}_k")
         layout_attr = dict(
