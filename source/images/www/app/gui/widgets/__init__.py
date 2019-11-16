@@ -11,6 +11,33 @@ from smart_hr.data.unit import get_employees
 from smart_hr.data.staff import persons
 from smart_hr.data.project import projects
 
+from graph import load_graphs
+from graph import filter_graph_for_person
+from vis import render_graph
+
+
+def graph(window, graph_names: list, employee=None, engine="bokeh"):
+    ''' Графы социального взаимодействия
+    '''
+    window.subheader("Графы взаимодействия")
+
+    for graph_uid, graph_title,  graph in load_graphs(graph_names):
+        print(f"Loaded graph '{graph_uid}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
+        if employee:
+            graph = filter_graph_for_person(graph, employee)
+
+        # k = window.slider('k:', 0.001, 1.0, step=0.001, key=f"{graph_uid}_k")
+        layout_attr = dict(
+            k=None,
+            scale=100,
+            center=(0, 0))
+        window.write(
+            render_graph(
+                graph,
+                title=graph_title,
+                engine=engine,
+                layout_attr=layout_attr))
+
 
 def filters(window):
     '''

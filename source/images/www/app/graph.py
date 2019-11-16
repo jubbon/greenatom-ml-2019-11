@@ -9,16 +9,18 @@ from smart_hr.data.staff import persons
 from smart_hr.data.skill import skills, get_skills
 
 
-def nodes(node_type=None) -> dict:
+def nodes(node_types: list) -> dict:
     ''' Generate nodes
     '''
-    if not node_type or node_type == "unit":
+    if not node_types or "unit" in node_types:
         for unit_uid, unit in units(level=-1):
             data = dict(type="unit")
             data.update(unit.to_dict(), desc=unit.desc)
+            if 'projects' in data:
+                del data['projects']
             yield unit_uid, data
 
-    if not node_type or node_type == "staff":
+    if not node_types or "staff" in node_types:
         for person_uid, person in persons():
             person_skills = get_skills(person_uid)
             data = dict(type="staff")
@@ -28,9 +30,11 @@ def nodes(node_type=None) -> dict:
                 desc=person.desc,
                 skills=person_skills.to_dict()
             )
+            if 'projects' in data:
+                del data['projects']
             yield person_uid, data
 
-    if not node_type or node_type == "skill":
+    if not node_types or "skill" in node_types:
         for skill_name, skill_level in skills():
             data = dict(type="skill")
             data.update(
@@ -40,48 +44,81 @@ def nodes(node_type=None) -> dict:
             yield skill_name, data
 
 
-@st.cache
-def load_graphs():
-    '''
-    '''
-    graphs = {
-        "staff-unit": nx.Graph(),
-        "staff-skill": nx.Graph(),
-        "skill-staff-unit": nx.Graph()
+GRAPHS = {
+    "test": {
+        "title": "Демо",
+        "init": nx.karate_club_graph,
+    },
+    "staff-unit": {
+        "title": "Сотрудник-подразделение",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+            "unit"
+        ],
+        "edges": []
+    },
+    "staff-skill": {
+        "title": "Сотрудник-компетенции",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+            "skill"
+        ],
+        "edges": []
+    },
+    "skill-staff-unit": {
+        "title": "Сотрудник-компетенции-подразделение",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+            "skill",
+            "unit"
+        ],
+        "edges": []
     }
+}
 
-    for node_uid, node in nodes():
-        # # Признак доступности узла при фильтрации
-        # node_enabled = True
-        # if node_type == "staff":
-        #     if person and person["Табельный номер"] != node.get("Табельный номер"):
-        #         node_enabled = False
+
+def load_graph(uid: str, config: dict) -> nx.Graph:
+    '''
+    '''
+    G = config.get('init', nx.Graph)()
+    node_types = config.get("nodes")
+    assert isinstance(node_types, list)
+    for node_uid, node in nodes(node_types):
         node_type = node["type"]
         node.update(enabled=True)
-        for graph_name, graph in graphs.items():
-            node_types = graph_name.split("-")
-            if node_type in node_types:
-                graph.add_node(node_uid, **node)
+        G.add_node(node_uid, **node)
 
         if node_type == "staff":
             # Подразделение
             unit = node["unit"]
-            if unit:
-                for graph_name in ("staff-unit", "skill-staff-unit"):
-                    graphs[graph_name].add_edge(node_uid, unit, type='unit')
+            if unit and uid in ("staff-unit", "skill-staff-unit"):
+                G.add_edge(node_uid, unit, type='unit')
             # Компетенции
-            for skill_name, skill_value in node.get("skills", dict()).items():
+            skills = node.pop("skills", dict())
+            for skill_name, skill_value in skills.items():
                 assert skill_value in range(0, 10)
-                if skill_value:
-                    for graph_name in ("staff-skill", "skill-staff-unit"):
-                        graphs[graph_name].add_edge(node_uid, skill_name, type='skill', value=skill_value)
+                if skill_value and uid in ("staff-skill", "skill-staff-unit"):
+                    G.add_edge(node_uid, skill_name, type='skill', value=skill_value)
         elif node_type == "unit":
             unit = node.get("fullname")
             parent = node.get("parent")
-            if unit and parent:
-                for graph_name in ("staff-unit", "skill-staff-unit"):
-                    graphs[graph_name].add_edge(unit, parent, type='unit')
-    return graphs
+            if unit and parent and uid in ("staff-unit", "skill-staff-unit"):
+                G.add_edge(unit, parent, type='unit')
+    return G
+
+
+def load_graphs(uids: list):
+    '''
+    '''
+    for uid in uids:
+        if uid not in GRAPHS:
+            print(f"Graph with uid '{uid}' not found", flush=True)
+            continue
+        config = GRAPHS[uid]
+        yield uid, config.get("title", uid), load_graph(uid, config)
 
 
 def filter_graph_for_person(graph, person):

@@ -42,3 +42,7 @@ def main():
         st.header("/".join(units).title())
         widgets.unit.info(st, units, locale=locale)
         widgets.unit.employees(st, units, locale=locale)
+    else:
+        # Начальная страница
+        graph_names = ["skill-staff-unit", "staff-unit", "staff-skill"]
+        widgets.graph(st, graph_names, engine="bokeh")

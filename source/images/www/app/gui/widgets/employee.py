@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-from graph import load_graphs
-from graph import filter_graph_for_person
-from vis import render_graph
 
 from tasks import send_email
 
@@ -85,21 +82,3 @@ def dismiss(window, person):
         "Рассчитать вероятность увольнения",
         key="predict_dismiss"):
         window.markdown(f"Вероятность увольнения в ближайшие 3 месяца составляет **27%**")
-
-
-def graph(window, person):
-    ''' Графы социального взаимодействия
-    '''
-    assert person
-    window.subheader("Графы взаимодействия")
-
-    graphs = load_graphs()
-    filtered_graphs = dict()
-    for graph_name, graph in graphs.items():
-        print(f"Loaded graph '{graph_name}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
-        if person:
-            graph = filter_graph_for_person(graph, person)
-        filtered_graphs[graph_name] = graph
-
-    for graph_name in ("skill-staff-unit", "staff-unit", "staff-skill"):
-        window.write(render_graph(filtered_graphs[graph_name], engine="bokeh"))
