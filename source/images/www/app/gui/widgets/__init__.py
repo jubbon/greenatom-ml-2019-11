@@ -12,8 +12,8 @@ from smart_hr.data.staff import persons
 from smart_hr.data.project import projects
 
 from graph import load_graphs
+from graph import render_graph
 from graph import filter_graph_for_person
-from vis import render_graph
 
 
 def graph(window, graph_names: list, employee=None, engine="bokeh"):
