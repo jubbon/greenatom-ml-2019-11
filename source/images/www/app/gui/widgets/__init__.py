@@ -13,10 +13,12 @@ from smart_hr.data.project import projects
 
 from graph import load_graphs
 from graph import render_graph
+from graph.filters.unit import filter_graph as filter_graph_for_unit
+from graph.filters.project import filter_graph as filter_graph_for_project
 from graph.filters.employee import filter_graph as filter_graph_for_employee
 
 
-def graph(window, graph_names: list, employee=None, engine="bokeh"):
+def graph(window, graph_names: list, unit=None, project=None, employee=None, engine="bokeh"):
     ''' Графы социального взаимодействия
     '''
     window.subheader("Графы взаимодействия")
@@ -27,6 +29,12 @@ def graph(window, graph_names: list, employee=None, engine="bokeh"):
         if employee:
             print(f"Filtering graph for {employee}", flush=True)
             graph = filter_graph_for_employee(graph, employee)
+        elif project:
+            print(f"Filtering graph for project '{project}'", flush=True)
+            graph = filter_graph_for_project(graph, project)
+        elif unit:
+            print(f"Filtering graph for unit '{unit}'", flush=True)
+            graph = filter_graph_for_unit(graph, unit)
 
         # k = window.slider('k:', 0.001, 1.0, step=0.001, key=f"{graph_uid}_k")
         layout_attr = dict(

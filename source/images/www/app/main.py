@@ -38,13 +38,14 @@ def main():
         widgets.project.skills(st, project, locale=locale)
         widgets.project.units(st, project, locale=locale)
         widgets.project.employees(st, project, locale=locale)
+        widgets.graph(st, graph_names, project=project, engine=engine)
     elif units:
         # Выбрано подразделение
         st.title("Информация о подразделении")
         st.header("/".join(units).title())
         widgets.unit.info(st, units, locale=locale)
         widgets.unit.employees(st, units, locale=locale)
+        widgets.graph(st, graph_names, unit=unit[-1], engine=engine)
     else:
         # Начальная страница
         widgets.graph(st, graph_names, engine=engine)
-
