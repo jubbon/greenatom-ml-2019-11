@@ -90,12 +90,12 @@ def employees(window, project, locale=None):
     ''' Список участников в проекте
     '''
     assert project
-    window.subheader("Участники")
     data = dict()
     for employee, involvement in project.employees():
         data[employee.fullname] = {
             "Должность": employee.job,
             "Вовлеченность, %": involvement
         }
+    window.subheader(f"Участники ({len(data)})")
     df = pd.DataFrame(data.values(), index=data.keys())
     window.table(df.sort_values(by=["Вовлеченность, %"], ascending=[False, ]))
