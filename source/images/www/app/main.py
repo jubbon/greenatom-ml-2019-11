@@ -26,7 +26,7 @@ def main():
         st.header(employee.fullname)
         widgets.employee.brief(st.sidebar, employee)
         widgets.employee.info(st, employee, locale=locale)
-        widgets.employee.family(st, employee, locale=locale)
+        widgets.employee.family_and_living(st, employee, locale=locale)
         widgets.employee.skill(st, employee)
         widgets.employee.dismiss(st, employee)
         widgets.graph(st, graph_names, employee=employee, engine=engine)

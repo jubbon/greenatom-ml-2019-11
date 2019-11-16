@@ -42,6 +42,35 @@ class FamilyRelations:
 
 
 @dataclass
+class LivingConditions:
+    _meta: ClassVar = {
+        "ru": {
+            "dwelling_type": "Тип жилья",
+            "distance": "Удаленность от места работы",
+            "mortgage": "Ипотека",
+            "country_house": "Наличие дачи"
+        }
+    }
+    # Тип жилья (общежитие, комната, квартира, дом)
+    dwelling_type: str
+    # Удаленность от места работы
+    distance: int
+    # Ипотека
+    mortgage: str
+    # Наличие дачи
+    country_house: str
+
+    def to_dict(self, locale=None):
+        data = asdict(self)
+        if locale:
+            data = {
+                self._meta.get(locale, {}).get(k, k): v
+                for k, v
+                in data.items()}
+        return data
+
+
+@dataclass
 class Person:
     _meta: ClassVar = {
         "ru": {
@@ -74,6 +103,9 @@ class Person:
 
     # Семейное положение
     family: FamilyRelations
+
+    # Бытовые условия
+    living: LivingConditions
 
     @property
     def fullname(self) -> str:
@@ -114,6 +146,7 @@ class Person:
     def to_dict(self, locale=None):
         data = asdict(self)
         data.pop("family")
+        data.pop("living")
         data.update(
             fullname=self.fullname,
             ages=self.ages,
@@ -144,8 +177,32 @@ def load_family_relations(filename):
         uid = fr['Табельный номер']
         data[uid] = FamilyRelations(
             status=fr["Статус"],
-            children_count=fr["Количество детей"],
+            children_count=int(fr["Количество детей"]),
             local=fr["Местный специалист"]
+        )
+    return data
+
+
+def load_living_conditions(filename: str) -> dict:
+    '''
+    '''
+    data = dict()
+    sheet_name = 'Бытовые условия'
+    print(f"Loading living conditions from sheet '{sheet_name}'", flush=True)
+    df = pd.read_excel(
+        filename,
+        sheet_name=sheet_name,
+        dtype={'Табельный номер': str}
+    )
+
+    for index, row in df.iterrows():
+        lc = row.to_dict()
+        uid = lc['Табельный номер']
+        data[uid] = LivingConditions(
+            dwelling_type=lc["Тип жилья"],
+            distance=int(lc["Удаленность от места работы"]),
+            mortgage=lc["Ипотека"],
+            country_house=lc["Наличие дачи"]
         )
     return data
 
@@ -183,6 +240,7 @@ def load(filename):
     )
 
     frs = load_family_relations(filename)
+    lcs = load_living_conditions(filename)
     projects = load_projects(filename)
 
     for index, row in df.iterrows():
@@ -201,7 +259,8 @@ def load(filename):
             status=person['Статус'],
             image_number=int(uid) % 22 + 1,
             projects=projects[uid],
-            family=frs[uid]
+            family=frs[uid],
+            living=lcs[uid]
         )
 
 

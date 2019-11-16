@@ -35,13 +35,15 @@ def info(window, person, locale=None):
     window.dataframe(df)
 
 
-def family(window, person, locale=None):
-    ''' Семейное положение
+def family_and_living(window, person, locale=None):
+    ''' Семейное положение и бытовые условия
     '''
     assert person
-    window.subheader("Семейное положение")
+    window.subheader("Семейное положение  и бытовые условия")
 
-    data = person.family.to_dict(locale)
+    data = dict()
+    data.update(person.family.to_dict(locale))
+    data.update(person.living.to_dict(locale))
     df = pd.DataFrame(
         data.values(),
         index=data.keys(),
