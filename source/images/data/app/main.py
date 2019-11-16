@@ -89,6 +89,13 @@ def generate_excel(filename: str, locale: str):
     worksheet_family.write(0, 2, "Количество детей")
     worksheet_family.write(0, 3, "Местный специалист")
 
+    worksheet_living = workbook.add_worksheet("Бытовые условия")
+    worksheet_living.write(0, 0, "Табельный номер")
+    worksheet_living.write(0, 1, "Тип жилья")
+    worksheet_living.write(0, 2, "Удаленность от места работы")
+    worksheet_living.write(0, 3, "Ипотека")
+    worksheet_living.write(0, 4, "Наличие дачи")
+
     worksheet_skills = workbook.add_worksheet("Компетенции")
     skill_columns = dict()
     for i, (staff, skill) in enumerate(
@@ -136,6 +143,12 @@ def generate_excel(filename: str, locale: str):
         worksheet_family.write(i, 1, staff.family.status)
         worksheet_family.write(i, 2, staff.family.children_count)
         worksheet_family.write(i, 3, staff.family.local)
+
+        worksheet_living.write(i, 0, staff.uid)
+        worksheet_living.write(i, 1, staff.living.dwelling_type)
+        worksheet_living.write(i, 2, staff.living.distance)
+        worksheet_living.write(i, 3, "Да" if staff.living.mortgage else "Нет")
+        worksheet_living.write(i, 4, "Да" if staff.living.country_house else "Нет")
 
     assert i == len(positions), f"{i} != {len(positions)}"
 

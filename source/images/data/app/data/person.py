@@ -28,6 +28,20 @@ class FamilyRelations:
 
 
 @dataclass
+class LivingConditions:
+    ''' Бытовые условия
+    '''
+    # Тип жилья (общежитие, комната, квартира, дом)
+    dwelling_type: str
+    # Удаленность от места работы
+    distance: int
+    # Ипотека
+    mortgage: bool
+    # Наличие дачи
+    country_house: bool
+
+
+@dataclass
 class Employee:
     uid: str
     last_name: str
@@ -57,6 +71,9 @@ class Employee:
 
     # Семейное положение
     family: FamilyRelations
+
+    # Бытовые условия
+    living: LivingConditions
 
 
 def filter_by_last_name(employee):
@@ -127,6 +144,14 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                 children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
                 local=random.choice([0]*1+[1]*2)
             )
+
+            living = LivingConditions(
+                dwelling_type=random.choice(['общежитие']*2+['комната']*5+['квартира']*40+['дом']*8),
+                distance=random.randint(1, 20),
+                mortgage=random.choice([True]*1+[False]*10),
+                country_house=random.choice([True]*1+[False]*2)
+            )
+
             employee = Employee(
                 uid=person.identifier(mask='#####'),
                 last_name=person.last_name(gender=gender),
@@ -144,7 +169,8 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                 business_trip_count=business_trip_count,
                 business_trip_days=business_trip_days,
                 involvement=involvement,
-                family=family
+                family=family,
+                living=living
             )
 
             if not filters or all(map(lambda f: f(employee), filters)):
