@@ -14,6 +14,8 @@ from mimesis.random import Random
 from mimesis.enums import Gender
 from mimesis.builtins import RussiaSpecProvider
 
+from app.utils import random_date
+
 
 @dataclass
 class FamilyRelations:
@@ -55,19 +57,6 @@ class Employee:
 
     # Семейное положение
     family: FamilyRelations
-
-
-def random_date(start: date, end: date, locale: str) -> date:
-    ''' Generate random date between start date and end date
-    '''
-    if end <= start:
-        raise RuntimeError("Bad date range")
-    datetime = Datetime(locale)
-    while True:
-        date = datetime.date(start=start.year, end=end.year)
-        if date < start or date >= end:
-            continue
-        return date
 
 
 def filter_by_last_name(employee):
