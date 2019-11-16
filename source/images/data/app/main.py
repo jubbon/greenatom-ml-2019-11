@@ -7,21 +7,17 @@ import xlsxwriter
 import random
 
 from data import persons, filter_by_last_name
-from data import skills
+from data import skills as get_skills
+from data import activities as get_activities
 from data.skills import names as skill_names
 from data import departments
 from data.project import projects as all_projects
 from utils import make_sure_directory_exists
 
 
-def generate_excel(filename: str, locale: str):
-    ''' Generate Excel file with fake staff
+def generate_data(locale: str):
     '''
-    print(f"Generating file '{filename}'", flush=True)
-
-    workbook = xlsxwriter.Workbook(
-        make_sure_directory_exists(filename))
-
+    '''
     # Проекты
     projects_count = random.randint(15, 25)
     projects = list(all_projects(count=projects_count, locale="ru"))
@@ -29,6 +25,36 @@ def generate_excel(filename: str, locale: str):
     # Штатное расписание
     units, positions, _ = departments(projects)
 
+    employees = dict()
+    skills = dict()
+    activities = dict()
+
+    for employee, skill, activity in zip(
+        persons(
+            units,
+            positions,
+            projects,
+            locale=locale,
+            filters=[filter_by_last_name,]),
+        get_skills(positions, locale=locale),
+        get_activities(positions, periods=('1m', '2m', '3m'), locale=locale)):
+
+        employees[employee.uid] = employee
+        skills[employee.uid] = skill
+        activities[employee.uid] = activity
+
+    return projects, units, employees, skills, activities
+
+
+def save_excel(filename: str, projects: list, units: list, employees: dict, skills: dict, locale: str):
+    ''' Save Excel file with fake data
+    '''
+    print(f"Saving file '{filename}'", flush=True)
+
+    workbook = xlsxwriter.Workbook(
+        make_sure_directory_exists(filename))
+
+    # Подразделения
     worksheet_units = workbook.add_worksheet("Оргструктура")
     worksheet_units.write(0, 0, "Тип")
     worksheet_units.write(0, 1, "Номер")
@@ -59,7 +85,7 @@ def generate_excel(filename: str, locale: str):
         for n, skill_name in enumerate(skill_names(), 1):
             worksheet_projects.write(i, n + 5, project.skills.get(skill_name, 0))
 
-    # Персонал
+    # Сотрудники
     worksheet_staff = workbook.add_worksheet("Персонал")
     worksheet_staff.write(0, 0, "Табельный номер")
     worksheet_staff.write(0, 1, "Фамилия")
@@ -76,95 +102,100 @@ def generate_excel(filename: str, locale: str):
     worksheet_staff.write(0, 12, "Дата увольнения")
     worksheet_staff.write(0, 13, "Количество командировок за год")
     worksheet_staff.write(0, 14, "Дней в командировках за год")
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        assert employee.last_name[0] != "Ё", employee.last_name
+        worksheet_staff.write(i, 0, employee_uid)
+        worksheet_staff.write(i, 1, employee.last_name)
+        worksheet_staff.write(i, 2, employee.first_name)
+        worksheet_staff.write(i, 3, employee.patronymic)
+        worksheet_staff.write(i, 4, employee.gender)
+        worksheet_staff.write(i, 5, str(employee.birthday))
+        worksheet_staff.write(i, 6, employee.department)
+        worksheet_staff.write(i, 7, employee.position)
+        worksheet_staff.write(i, 8, "Да" if employee.is_head else "Нет")
+        worksheet_staff.write(i, 9, employee.status)
+        worksheet_staff.write(i, 10, str(employee.first_workingday))
+        worksheet_staff.write(i, 11, str(employee.promotion_workingday))
+        worksheet_staff.write(i, 12, "" if employee.last_workingday is None else str(employee.last_workingday))
+        worksheet_staff.write(i, 13, employee.business_trip_count)
+        worksheet_staff.write(i, 14, employee.business_trip_days)
 
     # Вовлеченность в проекты
     worksheet_involvement = workbook.add_worksheet("Вовлеченность")
     worksheet_involvement.write(0, 0, "Табельный номер")
     for n, project in enumerate(projects):
         worksheet_involvement.write(0, 1 + n, project.name)
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        worksheet_involvement.write(i, 0, employee.uid)
+        for n, project in enumerate(projects):
+            project_name = project.name
+            worksheet_involvement.write(i, 1 + n, employee.involvement.get(project_name, 0))
 
+    # Семейное положение
     worksheet_family = workbook.add_worksheet("Семейное положение")
     worksheet_family.write(0, 0, "Табельный номер")
     worksheet_family.write(0, 1, "Статус")
     worksheet_family.write(0, 2, "Количество детей")
     worksheet_family.write(0, 3, "Местный специалист")
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        worksheet_family.write(i, 0, employee_uid)
+        worksheet_family.write(i, 1, employee.family.status)
+        worksheet_family.write(i, 2, employee.family.children_count)
+        worksheet_family.write(i, 3, employee.family.local)
 
+    # Бытовые условия
     worksheet_living = workbook.add_worksheet("Бытовые условия")
     worksheet_living.write(0, 0, "Табельный номер")
     worksheet_living.write(0, 1, "Тип жилья")
     worksheet_living.write(0, 2, "Удаленность от места работы")
     worksheet_living.write(0, 3, "Ипотека")
     worksheet_living.write(0, 4, "Наличие дачи")
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        worksheet_living.write(i, 0, employee_uid)
+        worksheet_living.write(i, 1, employee.living.dwelling_type)
+        worksheet_living.write(i, 2, employee.living.distance)
+        worksheet_living.write(i, 3, "Да" if employee.living.mortgage else "Нет")
+        worksheet_living.write(i, 4, "Да" if employee.living.country_house else "Нет")
 
+    # Компетенции
     worksheet_skills = workbook.add_worksheet("Компетенции")
-    skill_columns = dict()
-    for i, (staff, skill) in enumerate(
-        zip(
-            (
-            persons(
-                units,
-                positions,
-                projects,
-                locale=locale,
-                filters=[filter_by_last_name,])),
-            skills(positions, locale=locale)
-            ), 1):
-
-        assert staff.last_name[0] != "Ё", staff.last_name
-        worksheet_staff.write(i, 0, staff.uid)
-        worksheet_staff.write(i, 1, staff.last_name)
-        worksheet_staff.write(i, 2, staff.first_name)
-        worksheet_staff.write(i, 3, staff.patronymic)
-        worksheet_staff.write(i, 4, staff.gender)
-        worksheet_staff.write(i, 5, str(staff.birthday))
-        worksheet_staff.write(i, 6, staff.department)
-        worksheet_staff.write(i, 7, staff.position)
-        worksheet_staff.write(i, 8, "Да" if staff.is_head else "Нет")
-        worksheet_staff.write(i, 9, staff.status)
-        worksheet_staff.write(i, 10, str(staff.first_workingday))
-        worksheet_staff.write(i, 11, str(staff.promotion_workingday))
-        worksheet_staff.write(i, 12, "" if staff.last_workingday is None else str(staff.last_workingday))
-        worksheet_staff.write(i, 13, staff.business_trip_count)
-        worksheet_staff.write(i, 14, staff.business_trip_days)
-
-        worksheet_involvement.write(i, 0, staff.uid)
-        for n, project in enumerate(projects):
-            project_name = project.name
-            worksheet_involvement.write(i, 1 + n, staff.involvement.get(project_name, 0))
-
-        worksheet_skills.write(i, 0, staff.uid)
-        for skill_name, skill_value in skill.items():
-            worksheet_skills.write(
-                i,
-                skill_columns.setdefault(skill_name, len(skill_columns)+1),
-                skill_value)
-
-        worksheet_family.write(i, 0, staff.uid)
-        worksheet_family.write(i, 1, staff.family.status)
-        worksheet_family.write(i, 2, staff.family.children_count)
-        worksheet_family.write(i, 3, staff.family.local)
-
-        worksheet_living.write(i, 0, staff.uid)
-        worksheet_living.write(i, 1, staff.living.dwelling_type)
-        worksheet_living.write(i, 2, staff.living.distance)
-        worksheet_living.write(i, 3, "Да" if staff.living.mortgage else "Нет")
-        worksheet_living.write(i, 4, "Да" if staff.living.country_house else "Нет")
-
-    assert i == len(positions), f"{i} != {len(positions)}"
-
     worksheet_skills.write(0, 0, "Табельный номер")
-    for skill_name, column_number in skill_columns.items():
-        worksheet_skills.write(0, column_number, skill_name)
+    for n, skill_name in enumerate(skill_names(), 1):
+        worksheet_skills.write(0, n, skill_name)
+    for i, (employee_uid, skills) in enumerate(skills.items(), 1):
+        worksheet_skills.write(i, 0, employee_uid)
+        for n, skill_name in enumerate(skill_names(), 1):
+            worksheet_skills.write(i, n, skills.get(skill_name, 0))
 
     workbook.close()
-    print(f"Created {i} entries", flush=True)
+
+
+def save_csv(filename: str, activities: dict, locale: str):
+    ''' Save CSV file with fake data
+    '''
+    import csv
+    print(f"Saving file '{filename}'", flush=True)
+
+    with open(filename, mode='wt', encoding="utf-8") as f:
+        fieldnames = ["uid", ] + list(list(activities.values())[0].keys())
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+        # Проверка на пустой файл
+        if os.lseek(f.fileno(), 0, os.SEEK_CUR) == 0:
+            writer.writeheader()
+
+        for uid, activity in activities.items():
+            data = dict(uid=uid)
+            data.update(activity)
+            writer.writerow(data)
 
 
 @click.command()
 @click.option('--locale', type=str, default='ru')
+@click.option('--activity', type=bool, is_flag=True, default=False)
 @click.argument('output', type=str)
 @click.argument('count', type=int, default=1)
-def generate(output: str, count: int, locale: str):
+def generate(output: str, count: int, locale: str, activity: bool):
     ''' Generate Excel file with fake staff
     '''
     playbooks = list()
@@ -174,8 +205,13 @@ def generate(output: str, count: int, locale: str):
     else:
         playbooks.append(output)
     for playbook in playbooks:
-        output_filename = os.path.join(
-            os.getenv("DATA_DIR", "."),
-            playbook,
-            "hr.xls")
-        generate_excel(output_filename, locale)
+        output_dir = os.path.join(os.getenv("DATA_DIR", "."), playbook)
+
+        projects, units, employees, skills, activities = generate_data(locale)
+
+        output_filename_xls = os.path.join(output_dir, "hr.xls")
+        save_excel(output_filename_xls, projects, units, employees, skills, locale)
+
+        if activity:
+            output_filename_csv = os.path.join(output_dir, "activities.csv")
+            save_csv(output_filename_csv, activities, locale)
