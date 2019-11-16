@@ -48,14 +48,16 @@ def generate_excel(filename: str, locale: str):
     worksheet_projects.write(0, 0, "Название")
     worksheet_projects.write(0, 1, "Дата начала")
     worksheet_projects.write(0, 2, "Дата завершения")
+    worksheet_projects.write(0, 3, "Важность")
     for n, skill_name in enumerate(skill_names(), 1):
-        worksheet_projects.write(0, n+4, skill_name)
+        worksheet_projects.write(0, n + 5, skill_name)
     for i, project in enumerate(projects, 1):
         worksheet_projects.write(i, 0, project.name)
         worksheet_projects.write(i, 1, str(project.started_at))
         worksheet_projects.write(i, 2, str(project.finished_at))
+        worksheet_projects.write(i, 3, project.priority_str(locale))
         for n, skill_name in enumerate(skill_names(), 1):
-            worksheet_projects.write(i, n + 4, project.skills.get(skill_name, 0))
+            worksheet_projects.write(i, n + 5, project.skills.get(skill_name, 0))
 
     # Персонал
     worksheet_staff = workbook.add_worksheet("Персонал")

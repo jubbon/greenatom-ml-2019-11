@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from dataclasses import dataclass
 from functools import partial
 from typing import OrderedDict
-
+import random
 
 from mimesis import Science
 
@@ -22,8 +22,23 @@ class Project:
     started_at: date
     # Завершение проекта
     finished_at: date
+    # Важность проекта
+    # 0 - обычный
+    # 1 - высокий приоритет
+    # 2 - крайне важный
+    priority: int
     # Необходимые компетенции
     skills: OrderedDict[str, int]
+
+    def priority_str(self, locale: str) -> str:
+        '''
+        '''
+        if self.priority == 0:
+            return "обычный"
+        elif self.priority == 1:
+            return "высокий приоритет"
+        elif self.priority == 2:
+            return "крайне важный"
 
     def __hash__(self):
         return hash(self.name)
@@ -47,11 +62,13 @@ def projects(count: int, locale: str):
         finished_at = get_random_date(
             start=today,
             end=today + timedelta(days=3*365)).replace(day=1) - timedelta(days=1)
+        priority = random.choice([0]*20+[1]*5+[2]*1)
         for skills in get_skills([1, ], locale=locale):
             yield Project(
                 name=name,
                 started_at=started_at,
                 finished_at=finished_at,
+                priority=priority,
                 skills=skills,
             )
             break
