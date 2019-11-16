@@ -49,3 +49,4 @@ def main():
     else:
         # Начальная страница
         widgets.graph(st, graph_names, engine=engine)
+        widgets.intro.nlp(st, locale=locale)

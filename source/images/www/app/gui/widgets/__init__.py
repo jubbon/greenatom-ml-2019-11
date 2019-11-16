@@ -5,6 +5,7 @@
 from .employee import *  # noqa
 from .unit import *  # noqa
 from .project import *  # noqa
+from .intro import *  # noqa
 
 from smart_hr.data.unit import units as get_units
 from smart_hr.data.unit import get_employees
