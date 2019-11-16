@@ -93,6 +93,7 @@ def employees(window, project, locale=None):
     data = dict()
     for employee, involvement in project.employees():
         data[employee.fullname] = {
+            "Подразделение": employee.unit,
             "Должность": employee.job,
             "Вовлеченность, %": involvement
         }
