@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import networkx as nx
+import streamlit as st
 
 from smart_hr.data.unit import units
 from smart_hr.data.staff import persons
@@ -87,6 +88,7 @@ def entities(node_types: list, edge_types: list) -> dict:
                         yield "edge", (person_uid, skill_name), data
 
 
+@st.cache
 def load_graph(uid: str, config: dict) -> nx.Graph:
     '''
     '''
