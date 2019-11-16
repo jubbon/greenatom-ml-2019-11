@@ -63,7 +63,27 @@ def units(window, project, locale=None):
     ''' Список подразделений в проекте
     '''
     assert project
-    window.subheader("Подразделения")
+    data = dict()
+    for unit in project.units():
+        head = unit.head
+
+        employee_count = 0
+        total_involvement = 0
+        for employee in get_employees(unit.fullname):
+            involvement = employee.projects[project.name]
+            if involvement:
+                total_involvement += involvement / 100.0
+                employee_count += 1
+
+        data[unit.fullname] = {
+            "Руководитель": head.fullname if head else "",
+            "Сотрудников в проекте": employee_count,
+            "Суммарная вовлеченность": round(total_involvement, 1)
+        }
+    window.subheader(f"Подразделения ({len(data)})")
+    if data:
+        df = pd.DataFrame(data.values(), index=data.keys())
+        window.table(df.sort_values(by=["Сотрудников в проекте"], ascending=[False, ]))
 
 
 def employees(window, project, locale=None):
