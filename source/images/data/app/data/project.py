@@ -9,41 +9,6 @@ from mimesis import Science
 from .skills import generator as get_skills
 
 
-PROJECTS = [
-    {
-        "name": "Омега",
-        "skills": {
-            "tech:programming:python": 5,
-            "tech:programming:C": 2,
-            "tech:devops": 1
-        }
-    },
-    {
-        "name": "Дзета",
-        "skills": {
-            "tech:programming:JavaScript": 8,
-            "tech:programming:python": 1,
-            "tech:devops": 3
-        }
-    },
-    {
-        "name": "Гамма",
-        "skills": {
-            "tech:programming:С": 10,
-            "tech:programming:python": 1,
-            "tech:devops": 3
-        }
-    },
-    {
-        "name": "Логос",
-        "skills": {
-            "other:presentation": 3,
-            "finance": 5
-        }
-    }
-]
-
-
 @dataclass()
 class Project:
     # Наименование проекта
