@@ -21,6 +21,7 @@ def info(window, project, locale=None):
         "Текущая длительность": f"{project.duration_now.days} дн.",
         "Осталось": f"{project.duration_full.days - project.duration_now.days} дн.",
         "Прогресс": f"{round(project.progress * 100)}%",
+        "Важность": project.priority
     }
     df = pd.DataFrame(data.values(), columns=[""], index=data.keys())
     window.table(df)

@@ -23,6 +23,8 @@ class Project:
     started_at: date
     # Дата завершения проекта
     finished_at: date
+    # Важность проекта
+    priority: str
     # Необходимые компетенции
     skills: OrderedDict[str, int]
 
@@ -94,10 +96,12 @@ def load(filename):
         project_name = project.pop("Название")
         started_at = project.pop("Дата начала")
         finished_at = project.pop("Дата завершения")
+        priority = project.pop("Важность")
         project = Project(
             name=project_name,
             started_at=date.fromisoformat(started_at),
             finished_at=date.fromisoformat(finished_at),
+            priority=priority,
             skills=OrderedDict({k: int(v) for k, v in project.items() if not isnan(v)})
         )
         data[project_name] = project
