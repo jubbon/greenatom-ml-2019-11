@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from dataclasses import dataclass
+from datetime import date, timedelta
+from dataclasses import dataclass, asdict
 from typing import OrderedDict
+from math import isnan
 
 import pandas as pd
 
@@ -17,6 +19,10 @@ data = {}
 class Project:
     # Наименование проекта
     name: str
+    # Дата старта проекта
+    started_at: date
+    # Дата завершения проекта
+    finished_at: date
     # Необходимые компетенции
     skills: OrderedDict[str, int]
 
@@ -31,20 +37,46 @@ class Project:
                 yield unit
 
     def employees(self):
-        ''' Сотрудник, участвующие в проекте
+        ''' Сотрудники, участвующие в проекте
         '''
         for _, employee in persons():
             involvement = employee.projects.get(self.name, 0)
             if involvement > 0:
                 yield employee, involvement
 
+    def duration(self, dt: date) -> timedelta:
+        ''' Длительность проекта до заданной даты
+        '''
+        assert dt
+        assert dt > self.started_at
+        return dt - self.started_at
+
+    @property
+    def duration_full(self):
+        '''
+        '''
+        return self.duration(self.finished_at)
+
+    @property
+    def duration_now(self):
+        '''
+        '''
+        return self.duration(date.today())
+
+    @property
+    def progress(self):
+        '''
+        '''
+        return self.duration_now / self.duration_full
+
     def to_dict(self, locale=None) -> dict:
-        data = self.skills
-        if locale:
-            data = {
-                self._meta.get(locale, {}).get(k, k): v
-                for k, v
-                in data.items()}
+        data = asdict(self)
+        # data.update(self.skills)
+        # if locale:
+        #     data = {
+        #         self._meta.get(locale, {}).get(k, k): v
+        #         for k, v
+        #         in data.items()}
         return data
 
 
@@ -60,9 +92,13 @@ def load(filename):
     for index, row in df.iterrows():
         project = row.to_dict()
         project_name = project.pop("Название")
+        started_at = project.pop("Дата начала")
+        finished_at = project.pop("Дата завершения")
         project = Project(
             name=project_name,
-            skills=OrderedDict({k: int(v) for k, v in project.items()})
+            started_at=date.fromisoformat(started_at),
+            finished_at=date.fromisoformat(finished_at),
+            skills=OrderedDict({k: int(v) for k, v in project.items() if not isnan(v)})
         )
         data[project_name] = project
 

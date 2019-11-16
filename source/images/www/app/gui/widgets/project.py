@@ -13,6 +13,17 @@ def info(window, project, locale=None):
     '''
     assert project
     window.subheader("Общая информация")
+
+    data = {
+        "Дата начала": f"{project.started_at:%d.%m.%Y}",
+        "Дата завершения": f"{project.finished_at:%d.%m.%Y}",
+        "Полная длительность": f"{project.duration_full.days} дн.",
+        "Текущая длительность": f"{project.duration_now.days} дн.",
+        "Осталось": f"{project.duration_full.days - project.duration_now.days} дн.",
+        "Прогресс": f"{round(project.progress * 100)}%",
+    }
+    df = pd.DataFrame(data.values(), columns=[""], index=data.keys())
+    window.table(df)
     # employees_ = list(get_employees(unit=units[-1]))
     # window.markdown(f"Общее количество сотрудников: **{len(employees_)}**")
     # data = person.to_dict(locale)
