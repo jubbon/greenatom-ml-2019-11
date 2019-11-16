@@ -24,10 +24,14 @@ def projects(count: int, locale: str):
     '''
     '''
     science = Science(locale)
-    for _ in range(count):
+    project_names = set()
+    while len(project_names) < count:
+        project_names.add(science.chemical_element())
+    assert len(project_names) == count
+    for name in project_names:
         for skills in get_skills([1, ], locale=locale):
             yield Project(
-                name=science.chemical_element(),
+                name=name,
                 skills=skills
             )
             break
