@@ -20,12 +20,13 @@ def custom_graph(graph: nx.Graph):
     edge_width = {}
     for start_node, end_node, extra in graph.edges(data=True):
         edge_type = extra.get("type")
-        EdgeAttrs = EDGE_ATTRS[edge_type]
-        # enabled = edge_enabled[node]
-        enabled = extra.get("enabled", True)
-        edge_width[(start_node, end_node)] = EdgeAttrs.width(enabled, extra)
-        edge_color[(start_node, end_node)] = EdgeAttrs.color(enabled, extra)
-        edge_alpha[(start_node, end_node)] = EdgeAttrs.alpha(enabled, extra)
+        EdgeAttrs = EDGE_ATTRS.get(edge_type)
+        if EdgeAttrs:
+            # enabled = edge_enabled[node]
+            enabled = extra.get("enabled", True)
+            edge_width[(start_node, end_node)] = EdgeAttrs.width(enabled, extra)
+            edge_color[(start_node, end_node)] = EdgeAttrs.color(enabled, extra)
+            edge_alpha[(start_node, end_node)] = EdgeAttrs.alpha(enabled, extra)
     if edge_width:
         nx.set_edge_attributes(graph, edge_width, "edge_width")
         edge_attr.update(line_width="edge_width")

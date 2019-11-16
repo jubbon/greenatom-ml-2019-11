@@ -7,18 +7,29 @@ import streamlit as st
 from smart_hr.data.unit import get_unit, units, parents
 from smart_hr.data.staff import persons
 from smart_hr.data.skill import skills, get_skills
+from smart_hr.data.project import projects
 
 
-def nodes(node_types: list) -> dict:
-    ''' Generate nodes
+def entities(node_types: list, edge_types: list) -> dict:
+    ''' Generate nodes and edges
     '''
     if not node_types or "unit" in node_types:
         for unit_uid, unit in units(level=-1):
             data = dict(type="unit")
             data.update(unit.to_dict(), desc=unit.desc)
-            if 'projects' in data:
-                del data['projects']
-            yield unit_uid, data
+            if "projects" in data:
+                del data["projects"]
+            yield "node", unit_uid, data
+
+            if "unit-unit" in edge_types:
+                if unit.parent:
+                    data = dict(type="unit-unit")
+                    yield "edge", (unit_uid, unit.parent), data
+
+            if "unit-project" in edge_types:
+                for project in unit.projects:
+                    data = dict(type="unit-project")
+                    yield "edge", (unit_uid, project), data
 
     if not node_types or "staff" in node_types:
         for person_uid, person in persons():
@@ -28,11 +39,27 @@ def nodes(node_types: list) -> dict:
                 person.to_dict(),
                 level=person_skills.mean(),
                 desc=person.desc,
-                skills=person_skills.to_dict()
+                # skills=person_skills.to_dict()
             )
             if 'projects' in data:
                 del data['projects']
-            yield person_uid, data
+            yield "node", person_uid, data
+
+            if 'staff-unit' in edge_types:
+                data = dict(type="staff-unit")
+                yield "edge", (person_uid, person.unit), data
+
+            if 'staff-skill' in edge_types:
+                for skill_name, value in person.skills():
+                    if value > 0:
+                        data = dict(type="staff-skill", value=value)
+                        yield "edge", (person_uid, skill_name), data
+
+            if 'staff-project' in edge_types:
+                for project_name, involvement in person.projects.items():
+                    if involvement > 0:
+                        data = dict(type="staff-project")
+                        yield "edge", (person_uid, project_name), data
 
     if not node_types or "skill" in node_types:
         for skill_name, skill_level in skills():
@@ -41,7 +68,21 @@ def nodes(node_types: list) -> dict:
                 level=skill_level,
                 desc=f"{skill_name} (уровень {skill_level})"
             )
-            yield skill_name, data
+            yield "node", skill_name, data
+
+    if not node_types or "project" in node_types:
+        for project in projects():
+            data = dict(type="project")
+            data.update(
+                desc=f"{project.name}"
+            )
+            yield "node", project.name, data
+
+            if "project-skill" in edge_types:
+                for skill_name, value in project.skills.items():
+                    if value > 0:
+                        data = dict(type="project-skill", value=value)
+                        yield "edge", (person_uid, skill_name), data
 
 
 GRAPHS = {
@@ -56,7 +97,10 @@ GRAPHS = {
             "staff",
             "unit"
         ],
-        "edges": []
+        "edges": [
+            "staff-unit",
+            "unit-unit"
+        ]
     },
     "staff-skill": {
         "title": "Сотрудник-компетенции",
@@ -65,7 +109,9 @@ GRAPHS = {
             "staff",
             "skill"
         ],
-        "edges": []
+        "edges": [
+            "staff-skill"
+        ]
     },
     "skill-staff-unit": {
         "title": "Сотрудник-компетенции-подразделение",
@@ -75,7 +121,22 @@ GRAPHS = {
             "skill",
             "unit"
         ],
-        "edges": []
+        "edges": [
+            "staff-unit",
+            "unit-unit",
+            "staff-skill"
+        ]
+    },
+    "project-staff": {
+        "title": "Сотрудник-проект",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+            "project",
+        ],
+        "edges": [
+            "staff-project"
+        ]
     }
 }
 
@@ -86,27 +147,16 @@ def load_graph(uid: str, config: dict) -> nx.Graph:
     G = config.get('init', nx.Graph)()
     node_types = config.get("nodes")
     assert isinstance(node_types, list)
-    for node_uid, node in nodes(node_types):
-        node_type = node["type"]
-        node.update(enabled=True)
-        G.add_node(node_uid, **node)
-
-        if node_type == "staff":
-            # Подразделение
-            unit = node["unit"]
-            if unit and uid in ("staff-unit", "skill-staff-unit"):
-                G.add_edge(node_uid, unit, type='unit')
-            # Компетенции
-            skills = node.pop("skills", dict())
-            for skill_name, skill_value in skills.items():
-                assert skill_value in range(0, 10)
-                if skill_value and uid in ("staff-skill", "skill-staff-unit"):
-                    G.add_edge(node_uid, skill_name, type='skill', value=skill_value)
-        elif node_type == "unit":
-            unit = node.get("fullname")
-            parent = node.get("parent")
-            if unit and parent and uid in ("staff-unit", "skill-staff-unit"):
-                G.add_edge(unit, parent, type='unit')
+    edge_types = config.get("edges")
+    assert isinstance(node_types, list)
+    for entity_type, entity_uid, entity in entities(node_types, edge_types):
+        entity.update(enabled=True)
+        if entity_type == "node":
+            G.add_node(entity_uid, **entity)
+        elif entity_type == "edge":
+            G.add_edge(*entity_uid, **entity)
+        else:
+            print("Unknown entity type '{entity_type}'", flush=True)
     return G
 
 
