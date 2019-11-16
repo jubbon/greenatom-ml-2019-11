@@ -5,7 +5,7 @@ import pandas as pd
 
 from .stylers import *
 
-# from smart_hr.data.unit import get_employees
+from smart_hr.data.unit import get_employees
 
 
 def info(window, project, locale=None):
