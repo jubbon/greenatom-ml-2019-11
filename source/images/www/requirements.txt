@@ -4,3 +4,4 @@ networkx==2.4
 plotly==4.2.1
 bokeh==1.4.0
 xlrd==1.2.0
+requests==2.22.0

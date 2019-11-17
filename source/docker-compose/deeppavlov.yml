@@ -22,3 +22,15 @@ services:
       - ../../data/deeppavlov/venv:/venv
     ports:
       - 5006:5000
+
+  deeppavlov_rusentiment_elmo_twitter_cnn:
+    image: deeppavlov/base-cpu
+    environment:
+      CONFIG: rusentiment_elmo_twitter_cnn
+    volumes:
+      - ../../logs:/logs
+      - ../../
+      data/deeppavlov/.deeppavlov:/root/.deeppavlov
+      - ../../data/deeppavlov/venv:/venv
+    ports:
+      - 5007:5000

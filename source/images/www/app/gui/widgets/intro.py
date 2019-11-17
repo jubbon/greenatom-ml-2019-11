@@ -2,6 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import random
+from collections import OrderedDict
+
+import pandas as pd
+
+from app.tasks import analyze_text
 
 
 def nlp(window, locale=None):
@@ -11,10 +16,37 @@ def nlp(window, locale=None):
     text = window.text_area('Введите текст для анализа', '')
     if text:
         # TODO: делать запрос в DeepPavlov
-        tonality = random.choice([-1, 0, 1])
-        if tonality < 0:
-            window.error(f'Текст несет отрицательную тональность')
-        elif tonality == 0:
-            window.info(f'Текст несет нейтральную тональность')
-        elif tonality > 0:
-            window.success(f'Текст несет положительную тональность')
+        sentences = text.split('\n')
+        res_ner, res_sen = analyze_text(sentences)
+        print(f"Сущности: {res_ner}", flush=True)
+        print(f"Тональность: {res_sen}", flush=True)
+        for sentence_ner, sentence_sen in zip(res_ner, res_sen):
+            assert sentence_ner[0] == sentence_sen[0]
+            window.markdown(f"#### {sentence_ner[0]}")
+
+            tonality = sentence_sen[1][0]
+            if tonality == 'negative':
+                window.error('Отрицательная тональность')
+            elif tonality == 'speech':
+                window.info('Разговорная речь')
+            elif tonality == 'neutral':
+                window.info('Нейтральная тональность')
+            elif tonality == 'positive':
+                window.success('Положительная тональность')
+            else:
+                window.warning(tonality)
+
+            data = list()
+            index = list()
+            for number, word, entity_type in sentence_ner[1]:
+                if 'LOC' in entity_type:
+                    entity_type = "место"
+                elif 'PER' in entity_type:
+                    entity_type = "персона"
+                elif 'ORG' in entity_type:
+                    entity_type = "организация"
+                data.append({"Слово": word, "Тип": entity_type})
+                index.append(number)
+            if data:
+                df = pd.DataFrame(data, index=index)
+                window.table(df)

@@ -83,10 +83,18 @@
               - python -m deeppavlov download ner_rus_bert
               - python -m deeppavlov riseapi ner_rus_bert --port 5005
           - uid: deeppavlov_ner_ontonotes
-            title: DeepPavlov - распознавание тональности
-            description: Терминал для распознавания тональности текста с DeepPavlov
+            title: DeepPavlov - распознавание сущностей
+            description: Терминал для распознавания сущностей текста с DeepPavlov
             cwd: "{{ current_directory }}"
             history:
               - python -m deeppavlov install ner_ontonotes
               - python -m deeppavlov download ner_ontonotes
               - python -m deeppavlov riseapi ner_ontonotes --port 5006
+          - uid: deeppavlov_rusentiment_elmo_twitter_cnn
+            title: DeepPavlov - распознавание тональности
+            description: Терминал для распознавания тональности текста с DeepPavlov
+            cwd: "{{ current_directory }}"
+            history:
+              - python -m deeppavlov install rusentiment_elmo_twitter_cnn
+              - python -m deeppavlov download rusentiment_elmo_twitter_cnn
+              - python -m deeppavlov riseapi rusentiment_elmo_twitter_cnn --port 5007
