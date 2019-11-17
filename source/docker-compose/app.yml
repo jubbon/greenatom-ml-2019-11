@@ -120,12 +120,14 @@ services:
       LOCALE: ru
       IMAGE_DIR: /data/images
       BROKER_URL: "kafka://kafka:9092"
-      NLP_URL_NER: http://localhost:5005/model
-      NLP_URL_SEN: http://localhost:5007/model
+      NLP_URL_NER: http://outside:5005/model
+      NLP_URL_SEN: http://outside:5007/model
     volumes:
       - ../images/www:/usr/src/app
       - ../../data/playbooks:/data/playbooks
       - ../../data/images:/data/images
+    extra_hosts:
+      - outside:172.17.0.1
     ports:
       - 80:8501
     depends_on:
