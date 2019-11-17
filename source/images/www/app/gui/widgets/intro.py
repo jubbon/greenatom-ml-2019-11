@@ -1,12 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import random
 from collections import OrderedDict
 
 import pandas as pd
 
 from app.tasks import analyze_text
+
+
+def banner(window, image: str = "banner.jpg"):
+    '''
+    '''
+    window.image(
+        image=os.path.join(
+            os.getenv("IMAGE_DIR", "."),
+            image),
+        use_column_width=True)
 
 
 def nlp(window, locale=None):

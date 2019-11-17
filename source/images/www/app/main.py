@@ -18,6 +18,7 @@ def main():
     data_dir = os.getenv("DATA_DIR", ".")
     load_data(data_dir)
 
+    widgets.intro.banner(st)
     units, project, employee = widgets.filters(st.sidebar)
     graph_names = ["skill-staff-unit", "staff-unit", "staff-skill", "project-staff"]
     if employee:
