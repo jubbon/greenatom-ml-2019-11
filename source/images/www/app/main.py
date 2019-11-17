@@ -46,7 +46,7 @@ def main():
         st.header("/".join(units).title())
         widgets.unit.info(st, units, locale=locale)
         widgets.unit.employees(st, units, locale=locale)
-        widgets.graph(st, graph_names, unit=unit[-1], engine=engine)
+        widgets.graph(st, graph_names, unit=units[-1], engine=engine)
     else:
         # Начальная страница
         widgets.graph(st, graph_names, engine=engine)
