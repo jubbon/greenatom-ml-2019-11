@@ -23,7 +23,7 @@ train:
 demo:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/data.yml build \
-	&& docker-compose --file ./docker-compose/data.yml run data python app demo
+	&& docker-compose --file ./docker-compose/data.yml run data python app --dismissal demo
 
 up:
 	cd ./source \

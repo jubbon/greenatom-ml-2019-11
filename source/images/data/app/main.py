@@ -28,6 +28,7 @@ def generate_data(locale: str):
     employees = dict()
     skills = dict()
     activities = dict()
+    dismissal = dict()
 
     for employee, skill, activity in zip(
         persons(
@@ -42,8 +43,12 @@ def generate_data(locale: str):
         employees[employee.uid] = employee
         skills[employee.uid] = skill
         activities[employee.uid] = activity
+        dismissal[employee.uid] = {
+            "Вероятность увольнения": round(random.random(), 3)
+            }
 
-    return projects, units, employees, skills, activities
+
+    return projects, units, employees, skills, activities, dismissal
 
 
 def save_excel(filename: str, projects: list, units: list, employees: dict, skills: dict, locale: str):
@@ -170,32 +175,32 @@ def save_excel(filename: str, projects: list, units: list, employees: dict, skil
     workbook.close()
 
 
-def save_csv(filename: str, activities: dict, locale: str):
+def save_csv(filename: str, data: dict, locale: str):
     ''' Save CSV file with fake data
     '''
     import csv
     print(f"Saving file '{filename}'", flush=True)
 
     with open(filename, mode='wt', encoding="utf-8") as f:
-        fieldnames = ["uid", ] + list(list(activities.values())[0].keys())
+        fieldnames = ["uid", ] + list(list(data.values())[0].keys())
         writer = csv.DictWriter(f, fieldnames=fieldnames)
 
         # Проверка на пустой файл
         if os.lseek(f.fileno(), 0, os.SEEK_CUR) == 0:
             writer.writeheader()
 
-        for uid, activity in activities.items():
-            data = dict(uid=uid)
-            data.update(activity)
-            writer.writerow(data)
+        for uid, entry in data.items():
+            entry.update(uid=uid)
+            writer.writerow(entry)
 
 
 @click.command()
 @click.option('--locale', type=str, default='ru')
 @click.option('--activity', type=bool, is_flag=True, default=False)
+@click.option('--dismissal', type=bool, is_flag=True, default=False)
 @click.argument('output', type=str)
 @click.argument('count', type=int, default=1)
-def generate(output: str, count: int, locale: str, activity: bool):
+def generate(output: str, count: int, locale: str, activity: bool, dismissal: bool):
     ''' Generate Excel file with fake staff
     '''
     playbooks = list()
@@ -207,7 +212,7 @@ def generate(output: str, count: int, locale: str, activity: bool):
     for playbook in playbooks:
         output_dir = os.path.join(os.getenv("DATA_DIR", "."), playbook)
 
-        projects, units, employees, skills, activities = generate_data(locale)
+        projects, units, employees, skills, activities, dismissal = generate_data(locale)
 
         output_filename_xls = os.path.join(output_dir, "hr.xls")
         save_excel(output_filename_xls, projects, units, employees, skills, locale)
@@ -215,3 +220,7 @@ def generate(output: str, count: int, locale: str, activity: bool):
         if activity:
             output_filename_csv = os.path.join(output_dir, "activities.csv")
             save_csv(output_filename_csv, activities, locale)
+
+        if dismissal:
+            output_filename_csv = os.path.join(output_dir, "dismissal.csv")
+            save_csv(output_filename_csv, dismissal, locale)
