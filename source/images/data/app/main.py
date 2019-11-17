@@ -44,9 +44,9 @@ def generate_data(locale: str):
         skills[employee.uid] = skill
         activities[employee.uid] = activity
         dismissal[employee.uid] = {
+            "Табельный номер": employee.uid,
             "Вероятность увольнения": round(random.random(), 3)
             }
-
 
     return projects, units, employees, skills, activities, dismissal
 
