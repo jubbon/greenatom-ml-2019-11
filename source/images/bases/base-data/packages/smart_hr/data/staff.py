@@ -10,6 +10,7 @@ from typing import Dict
 import pandas as pd
 
 from .skill import get_skills
+from .dismissal import get_dismissal_probability
 
 
 data = {}
@@ -127,6 +128,10 @@ class Person:
     @property
     def is_dismissed(self) -> bool:
         return self.status == 1
+
+    @property
+    def dismissal_probability(self) -> float:
+        return get_dismissal_probability(self.uid)
 
     @property
     def image_filename(self) -> str:

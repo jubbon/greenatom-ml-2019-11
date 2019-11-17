@@ -83,4 +83,5 @@ def dismiss(window, person):
     if window.button(
         "Рассчитать вероятность увольнения",
         key="predict_dismiss"):
-        window.markdown(f"Вероятность увольнения в ближайшие 3 месяца составляет **27%**")
+        window.markdown(
+            f"Вероятность увольнения составляет **{round(person.dismissal_probability*100)}%**")
