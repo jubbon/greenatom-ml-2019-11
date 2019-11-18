@@ -14,6 +14,8 @@ from data import departments
 from data.project import projects as all_projects
 from utils import make_sure_directory_exists
 
+from dismissal import get_dismissal_probability
+
 
 def generate_data(locale: str):
     '''
@@ -40,12 +42,18 @@ def generate_data(locale: str):
         get_skills(positions, locale=locale),
         get_activities(positions, periods=('1m', '2m', '3m'), locale=locale)):
 
+        # Расчет вероятности увольнения
+        dismissal_probability = get_dismissal_probability(employee, skill, activity)
+        if random.random() < dismissal_probability:
+            # Сотрудник уже уволен
+            employee.dismiss()
+
         employees[employee.uid] = employee
         skills[employee.uid] = skill
         activities[employee.uid] = activity
         dismissal[employee.uid] = {
             "Табельный номер": employee.uid,
-            "Вероятность увольнения": round(random.random(), 3)
+            "Вероятность увольнения": round(dismissal_probability, 3)
             }
 
     return projects, units, employees, skills, activities, dismissal

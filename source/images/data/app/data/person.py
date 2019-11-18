@@ -75,6 +75,16 @@ class Employee:
     # Бытовые условия
     living: LivingConditions
 
+    def dismiss(self):
+        ''' Dismiss employee
+        '''
+        self.status = 1
+        get_random_date = partial(random_date, locale='ru')
+        self.last_workingday = get_random_date(
+            start=self.promotion_workingday + timedelta(days=2*30),
+            end=date.today() - timedelta(days=2*30))
+        assert self.last_workingday is None or self.promotion_workingday < self.last_workingday, f"{self.promotion_workingday} < {self.last_workingday}"
+
 
 def filter_by_last_name(employee):
     ''' Выполняет фильтрацию по фамилии
@@ -95,7 +105,7 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
         department = position[0] + ' ' + position[1]
         while True:
             gender = random.choice([Gender.MALE, Gender.FEMALE])
-            status = 1 if random.random() < 0.1 else 0
+            status = 0
             birthday = datetime.date(start=1950, end=1998)
 
             first_workingday = get_random_date(
@@ -104,11 +114,7 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
             promotion_workingday = get_random_date(
                 start=first_workingday + timedelta(days=6*30),
                 end=today - timedelta(days=6*30))
-            last_workingday = get_random_date(
-                start=promotion_workingday + timedelta(days=2*30),
-                end=today - timedelta(days=2*30))
             assert first_workingday < promotion_workingday, f"{first_workingday} < {promotion_workingday}"
-            assert last_workingday is None or promotion_workingday < last_workingday, f"{promotion_workingday} < {last_workingday}"
 
             business_trip_count = random.choice([0]*30+[1]*20+[2]*16+[3]*13+[4]*8+[5]*5+[6]*4+[7]*3+[8]*2+[9]*1+[10])
             business_trip_days = random.randint(business_trip_count, 7 * business_trip_count)
@@ -165,7 +171,7 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                 status=status,
                 first_workingday=first_workingday,
                 promotion_workingday=promotion_workingday,
-                last_workingday=last_workingday if status == 1 else None,
+                last_workingday=None,
                 business_trip_count=business_trip_count,
                 business_trip_days=business_trip_days,
                 involvement=involvement,
