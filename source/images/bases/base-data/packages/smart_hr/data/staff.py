@@ -274,7 +274,7 @@ def load(filename):
             job=person['Должность'],
             is_head=person['Руководитель'] == 'Да',
             status=person['Статус'],
-            image_number=int(uid) % 22 + 1,
+            image_number=int(uid) % 85 + 1,
             projects=projects[uid],
             family=frs[uid],
             living=lcs[uid]
