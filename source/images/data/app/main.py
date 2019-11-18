@@ -36,7 +36,7 @@ def generate_data(locale: str):
             positions,
             projects,
             locale=locale,
-            filters=[filter_by_last_name,]),
+            filters=[filter_by_last_name, ]),
         get_skills(positions, locale=locale),
         get_activities(positions, periods=('1m', '2m', '3m'), locale=locale)):
 
