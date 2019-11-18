@@ -15,8 +15,8 @@ from sklearn.model_selection import train_test_split
 
 pd.set_option('mode.chained_assignment', None)
 
-demoFilePath = 'C:\\hackathon\\greenatom-ml-2019-11\\data\\playbooks\\demo'
-trainFilePath = 'C:\\hackathon\\greenatom-ml-2019-11\\data\\playbooks\\train'
+demoFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'demo')
+trainFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'train')
 
 '''
     Рекурсивный поиск файла в подкаталогах каталога
