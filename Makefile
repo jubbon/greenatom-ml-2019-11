@@ -1,5 +1,10 @@
-export DOCKER_IMAGE_REGISTRY=cr.yandex/crphj01dfoo9goar48sq
-export DOCKER_IMAGE_TAG=latest
+ifndef DOCKER_IMAGE_REGISTRY
+	export DOCKER_IMAGE_REGISTRY=cr.yandex/crphj01dfoo9goar48sq
+endif
+
+ifndef DOCKER_IMAGE_TAG
+	export DOCKER_IMAGE_TAG=latest
+endif
 
 build:
 	cd ./source \
