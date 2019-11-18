@@ -15,6 +15,8 @@ services:
     build: ../images/predictor
     environment:
       DATA_DIR: /data/playbooks
+      MODELS_DIR: /data/models
     volumes:
       - ../images/predictor:/usr/src/app
       - ../../data/playbooks:/data/playbooks
+      - ../../data/models:/data/models
