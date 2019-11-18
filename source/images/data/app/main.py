@@ -6,7 +6,9 @@ import click
 import xlsxwriter
 import random
 
-from data import persons, filter_by_last_name
+from data import persons
+from data import filter_by_last_name
+from data import filter_by_living_conditions
 from data import skills as get_skills
 from data import activities as get_activities
 from data.skills import names as skill_names
@@ -32,13 +34,18 @@ def generate_data(locale: str):
     activities = dict()
     dismissal = dict()
 
+    filters=[
+        filter_by_last_name,
+        filter_by_living_conditions,
+    ]
+
     for employee, skill, activity in zip(
         persons(
             units,
             positions,
             projects,
             locale=locale,
-            filters=[filter_by_last_name, ]),
+            filters=filters),
         get_skills(positions, locale=locale),
         get_activities(positions, periods=('1m', '2m', '3m'), locale=locale)):
 

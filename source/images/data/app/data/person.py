@@ -101,6 +101,16 @@ def filter_by_last_name(employee):
     return not employee.last_name.startswith("Ё")
 
 
+def filter_by_living_conditions(employee) -> bool:
+    ''' Выполняет фильтрацию по жилищным условиям
+    '''
+    # Ипотека не может быть взята для общежития или комнаты
+    if (employee.living.mortgage and
+        employee.living.dwelling_type in ('общежитие', 'комната')):
+        return False
+    return True
+
+
 def generator(units: list, positions: list, projects: list, locale: str, filters: None):
     '''
     '''
