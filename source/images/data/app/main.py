@@ -44,6 +44,7 @@ def generate_data(locale: str):
 
         # Расчет вероятности увольнения
         dismissal_probability = get_dismissal_probability(employee, skill, activity)
+        assert 0.0 <= dismissal_probability < 1.0
         if random.random() < dismissal_probability:
             # Сотрудник уже уволен
             employee.dismiss()
