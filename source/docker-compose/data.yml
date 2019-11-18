@@ -7,4 +7,5 @@ services:
     environment:
       DATA_DIR: /data/playbooks
     volumes:
+      - ../images/data:/usr/src/app
       - ../../data/playbooks:/data/playbooks
