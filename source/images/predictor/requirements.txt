@@ -1,2 +1,4 @@
 click==7.0
+xlrd>=1.0.0
+scikit-learn==0.21.3
 catboost==0.18.1
