@@ -80,8 +80,14 @@ def dismiss(window, person):
     '''
     assert person
     window.subheader("Увольнение")
-    if window.button(
-        "Рассчитать вероятность увольнения",
-        key="predict_dismiss"):
+    if window.button("Рассчитать вероятность увольнения", key="predict_dismiss"):
+        probability, feature_importance = person.dismissal(feature_importance_count=10)
         window.markdown(
-            f"Вероятность увольнения составляет **{round(person.dismissal_probability*100)}%**")
+            f"Вероятность увольнения составляет **{round(probability*100)}%**")
+        if feature_importance:
+            df = pd.DataFrame(feature_importance).set_index('feature_name')
+            df.rename(columns={
+                'importance': 'Важность',
+                'value': 'Значение'
+                }, inplace=True)
+            window.table(df)

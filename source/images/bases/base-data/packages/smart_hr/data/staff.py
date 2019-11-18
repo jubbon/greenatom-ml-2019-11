@@ -10,7 +10,7 @@ from typing import Dict
 import pandas as pd
 
 from .skill import get_skills
-from .dismissal import get_dismissal_probability
+from .dismissal import get_dismissal
 
 
 data = {}
@@ -129,9 +129,21 @@ class Person:
     def is_dismissed(self) -> bool:
         return self.status == 1
 
-    @property
-    def dismissal_probability(self) -> float:
-        return get_dismissal_probability(self.uid)
+    def feature_value(self, feature_name):
+        '''
+        '''
+        # TODO
+        return ""
+
+    def dismissal(self, feature_importance_count) -> float:
+        dismissal = get_dismissal(self.uid)
+        feature_importance_list = list()
+        for fi in dismissal.feature_importance[:feature_importance_count]:
+            feature_importance = fi.to_dict()
+            feature_name = feature_importance['feature_name']
+            feature_importance.update(value=self.feature_value(feature_name))
+            feature_importance_list.append(feature_importance)
+        return dismissal.probability, feature_importance_list
 
     @property
     def image_filename(self) -> str:

@@ -17,4 +17,5 @@ def load_data(data_dir):
     load(excel_filename)
 
     dismissal_filename = os.path.join(data_dir, "dismissal.csv")
-    load_dismissal(dismissal_filename)
+    feature_importance_filename = os.path.join(data_dir, "feature_importance.csv")
+    load_dismissal(dismissal_filename, feature_importance_filename)
