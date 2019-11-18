@@ -4,6 +4,7 @@
 import pandas as pd
 
 from tasks import send_email
+from tasks.expert import find_experts
 
 
 def brief(window, person):
@@ -64,15 +65,29 @@ def skill(window, person):
         columns=["Уровень", ])
     window.dataframe(df_skills)
 
-    if window.button("Подобрать экспертов", key="find_experts"):
-        to = "kulikov@sarov.info"
-        subject = "[SmartHR] Рекомендованные эксперты"
-        text = f"Рекомендованные эксперты для сотрудника {person.fullname}"
-        res = send_email(to=to, subject=subject, text=text)
-        if res:
-            window.text(f"Письмо с рекомендованными экспертами было успешно отправлено на адрес '{to}'")
-    else:
-        print(f"Не выбрали помощь экспертов", flush=True)
+    def get_experts(person):
+        experts = dict()
+        for skill_name, skill_value, expert in find_experts(person):
+            experts.setdefault(skill_name, list()).append({
+                "Эксперт": expert.fullname,
+                "Подразделение": expert.unit,
+                "Уровень компетенции": skill_value
+            })
+        return experts
+
+    send_to = window.text_input("Рекомендации отправить по электронной почте", "kulikov@sarov.info", key="email")
+    find_experts_button = window.button("Подобрать экспертов", key="find_experts")
+    if find_experts_button:
+        for skill_name, experts_ in get_experts(person).items():
+            window.text(f"Эксперты по {skill_name}")
+            df_experts = pd.DataFrame(experts_)
+            window.dataframe(df_experts)
+        if send_to:
+            subject = "[SmartHR] Рекомендованные эксперты"
+            # TODO: отформатировать текст
+            text = f"Рекомендованные эксперты для сотрудника {person.fullname}"
+            if send_email(to=send_to, subject=subject, text=text):
+                window.success(f"Письмо с рекомендованными экспертами было отправлено на электронную почту '{send_to}'")
 
 
 def dismiss(window, person):

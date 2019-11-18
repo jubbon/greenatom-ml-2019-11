@@ -288,3 +288,14 @@ def persons(unit=None):
         if unit and unit != person.unit:
             continue
         yield person_uid, person
+
+
+def experts(skill_name: str, expected_skill_value: int, unit=None):
+    ''' Генерирует список экспертов - сотрудников с компетенциями, не ниже заданных
+    '''
+    for person_uid, person in persons(unit):
+        for person_skill_name, person_skill_value in person.skills():
+            if person_skill_name == skill_name:
+                if person_skill_value >= expected_skill_value:
+                    yield person, person_skill_value
+                break
