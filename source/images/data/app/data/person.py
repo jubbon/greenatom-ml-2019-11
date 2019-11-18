@@ -18,6 +18,12 @@ from app.utils import random_date
 
 
 @dataclass
+class Contacts:
+    # Адрес электронной почты
+    email: str
+
+
+@dataclass
 class FamilyRelations:
     # Семейный статус
     status: str
@@ -68,6 +74,9 @@ class Employee:
 
     # Вовлеченность в проекты
     involvement: Dict[str, int]
+
+    # Контакты
+    contacts: Contacts
 
     # Семейное положение
     family: FamilyRelations
@@ -145,6 +154,10 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                     project = random.choice(projects)
                     involvement[project.name] = involvement.setdefault(project.name, 0) + involvement_schema[i]
 
+            contacts = Contacts(
+                email=person.email(domains=("@rosatom.ru", ))
+            )
+
             family = FamilyRelations(
                 status=random.choice([0]*30+[1]*10+[2]*1),
                 children_count=random.choice([0]*2+[1]*10+[2]*7+[3]*2),
@@ -175,6 +188,7 @@ def generator(units: list, positions: list, projects: list, locale: str, filters
                 business_trip_count=business_trip_count,
                 business_trip_days=business_trip_days,
                 involvement=involvement,
+                contacts=contacts,
                 family=family,
                 living=living
             )

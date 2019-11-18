@@ -145,6 +145,14 @@ def save_excel(filename: str, projects: list, units: list, employees: dict, skil
             project_name = project.name
             worksheet_involvement.write(i, 1 + n, employee.involvement.get(project_name, 0))
 
+    # Контакты
+    worksheet_contacts = workbook.add_worksheet("Контакты")
+    worksheet_contacts.write(0, 0, "Табельный номер")
+    worksheet_contacts.write(0, 1, "Адрес электронной почты")
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        worksheet_contacts.write(i, 0, employee_uid)
+        worksheet_contacts.write(i, 1, employee.contacts.email)
+
     # Семейное положение
     worksheet_family = workbook.add_worksheet("Семейное положение")
     worksheet_family.write(0, 0, "Табельный номер")
