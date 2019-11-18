@@ -26,11 +26,11 @@ trainFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'train')
     Возвращает список всех найденных файлов
 '''
 def find_files(catalog, f):
-    print( 'Запущен поиск файлов в каталоге: {}'.format( catalog ) )
+    print('Запущен поиск файлов в каталоге: {}'.format(catalog), flush=True)
     find_files = []
     for root, dirs, files in os.walk(catalog):
         find_files += [os.path.join(root, name) for name in files if name == f]
-    print( 'Завершен поиск файлов. Обнаружено {} файла(ов)'.format( str ( len( find_files))))
+    print('Завершен поиск файлов. Обнаружено {} файла(ов)'.format(str(len(find_files))), flush=True)
     return find_files
 
 '''
@@ -44,12 +44,12 @@ def prepareInputData (pathlist):
 
     # проверка существования подготовленных данных
     if os.path.exists( trainFilePath + '/dataframe.csv'):
-        print( 'Обнаружены ранее подготовленные данные')
+        print('Обнаружены ранее подготовленные данные', flush=True)
         dataFrame = pd.read_csv( trainFilePath + '/dataframe.csv')
         dataFrame.drop(['Unnamed: 0' ], axis=1, inplace = True)
     else:
         for path in pathlist:
-            print( 'Обработка файла: {}'.format (path))
+            print('Обработка файла: {}'.format(path), flush=True)
             persons = pd.read_excel(path, sheet_name='Персонал', dtype={'Дата увольнения':str}, na_rep ='')
             # удаление значений nan
             persons = persons.fillna('')
@@ -78,7 +78,7 @@ def prepareInputData (pathlist):
             head, tail = os.path.split(path)
             act = head + '/activities.csv'
             if os.path.exists( act ):
-                print( 'Обработка файла: {}'.format (act))
+                print('Обработка файла: {}'.format(act), flush=True)
                 activities = pd.read_csv(act, sep=',')
                 activities = activities.fillna('')
                 persons = pd.merge(persons, activities, left_on='Табельный номер', right_on='uid')
@@ -89,7 +89,7 @@ def prepareInputData (pathlist):
         # Обнуление полей nan, после слияния таблиц
         dataFrame = dataFrame.fillna(0)
 
-        print('Сохранение файла со считанными данными')
+        print('Сохранение файла со считанными данными', flush=True)
         dataFrame.to_csv( trainFilePath + '/dataframe.csv')
 
     dataFrame.sort_index(axis=1, inplace=True)
@@ -112,8 +112,8 @@ def prepareInputData (pathlist):
 
     # Список колонок
     columnNames = dataFrame.columns.tolist()
-    #print(dataFrame.columns.tolist())
-    #print (dataFrame.dtypes)
+    #print(dataFrame.columns.tolist(), flush=True)
+    #print (dataFrame.dtypes, flush=True)
 
     # Определение категориальных фитч
     categorical_features_indices = np.where((dataFrame.dtypes != np.int32) & (dataFrame.dtypes != np.float64) & (dataFrame.dtypes != np.int64))[0]
@@ -142,23 +142,23 @@ def loadData (fname):
     return model
 
 
-print( 'Запущен процесс подготовки данных')
+print('Запущен процесс подготовки данных', flush=True)
 train_label, datalist80, test_label, datalist20, columnNames, categorical_features_indices = \
 prepareInputData (find_files(trainFilePath, 'hr.xls'))
 
-print( 'Подготовка данных завершена')
-print( 'Количество категориальных фитч: {}'.format( str( len( categorical_features_indices ) ) ))
-print( 'Создание dataset для обучения')
+print('Подготовка данных завершена', flush=True)
+print('Количество категориальных фитч: {}'.format(str(len(categorical_features_indices))), flush=True)
+print('Создание dataset для обучения', flush=True)
 train_dataset = Pool(data=datalist80,
                      label=train_label,
                      cat_features=categorical_features_indices)
 
-print( 'Создание dataset для валидации')
+print('Создание dataset для валидации', flush=True)
 test_dataset = Pool(data=datalist20,
                      label=test_label,
                      cat_features=categorical_features_indices)
 
-print( 'Инициализация классфикатора')
+print('Инициализация классфикатора', flush=True)
 model = CatBoostClassifier(
                          learning_rate=0.15,
                          loss_function='Logloss',
@@ -172,16 +172,16 @@ model = CatBoostClassifier(
 #custom_metric='Accuracy',
 #eval_metric='Accuracy',
 
-print( 'Запуск обучения модели')
+print('Запуск обучения модели', flush=True)
 model.fit(train_dataset, eval_set=test_dataset)
-print( 'Обучение модели завершено')
+print('Обучение модели завершено', flush=True)
 
-print( 'Cохранение обученной модели')
+print('Cохранение обученной модели', flush=True)
 saveData(model, demoFilePath + '/model.cbm', train_dataset)
 
-print('Точность валидации модели: {:.4}'.format(accuracy_score(test_label, model.predict(datalist20))))
+print('Точность валидации модели: {:.4}'.format(accuracy_score(test_label, model.predict(datalist20))), flush=True)
 
-print( 'Подготовка списка важности фитч')
+print('Подготовка списка важности признаков', flush=True)
 feature_importances = model.get_feature_importance(train_dataset)
 feature_names = columnNames
 with open(demoFilePath + '/feature_importance.csv', mode='w') as csv_file:
@@ -190,7 +190,7 @@ with open(demoFilePath + '/feature_importance.csv', mode='w') as csv_file:
         csv_file.write(name + ',' + str(score) + '\n')
     csv_file.close()
 
-print( 'Чтение демонстрационных данных')
+print('Чтение демонстрационных данных', flush=True)
 demo_persons = pd.read_excel(demoFilePath + '/hr.xls', sheet_name='Персонал', dtype={'Дата увольнения':str}, na_rep ='')
 # удаление значений nan
 demo_persons = demo_persons.fillna('')
@@ -232,17 +232,17 @@ demo_persons = demo_persons.fillna(0)
 
 demo_persons.sort_index(axis=1, inplace=True)
 demo_data = demo_persons.values.tolist()
-#print(len(demo_persons.columns.tolist()))
+#print(len(demo_persons.columns.tolist()), flush=True)
 categorical_features_indices = np.where((demo_persons.dtypes != np.int32) & (demo_persons.dtypes != np.float64) & (demo_persons.dtypes != np.int64))[0]
 demo_dataset = Pool(data=demo_data, label = demo_persons['Статус'].values.tolist(), cat_features=categorical_features_indices)
 
-print( 'Прогнозирование')
+print('Прогнозирование', flush=True)
 preds_class = model.predict(demo_dataset)
 preds_proba = model.predict_proba(demo_dataset)
 
-print('Точность прогнозирования модели: {:.4}'.format(accuracy_score(demo_persons['Статус'].values.tolist(), model.predict(demo_dataset))))
+print('Точность прогнозирования модели: {:.4}'.format(accuracy_score(demo_persons['Статус'].values.tolist(), model.predict(demo_dataset))), flush=True)
 
-print( 'Сохранение результатов прогнозирования')
+print('Сохранение результатов прогнозирования', flush=True)
 with open(demoFilePath + '/dismissal.csv', mode='w') as csv_file:
     csv_file.write('Табельный номер,Вероятность увольнения\n')
     for tabel, probability in zip(TabelNumbers, preds_proba):
