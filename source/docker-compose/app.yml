@@ -140,7 +140,7 @@ services:
       DATA_DIR: /data/playbooks
     volumes:
       - ../images/predictor:/usr/src/app
-      - ../../data/playbooks/train:/data/playbooks
+      - ../../data/playbooks:/data/playbooks
 
   simulator:
     image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/simulator:${DOCKER_IMAGE_TAG}
