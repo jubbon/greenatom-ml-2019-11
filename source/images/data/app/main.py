@@ -212,7 +212,7 @@ def generate(output: str, count: int, locale: str, activity: bool, dismissal: bo
     for playbook in playbooks:
         output_dir = os.path.join(os.getenv("DATA_DIR", "."), playbook)
 
-        projects, units, employees, skills, activities, dismissal = generate_data(locale)
+        projects, units, employees, skills, activities, dismissals = generate_data(locale)
 
         output_filename_xls = os.path.join(output_dir, "hr.xls")
         save_excel(output_filename_xls, projects, units, employees, skills, locale)
@@ -223,4 +223,4 @@ def generate(output: str, count: int, locale: str, activity: bool, dismissal: bo
 
         if dismissal:
             output_filename_csv = os.path.join(output_dir, "dismissal.csv")
-            save_csv(output_filename_csv, dismissal, locale)
+            save_csv(output_filename_csv, dismissals, locale)
