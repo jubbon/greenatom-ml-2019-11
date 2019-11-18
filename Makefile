@@ -26,7 +26,8 @@ dataset:
 
 train:
 	cd ./source \
-	&& docker-compose --file ./docker-compose/app.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml run predictor python app/train.py \
+	&& docker-compose --file ./docker-compose/data.yml build predictor \
+	&& docker-compose --file ./docker-compose/data.yml run predictor python app/train.py
 
 demo:
 	cd ./source \
@@ -35,7 +36,8 @@ demo:
 
 predict:
 	cd ./source \
-	&& docker-compose --file ./docker-compose/app.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml run --build predictor python app/predict.py
+	&& docker-compose --file ./docker-compose/data.yml build predictor \
+	&& docker-compose --file ./docker-compose/data.yml run predictor python app/predict.py
 
 up:
 	cd ./source \

@@ -9,3 +9,12 @@ services:
     volumes:
       - ../images/data:/usr/src/app
       - ../../data/playbooks:/data/playbooks
+
+  predictor:
+    image: ${DOCKER_IMAGE_REGISTRY}/citylix-greenatom-ml/predictor:${DOCKER_IMAGE_TAG}
+    build: ../images/predictor
+    environment:
+      DATA_DIR: /data/playbooks
+    volumes:
+      - ../images/predictor:/usr/src/app
+      - ../../data/playbooks:/data/playbooks
