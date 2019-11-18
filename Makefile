@@ -14,11 +14,15 @@ upload:
 	&& docker-compose --file ./docker-compose/data.yml push \
 	&& docker-compose --file ./docker-compose/app.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml push --ignore-push-failures
 
+dataset:
+	cd ./source \
+	&& docker-compose --file ./docker-compose/data.yml build \
+	&& docker-compose --file ./docker-compose/data.yml run data python app --activity train 100
+
 train:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/data.yml build \
-	&& docker-compose --file ./docker-compose/data.yml run data python app --activity train 100 \
-	&& docker-compose --file ./docker-compose/app.yml --file ./docker-compose/kafka.yml --file ./docker-compose/clickhouse.yml run predictor python app
+	&& docker-compose --file ./docker-compose/data.yml run predictor python app train
 
 demo:
 	cd ./source \
