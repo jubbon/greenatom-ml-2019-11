@@ -3,6 +3,7 @@
 
 import networkx as nx
 import streamlit as st
+import copy
 
 from smart_hr.data.unit import units
 from smart_hr.data.staff import persons
@@ -116,4 +117,5 @@ def load_graphs(uids: list):
             print(f"Graph with uid '{uid}' not found", flush=True)
             continue
         config = GRAPHS[uid]
-        yield uid, config.get("title", uid), load_graph(uid, config)
+        graph = load_graph(uid, config)
+        yield uid, config.get("title", uid), copy.deepcopy(graph)
