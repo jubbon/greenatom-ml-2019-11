@@ -72,7 +72,7 @@ def prepareInputData (pathlist):
             persons = persons.astype({"Дата рождения": float, "Дата выхода на работу": int, "Дата последнего повышения": int})
 
             # Обработка других листов файла
-            ExcelList = ['Вовлеченность', 'Бытовые условия', 'Компетенции', 'Семейное положение']
+            ExcelList = ['Бытовые условия', 'Компетенции', 'Семейное положение']
             for index in ExcelList:
                 tmp = pd.read_excel(path, sheet_name=index, na_rep ='')
                 tmp = tmp.fillna('')

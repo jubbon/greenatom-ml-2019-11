@@ -57,11 +57,20 @@ def main():
 
         demo_persons = demo_persons.astype({"Дата рождения": float, "Дата выхода на работу": int, "Дата последнего повышения": int})
 
-        ExcelList = ['Вовлеченность', 'Бытовые условия', 'Компетенции', 'Семейное положение']
+        ExcelList = ['Бытовые условия', 'Компетенции', 'Семейное положение']
         for index in ExcelList:
             tmp = pd.read_excel(demoFilePath + '/hr.xls', sheet_name=index, na_rep ='')
             tmp = tmp.fillna('')
             demo_persons = pd.merge(demo_persons, tmp, left_on='Табельный номер', right_on='Табельный номер')
+
+            # Чтение активности сотрудников
+            act = demoFilePath + '/activities.csv'
+            if os.path.exists( act ):
+                print('Обработка файла: {}'.format(act), flush=True)
+                activities = pd.read_csv(act, sep=',')
+                activities = activities.fillna('')
+                demo_persons = pd.merge(demo_persons, activities, left_on='Табельный номер', right_on='uid')
+                demo_persons.drop(['uid' ], axis=1, inplace = True)
 
         demo_persons.drop(['Табельный номер' ], axis=1, inplace = True)
 
