@@ -17,6 +17,12 @@ data = {}
 
 
 @dataclass
+class Contacts:
+    # Адрес электронной почты
+    email: str
+
+
+@dataclass
 class FamilyRelations:
     _meta: ClassVar = {
         "ru": {
@@ -102,6 +108,9 @@ class Person:
     # Вовлеченность в проекты
     projects: Dict[str, int]
 
+    # Контактная информация
+    contacts: Contacts
+
     # Семейное положение
     family: FamilyRelations
 
@@ -177,6 +186,27 @@ class Person:
                 for k, v
                 in data.items()}
         return data
+
+
+def load_contacts(filename):
+    '''
+    '''
+    data = dict()
+    sheet_name = 'Контакты'
+    print(f"Loading contacts from sheet '{sheet_name}'", flush=True)
+    df = pd.read_excel(
+        filename,
+        sheet_name=sheet_name,
+        dtype={'Табельный номер': str}
+    )
+
+    for index, row in df.iterrows():
+        cnt = row.to_dict()
+        uid = cnt['Табельный номер']
+        data[uid] = Contacts(
+            email=cnt["Адрес электронной почты"]
+        )
+    return data
 
 
 def load_family_relations(filename):
@@ -260,6 +290,8 @@ def load(filename):
 
     frs = load_family_relations(filename)
     lcs = load_living_conditions(filename)
+    cs = load_contacts(filename)
+
     projects = load_projects(filename)
 
     for index, row in df.iterrows():
@@ -278,6 +310,7 @@ def load(filename):
             status=person['Статус'],
             image_number=int(uid) % 85 + 1,
             projects=projects[uid],
+            contacts=cs[uid],
             family=frs[uid],
             living=lcs[uid]
         )

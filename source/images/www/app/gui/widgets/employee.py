@@ -71,6 +71,7 @@ def skill(window, person):
             experts.setdefault(skill_name, list()).append({
                 "Эксперт": expert.fullname,
                 "Подразделение": expert.unit,
+                "Электронная почта": expert.contacts.email,
                 "Уровень компетенции": skill_value
             })
         return experts
