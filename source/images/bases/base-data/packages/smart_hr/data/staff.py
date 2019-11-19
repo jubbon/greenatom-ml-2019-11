@@ -137,6 +137,8 @@ class Person:
 
     def dismissal(self, feature_importance_count) -> float:
         dismissal = get_dismissal(self.uid)
+        if dismissal is None:
+            return None
         feature_importance_list = list()
         for fi in dismissal.feature_importance[:feature_importance_count]:
             feature_importance = fi.to_dict()
