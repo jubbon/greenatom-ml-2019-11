@@ -21,6 +21,7 @@ pd.set_option('mode.chained_assignment', None)
 
 trainFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'train')
 demoFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'demo')
+modelsDirPath = os.getenv('MODELS_DIR', '.')
 
 '''
     Рекурсивный поиск файла в подкаталогах каталога
@@ -174,7 +175,7 @@ def main():
         print('Обучение модели завершено', flush=True)
 
         print('Cохранение обученной модели', flush=True)
-        saveData(model, demoFilePath + '/model.cbm', train_dataset)
+        saveData(model, modelsDirPath + '/dismissal.cbm', train_dataset)
 
         print('Точность валидации модели: {:.4}'.format(accuracy_score(test_label, model.predict(datalist20))), flush=True)
 
