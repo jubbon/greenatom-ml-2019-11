@@ -19,12 +19,22 @@ from graph.filters.project import filter_graph as filter_graph_for_project
 from graph.filters.employee import filter_graph as filter_graph_for_employee
 
 
-def graph(window, graph_names: list, unit=None, project=None, employee=None, engine="bokeh"):
+def graph(window, available_graphs: list, unit=None, project=None, employee=None, engine="bokeh"):
     ''' Графы социального взаимодействия
     '''
     window.subheader("Графы взаимодействия")
 
-    graph_names = window.multiselect('', graph_names, ())
+    graph_titles = window.multiselect(
+        label="",
+        options=list(title for _, title in available_graphs),
+        default=None)
+
+    graph_names = list(
+        name
+        for name, title
+        in available_graphs
+        if title in graph_titles)
+
     for graph_uid, graph_title, graph in load_graphs(graph_names):
         print(f"Loaded graph '{graph_uid}' with {graph.number_of_nodes()} nodes and {graph.number_of_edges()} edges", flush=True)
         if employee:

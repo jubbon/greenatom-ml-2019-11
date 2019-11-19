@@ -125,4 +125,4 @@ def load_graphs(uids: list):
 def available_graphs():
     '''
     '''
-    return list(GRAPHS.keys())
+    return [(name, params.get("title", name)) for name, params in GRAPHS.items()]
