@@ -5,10 +5,10 @@ import networkx as nx
 
 
 GRAPHS = {
-    "test": {
-        "title": "Демо",
-        "init": nx.karate_club_graph,
-    },
+    # "test": {
+    #     "title": "Демо",
+    #     "init": nx.karate_club_graph,
+    # },
     "staff-unit": {
         "title": "Сотрудник-подразделение",
         "init": nx.Graph,
