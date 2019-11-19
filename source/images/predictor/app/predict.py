@@ -38,7 +38,7 @@ def main():
     ''' Применяет модель для предсказания
     '''
     try:
-        print('Чтение демонстрационных данных', flush=True)
+        print('Загрузка данных из hr.xls', flush=True)
         demo_persons = pd.read_excel(demoFilePath + '/hr.xls', sheet_name='Персонал', dtype={'Дата увольнения':str}, na_rep ='')
         # удаление значений nan
         demo_persons = demo_persons.fillna('')
@@ -65,9 +65,9 @@ def main():
             demo_persons = pd.merge(demo_persons, tmp, left_on='Табельный номер', right_on='Табельный номер')
 
         # Чтение активности сотрудников
+        print('Загрузка цифрового следа сотрудника', flush=True)
         act = demoFilePath + '/activities.csv'
         if os.path.exists( act ):
-            print('Обработка файла: {}'.format(act), flush=True)
             activities = pd.read_csv(act, sep=',')
             activities = activities.fillna('')
             demo_persons = pd.merge(demo_persons, activities, left_on='Табельный номер', right_on='uid')
