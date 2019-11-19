@@ -22,7 +22,7 @@ upload:
 dataset:
 	cd ./source \
 	&& docker-compose --file ./docker-compose/data.yml build \
-	&& docker-compose --file ./docker-compose/data.yml run data python app --activity train 100
+	&& docker-compose --file ./docker-compose/data.yml run data python app --activity train 200
 
 train:
 	cd ./source \
