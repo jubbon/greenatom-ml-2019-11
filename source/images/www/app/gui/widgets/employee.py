@@ -101,7 +101,7 @@ def dismiss(window, person):
     assert person
     window.subheader("Увольнение")
     if window.button("Рассчитать вероятность увольнения", key="predict_dismiss"):
-        dismissal = person.dismissal(feature_importance_count=10)
+        dismissal = person.dismissal(feature_importance_count=8)
         if dismissal:
             probability, feature_importance = dismissal
             window.markdown(
