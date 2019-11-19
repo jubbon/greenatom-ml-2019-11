@@ -13,6 +13,7 @@ import numpy as np
 from datetime import datetime
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
 import pickle
 
 pd.set_option('mode.chained_assignment', None)
@@ -155,13 +156,13 @@ def main():
 
         print('Инициализация классфикатора', flush=True)
         model = CatBoostClassifier(
-                                learning_rate=0.15,
+                                learning_rate=0.05,
                                 loss_function='Logloss',
                                 use_best_model=True,
                                 eval_metric='AUC',
                                 depth=5,
                                 iterations=100,
-                                random_seed=1
+                                random_seed=42
                                 )
 
         #custom_metric='Accuracy',
@@ -175,6 +176,9 @@ def main():
         saveData(model, demoFilePath + '/model.cbm', train_dataset)
 
         print('Точность валидации модели: {:.4}'.format(accuracy_score(test_label, model.predict(datalist20))), flush=True)
+
+        preds_proba = model.predict_proba(datalist20)
+        print ( 'ROC AUC Score: {}'.format( roc_auc_score(test_label, preds_proba[:, 1] )), flush=True)
 
         print('Подготовка списка важности признаков', flush=True)
         feature_importances = model.get_feature_importance(train_dataset)
