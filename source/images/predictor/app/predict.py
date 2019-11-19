@@ -19,6 +19,7 @@ pd.set_option('mode.chained_assignment', None)
 
 demoFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'demo')
 trainFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'train')
+modelsDirPath = os.getenv('MODELS_DIR', '.')
 
 '''
     Загрузка обученной модели
@@ -57,16 +58,25 @@ def main():
 
         demo_persons = demo_persons.astype({"Дата рождения": float, "Дата выхода на работу": int, "Дата последнего повышения": int})
 
-        ExcelList = ['Вовлеченность', 'Бытовые условия', 'Компетенции', 'Семейное положение']
+        ExcelList = ['Бытовые условия', 'Компетенции', 'Семейное положение']
         for index in ExcelList:
             tmp = pd.read_excel(demoFilePath + '/hr.xls', sheet_name=index, na_rep ='')
             tmp = tmp.fillna('')
             demo_persons = pd.merge(demo_persons, tmp, left_on='Табельный номер', right_on='Табельный номер')
 
+        # Чтение активности сотрудников
+        act = demoFilePath + '/activities.csv'
+        if os.path.exists( act ):
+            print('Обработка файла: {}'.format(act), flush=True)
+            activities = pd.read_csv(act, sep=',')
+            activities = activities.fillna('')
+            demo_persons = pd.merge(demo_persons, activities, left_on='Табельный номер', right_on='uid')
+            demo_persons.drop(['uid' ], axis=1, inplace = True)
+
         demo_persons.drop(['Табельный номер' ], axis=1, inplace = True)
 
         columnNames = list ()
-        with open (demoFilePath + '/columnNames', 'rb') as fp:
+        with open (modelsDirPath + '/columnNames', 'rb') as fp:
             columnNames = pickle.load(fp)
 
         # Обнуление несуществующих колонок
@@ -88,7 +98,7 @@ def main():
         demo_dataset = Pool(data=demo_data, label = demo_persons['Статус'].values.tolist(), cat_features=categorical_features_indices)
 
         print('Инициализация модели', flush=True)
-        model = loadData (demoFilePath + '/model.cbm')
+        model = loadData (modelsDirPath + '/dismissal.cbm')
         print('Прогнозирование', flush=True)
         preds_class = model.predict(demo_dataset)
         preds_proba = model.predict_proba(demo_dataset)
@@ -100,8 +110,21 @@ def main():
             csv_file.write('Табельный номер,Вероятность увольнения\n')
             for tabel, probability in zip(TabelNumbers, preds_proba):
                 csv_file.write(str(tabel) + ',' + str(float('{:.3f}'.format(probability[1]))) + '\n')
+                if probability[1] > 0.5:
+                    print( 'Уволился сотрудник: ' + str(tabel) + '. Вероятность: {}%'.format(str(float('{:.3f}'.format(probability[1])))), flush=True)
             csv_file.close()
 
+        print('Общее количество сотрудников: {}'.format (str (len (preds_class))), flush=True)
+        dismissalN = 0
+        dismissalY = 0
+        for cat in preds_class:
+            if int(cat) == 0:
+                dismissalN += 1
+            elif int(cat) == 1:
+                dismissalY += 1
+
+        print('Количество уволившихся сотрудников: {}'.format (str (dismissalY)), flush=True)
+        print('Количество оставшихся сотрудников: {}'.format (str (dismissalN)), flush=True)
     except KeyboardInterrupt:
         pass
 

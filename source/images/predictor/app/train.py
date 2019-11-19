@@ -21,6 +21,7 @@ pd.set_option('mode.chained_assignment', None)
 
 trainFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'train')
 demoFilePath = os.path.join(os.getenv('DATA_DIR', '.'), 'demo')
+modelsDirPath = os.getenv('MODELS_DIR', '.')
 
 '''
     Рекурсивный поиск файла в подкаталогах каталога
@@ -72,7 +73,7 @@ def prepareInputData (pathlist):
             persons = persons.astype({"Дата рождения": float, "Дата выхода на работу": int, "Дата последнего повышения": int})
 
             # Обработка других листов файла
-            ExcelList = ['Вовлеченность', 'Бытовые условия', 'Компетенции', 'Семейное положение']
+            ExcelList = ['Бытовые условия', 'Компетенции', 'Семейное положение']
             for index in ExcelList:
                 tmp = pd.read_excel(path, sheet_name=index, na_rep ='')
                 tmp = tmp.fillna('')
@@ -174,7 +175,7 @@ def main():
         print('Обучение модели завершено', flush=True)
 
         print('Cохранение обученной модели', flush=True)
-        saveData(model, demoFilePath + '/model.cbm', train_dataset)
+        saveData(model, modelsDirPath + '/dismissal.cbm', train_dataset)
 
         print('Точность валидации модели: {:.4}'.format(accuracy_score(test_label, model.predict(datalist20))), flush=True)
 
@@ -186,13 +187,13 @@ def main():
         print('Подготовка списка важности признаков', flush=True)
         feature_importances = model.get_feature_importance(train_dataset)
         feature_names = columnNames
-        with open(demoFilePath + '/feature_importance.csv', mode='w') as csv_file:
+        with open(modelsDirPath + '/feature_importance.csv', mode='w') as csv_file:
             csv_file.write('Наименование колонки,Важность\n')
             for score, name in sorted(zip(feature_importances, feature_names), reverse=True):
                 csv_file.write(name + ',' + str(score) + '\n')
             csv_file.close()
 
-        with open(demoFilePath + '/columnNames', 'wb') as fp:
+        with open(modelsDirPath + '/columnNames', 'wb') as fp:
             pickle.dump(columnNames, fp)
 
         print(f"Обучение модели завершено", flush=True)
