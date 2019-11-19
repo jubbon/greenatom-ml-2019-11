@@ -56,5 +56,15 @@ GRAPHS = {
         "edges": [
             "staff-project"
         ]
+    },
+    "staff-staff": {
+        "title": "Социальные взаимосвязи сотрудников",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+        ],
+        "edges": [
+            "staff-staff"
+        ]
     }
 }
