@@ -8,6 +8,7 @@ import streamlit as st
 
 from gui import widgets
 from data import load_data
+from graph import available_graphs
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
 
     widgets.intro.banner(st)
     units, project, employee = widgets.filters(st.sidebar)
-    graph_names = ["skill-staff-unit", "staff-unit", "staff-skill", "project-staff"]
+    graph_names = available_graphs()
     if employee:
         # Выбран сотрудник
         st.title("Информация о сотруднике")
