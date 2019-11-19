@@ -93,7 +93,7 @@ def main():
         preds_class = model.predict(demo_dataset)
         preds_proba = model.predict_proba(demo_dataset)
 
-        print('Точность прогнозирования модели: {:.4}'.format(accuracy_score(demo_persons['Статус'].values.tolist(), model.predict(demo_dataset))), flush=True)
+        #print('Точность прогнозирования модели: {:.4}'.format(accuracy_score(demo_persons['Статус'].values.tolist(), model.predict(demo_dataset))), flush=True)
 
         print('Сохранение результатов прогнозирования', flush=True)
         with open(demoFilePath + '/dismissal.csv', mode='w') as csv_file:
