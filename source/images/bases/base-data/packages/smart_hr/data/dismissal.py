@@ -102,4 +102,4 @@ def get_dismissal(person_uid: str) -> Dismissal:
         FeatureImportance.updated_at < os.stat(FeatureImportance.filename).st_mtime):
         # Обновление данных
         load()
-    return data[person_uid]
+    return data.get(person_uid)

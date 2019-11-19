@@ -71,11 +71,12 @@ def skill(window, person):
             experts.setdefault(skill_name, list()).append({
                 "Эксперт": expert.fullname,
                 "Подразделение": expert.unit,
+                "Электронная почта": expert.contacts.email,
                 "Уровень компетенции": skill_value
             })
         return experts
 
-    send_to = window.text_input("Рекомендации отправить по электронной почте", "kulikov@sarov.info", key="email")
+    send_to = window.text_input("Рекомендации отправить по электронной почте", f"{person.contacts.email}", key="email")
     find_experts_button = window.button("Подобрать экспертов", key="find_experts")
     if find_experts_button:
         for skill_name, experts_ in get_experts(person).items():
@@ -96,13 +97,17 @@ def dismiss(window, person):
     assert person
     window.subheader("Увольнение")
     if window.button("Рассчитать вероятность увольнения", key="predict_dismiss"):
-        probability, feature_importance = person.dismissal(feature_importance_count=10)
-        window.markdown(
-            f"Вероятность увольнения составляет **{round(probability*100)}%**")
-        if feature_importance:
-            df = pd.DataFrame(feature_importance).set_index('feature_name')
-            df.rename(columns={
-                'importance': 'Важность',
-                'value': 'Значение'
-                }, inplace=True)
-            window.table(df)
+        dismissal = person.dismissal(feature_importance_count=10)
+        if dismissal:
+            probability, feature_importance = dismissal
+            window.markdown(
+                f"Вероятность увольнения составляет **{round(probability*100)}%**")
+            if feature_importance:
+                df = pd.DataFrame(feature_importance).set_index('feature_name')
+                df.rename(columns={
+                    'importance': 'Важность',
+                    'value': 'Значение'
+                    }, inplace=True)
+                window.table(df)
+        else:
+            window.error("Служба предсказаний временно недоступна")

@@ -6,13 +6,17 @@ import click
 import xlsxwriter
 import random
 
-from data import persons, filter_by_last_name
+from data import persons
+from data import filter_by_last_name
+from data import filter_by_living_conditions
 from data import skills as get_skills
 from data import activities as get_activities
 from data.skills import names as skill_names
 from data import departments
 from data.project import projects as all_projects
 from utils import make_sure_directory_exists
+
+from dismissal import get_dismissal_probability
 
 
 def generate_data(locale: str):
@@ -30,22 +34,34 @@ def generate_data(locale: str):
     activities = dict()
     dismissal = dict()
 
+    filters=[
+        filter_by_last_name,
+        filter_by_living_conditions,
+    ]
+
     for employee, skill, activity in zip(
         persons(
             units,
             positions,
             projects,
             locale=locale,
-            filters=[filter_by_last_name, ]),
+            filters=filters),
         get_skills(positions, locale=locale),
         get_activities(positions, periods=('1m', '2m', '3m'), locale=locale)):
+
+        # Расчет вероятности увольнения
+        dismissal_probability = get_dismissal_probability(employee, skill, activity)
+        assert 0.0 <= dismissal_probability < 1.0
+        if random.random() < dismissal_probability:
+            # Сотрудник уже уволен
+            employee.dismiss()
 
         employees[employee.uid] = employee
         skills[employee.uid] = skill
         activities[employee.uid] = activity
         dismissal[employee.uid] = {
             "Табельный номер": employee.uid,
-            "Вероятность увольнения": round(random.random(), 3)
+            "Вероятность увольнения": round(dismissal_probability, 3)
             }
 
     return projects, units, employees, skills, activities, dismissal
@@ -135,6 +151,14 @@ def save_excel(filename: str, projects: list, units: list, employees: dict, skil
         for n, project in enumerate(projects):
             project_name = project.name
             worksheet_involvement.write(i, 1 + n, employee.involvement.get(project_name, 0))
+
+    # Контакты
+    worksheet_contacts = workbook.add_worksheet("Контакты")
+    worksheet_contacts.write(0, 0, "Табельный номер")
+    worksheet_contacts.write(0, 1, "Адрес электронной почты")
+    for i, (employee_uid, employee) in enumerate(employees.items(), 1):
+        worksheet_contacts.write(i, 0, employee_uid)
+        worksheet_contacts.write(i, 1, employee.contacts.email)
 
     # Семейное положение
     worksheet_family = workbook.add_worksheet("Семейное положение")

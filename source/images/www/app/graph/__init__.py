@@ -93,6 +93,7 @@ def entities(node_types: list, edge_types: list) -> dict:
 def load_graph(uid: str, config: dict) -> nx.Graph:
     '''
     '''
+    print(f"Generating graph '{uid}'", flush=True)
     G = config.get('init', nx.Graph)()
     node_types = config.get("nodes")
     assert isinstance(node_types, list)

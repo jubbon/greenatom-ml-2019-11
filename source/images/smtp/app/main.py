@@ -13,12 +13,13 @@ from smart_hr.bus.models.email import topic
 @app.agent(topic)
 async def handler(messages):
     async for message in messages:
-        print(f"Send email '{message.text}' to '{message.to}'", flush=True)
+        to = os.getenv("SMTP_REDIRECT_TO", message.to)
+        print(f"Send email '{message.text}' to '{to}'", flush=True)
         try:
             emsg = EmailMessage()
             emsg.set_content(message.text)
             emsg['From'] = os.getenv("SMTP_USERNAME")
-            emsg['To'] = message.to
+            emsg['To'] = to
             emsg['Subject'] = message.subject
 
             smtp_server = os.getenv("SMTP_SERVER")

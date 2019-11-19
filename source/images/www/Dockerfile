@@ -7,6 +7,7 @@ ENV PYTHONPATH="$PYTHONPATH:/usr/src/app"
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY ./.streamlit ./.streamlit
 COPY ./app ./app
 
 CMD ["streamlit", "run", "./app/__main__.py"]

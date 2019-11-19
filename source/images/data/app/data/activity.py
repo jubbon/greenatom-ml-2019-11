@@ -12,6 +12,8 @@ ACTIVITIES = [
     "count_early_from_work",
     # Количество отгулов
     "count_day_off",
+    # Количество выходов на работу в выходные
+    "count_workdays_weekend"
 ]
 
 
