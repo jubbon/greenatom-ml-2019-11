@@ -148,8 +148,38 @@ class Person:
     def feature_value(self, feature_name):
         '''
         '''
-        # TODO
-        return ""
+        skills = get_skills(self.uid).to_dict()
+
+        if feature_name == "Ипотека":
+            return self.living.mortgage
+        elif feature_name == "Дата последнего повышения":
+            return ""
+        elif feature_name == "Должность":
+            return self.job
+        elif feature_name == "count_early_from_work_1m":
+            return ""
+        elif feature_name == "count_late_for_work_1m":
+            return ""
+        elif feature_name == "tech:programming:JavaScript":
+            return skills.get("tech:programming:JavaScript", "")
+        elif feature_name == "tech:programming:python":
+            return skills.get("tech:programming:python", "")
+        elif feature_name == "count_day_off_3m":
+            return ""
+        elif feature_name == "Тип жилья":
+            return self.living.dwelling_type
+        elif feature_name == "other:presentation":
+            return skills.get("other:presentation", "")
+        elif feature_name == "finance":
+            return skills.get("finance", "")
+        elif feature_name == "Руководитель":
+            return "Да" if self.is_head else "Нет"
+        elif feature_name == "count_day_off_1m":
+            return ""
+        elif feature_name == "count_workdays_weekend_1m":
+            return ""
+        else:
+            return ""
 
     def dismissal(self, feature_importance_count) -> float:
         dismissal = get_dismissal(self.uid)
