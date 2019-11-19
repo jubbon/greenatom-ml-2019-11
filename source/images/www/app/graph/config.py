@@ -10,7 +10,7 @@ GRAPHS = {
     #     "init": nx.karate_club_graph,
     # },
     "staff-unit": {
-        "title": "Сотрудник-подразделение",
+        "title": "Оргструктура компании",
         "init": nx.Graph,
         "nodes": [
             "staff",
@@ -22,7 +22,7 @@ GRAPHS = {
         ]
     },
     "staff-skill": {
-        "title": "Сотрудник-компетенции",
+        "title": "Компетенции сотрудников",
         "init": nx.Graph,
         "nodes": [
             "staff",
@@ -33,7 +33,7 @@ GRAPHS = {
         ]
     },
     "skill-staff-unit": {
-        "title": "Сотрудник-компетенции-подразделение",
+        "title": "Компетенции cотрудников и подразделений",
         "init": nx.Graph,
         "nodes": [
             "staff",
@@ -47,7 +47,7 @@ GRAPHS = {
         ]
     },
     "project-staff": {
-        "title": "Сотрудник-проект",
+        "title": "Участие сотрудников в проектах компании",
         "init": nx.Graph,
         "nodes": [
             "staff",
@@ -55,6 +55,16 @@ GRAPHS = {
         ],
         "edges": [
             "staff-project"
+        ]
+    },
+    "staff-staff": {
+        "title": "Социальные взаимосвязи сотрудников",
+        "init": nx.Graph,
+        "nodes": [
+            "staff",
+        ],
+        "edges": [
+            "staff-staff"
         ]
     }
 }

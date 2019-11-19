@@ -22,7 +22,6 @@ def main():
 
     widgets.intro.banner(st)
     units, project, employee = widgets.filters(st.sidebar)
-    graph_names = available_graphs()
     if employee:
         # Выбран сотрудник
         st.title("Информация о сотруднике")
@@ -32,7 +31,7 @@ def main():
         widgets.employee.family_and_living(st, employee, locale=locale)
         widgets.employee.skill(st, employee)
         widgets.employee.dismiss(st, employee)
-        widgets.graph(st, graph_names, employee=employee, engine=engine)
+        widgets.graph(st, available_graphs(), employee=employee, engine=engine)
     elif project:
         # Выбран проект
         st.title("Информация о проекте")
@@ -41,7 +40,7 @@ def main():
         widgets.project.skills(st, project, locale=locale)
         widgets.project.units(st, project, locale=locale)
         widgets.project.employees(st, project, locale=locale)
-        widgets.graph(st, graph_names, project=project, engine=engine)
+        widgets.graph(st, available_graphs(), project=project, engine=engine)
     elif units:
         # Выбрано подразделение
         st.title("Информация о подразделении")
@@ -49,8 +48,8 @@ def main():
         widgets.unit.info(st, units, locale=locale)
         widgets.unit.units(st, units, locale=locale)
         widgets.unit.employees(st, units, locale=locale)
-        widgets.graph(st, graph_names, unit=units[-1], engine=engine)
+        widgets.graph(st, available_graphs(), unit=units[-1], engine=engine)
     else:
         # Начальная страница
-        widgets.graph(st, graph_names, engine=engine)
+        widgets.graph(st, available_graphs(), engine=engine)
         widgets.intro.nlp(st, locale=locale)

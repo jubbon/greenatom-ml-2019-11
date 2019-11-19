@@ -47,11 +47,19 @@ def entities(node_types: list, edge_types: list) -> dict:
             )
             if 'projects' in data:
                 del data['projects']
+            email = data.get("contacts", {}).get("email", "")
+            data.update(contacts=email)
             yield "node", person_uid, data
 
             if 'staff-unit' in edge_types:
                 data = dict(type="staff-unit")
                 yield "edge", (person_uid, person.unit), data
+
+            if 'staff-staff' in edge_types:
+                data = dict(type="staff-staff")
+                director = person.director
+                if director:
+                    yield "edge", (person_uid, director.uid), data
 
             if 'staff-skill' in edge_types:
                 for skill_name, value in person.skills():
@@ -125,4 +133,4 @@ def load_graphs(uids: list):
 def available_graphs():
     '''
     '''
-    return list(GRAPHS.keys())
+    return [(name, params.get("title", name)) for name, params in GRAPHS.items()]
