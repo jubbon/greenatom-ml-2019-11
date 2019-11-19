@@ -11,7 +11,7 @@ import pandas as pd
 
 from .skill import get_skills
 from .dismissal import get_dismissal
-
+from .unit import get_unit
 
 data = {}
 
@@ -137,6 +137,13 @@ class Person:
     @property
     def is_dismissed(self) -> bool:
         return self.status == 1
+
+    @property
+    def director(self):
+        '''
+        '''
+        unit = get_unit(self.unit)
+        return unit.head
 
     def feature_value(self, feature_name):
         '''
