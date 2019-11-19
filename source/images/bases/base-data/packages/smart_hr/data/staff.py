@@ -154,33 +154,33 @@ class Person:
         activities = activities.to_dict() if activities else {}
 
         if feature_name == "Ипотека":
-            return self.living.mortgage
+            return "Наличие ипотеки", self.living.mortgage
         elif feature_name == "Дата последнего повышения":
-            return ""
+            return "Дата последнего повышения", ""
         elif feature_name == "Должность":
-            return self.job
+            return "Должность", self.job
         elif feature_name == "count_early_from_work_1m":
-            return activities.get(feature_name, "")
+            return "Ранний уход с работы за последний месяц", activities.get(feature_name, "")
         elif feature_name == "count_late_for_work_1m":
-            return activities.get(feature_name, "")
+            return "Опоздание на работу за последний месяц", activities.get(feature_name, "")
         elif feature_name == "tech:programming:JavaScript":
-            return skills.get("tech:programming:JavaScript", "")
+            return "Уровень знаний JavaScript", skills.get("tech:programming:JavaScript", "")
         elif feature_name == "tech:programming:python":
-            return skills.get("tech:programming:python", "")
+            return "Уровень знаний Python", skills.get("tech:programming:python", "")
         elif feature_name == "count_day_off_3m":
-            return activities.get(feature_name, "")
+            return "Отгулы за последние 3 месяца", activities.get(feature_name, "")
         elif feature_name == "Тип жилья":
-            return self.living.dwelling_type
+            return "Тип жилья", self.living.dwelling_type
         elif feature_name == "other:presentation":
-            return skills.get("other:presentation", "")
+            return "Уровень владения презентационными навыками", skills.get(feature_name, "")
         elif feature_name == "finance":
-            return skills.get("finance", "")
+            return "Уровень навыков финансовой деятельности", skills.get("finance", "")
         elif feature_name == "Руководитель":
-            return "Да" if self.is_head else "Нет"
+            return "Руководитель", "Да" if self.is_head else "Нет"
         elif feature_name == "count_day_off_1m":
-            return activities.get(feature_name, "")
+            return "Отгулы за последний месяц", activities.get(feature_name, "")
         elif feature_name == "count_workdays_weekend_1m":
-            return activities.get(feature_name, "")
+            return "Работа в выходные дни за последний месяц", activities.get(feature_name, "")
         else:
             return ""
 
@@ -192,7 +192,8 @@ class Person:
         for fi in dismissal.feature_importance[:feature_importance_count]:
             feature_importance = fi.to_dict()
             feature_name = feature_importance['feature_name']
-            feature_importance.update(value=self.feature_value(feature_name))
+            desc, value = self.feature_value(feature_name)
+            feature_importance.update(feature_name=desc, value=value)
             feature_importance_list.append(feature_importance)
         return dismissal.probability, feature_importance_list
 
