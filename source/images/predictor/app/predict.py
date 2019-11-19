@@ -106,7 +106,7 @@ def main():
         #print('Точность прогнозирования модели: {:.4}'.format(accuracy_score(demo_persons['Статус'].values.tolist(), model.predict(demo_dataset))), flush=True)
 
         print('Сохранение результатов прогнозирования', flush=True)
-        with open(demoFilePath + '/dismissal.csv', mode='w') as csv_file:
+        with open(demoFilePath + '/dismissal.csv', mode='w', encoding='utf-8') as csv_file:
             csv_file.write('Табельный номер,Вероятность увольнения\n')
             for tabel, probability in zip(TabelNumbers, preds_proba):
                 csv_file.write(str(tabel) + ',' + str(float('{:.3f}'.format(probability[1]))) + '\n')
