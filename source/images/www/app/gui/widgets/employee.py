@@ -29,6 +29,9 @@ def info(window, person, locale=None):
     window.subheader("Общая информация")
 
     data = person.to_dict(locale)
+    for feature in ("is_head", "status", "image_number", "projects", "contacts", "ФИО", "is_dismissed"):
+        if feature in data:
+            del data[feature]
     df = pd.DataFrame(
         data.values(),
         index=data.keys(),
