@@ -53,4 +53,13 @@ def employees(window, units, locale=None):
     ''' Список сотрудников подразделения
     '''
     assert units
-    window.subheader("Сотрудники")
+    data = dict()
+    for employee in get_employees(unit=units[-1]):
+        data[employee.fullname] = {
+            "Подразделение": employee.unit,
+            "Должность": employee.job,
+        }
+    if data:
+        window.subheader(f"Сотрудники ({len(data)})")
+        df = pd.DataFrame(data.values(), index=data.keys())
+        window.table(df)
