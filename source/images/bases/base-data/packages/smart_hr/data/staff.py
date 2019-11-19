@@ -9,6 +9,7 @@ from typing import Dict
 
 import pandas as pd
 
+from .activity import get_activities
 from .skill import get_skills
 from .dismissal import get_dismissal
 from .unit import get_unit
@@ -149,6 +150,8 @@ class Person:
         '''
         '''
         skills = get_skills(self.uid).to_dict()
+        activities = get_activities(self.uid)
+        activities = activities.to_dict() if activities else {}
 
         if feature_name == "Ипотека":
             return self.living.mortgage
@@ -157,15 +160,15 @@ class Person:
         elif feature_name == "Должность":
             return self.job
         elif feature_name == "count_early_from_work_1m":
-            return ""
+            return activities.get(feature_name, "")
         elif feature_name == "count_late_for_work_1m":
-            return ""
+            return activities.get(feature_name, "")
         elif feature_name == "tech:programming:JavaScript":
             return skills.get("tech:programming:JavaScript", "")
         elif feature_name == "tech:programming:python":
             return skills.get("tech:programming:python", "")
         elif feature_name == "count_day_off_3m":
-            return ""
+            return activities.get(feature_name, "")
         elif feature_name == "Тип жилья":
             return self.living.dwelling_type
         elif feature_name == "other:presentation":
@@ -175,9 +178,9 @@ class Person:
         elif feature_name == "Руководитель":
             return "Да" if self.is_head else "Нет"
         elif feature_name == "count_day_off_1m":
-            return ""
+            return activities.get(feature_name, "")
         elif feature_name == "count_workdays_weekend_1m":
-            return ""
+            return activities.get(feature_name, "")
         else:
             return ""
 

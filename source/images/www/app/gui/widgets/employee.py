@@ -79,15 +79,19 @@ def skill(window, person):
     send_to = window.text_input("Рекомендации отправить по электронной почте", f"{person.contacts.email}", key="email")
     find_experts_button = window.button("Подобрать экспертов", key="find_experts")
     if find_experts_button:
+        report = f"Рекомендованные эксперты для сотрудника {person.fullname}"
         for skill_name, experts_ in get_experts(person).items():
             window.text(f"Эксперты по {skill_name}")
             df_experts = pd.DataFrame(experts_)
             window.table(df_experts)
+            report += "\n"
+            report += f"Эксперты по {skill_name}"
+            report += df_experts.to_html()
+
         if send_to:
             subject = "[SmartHR] Рекомендованные эксперты"
-            # TODO: отформатировать текст
-            text = f"Рекомендованные эксперты для сотрудника {person.fullname}"
-            if send_email(to=send_to, subject=subject, text=text):
+            print(report, flush=True)
+            if send_email(to=send_to, subject=subject, text=report):
                 window.success(f"Письмо с рекомендованными экспертами было отправлено на электронную почту '{send_to}'")
 
 

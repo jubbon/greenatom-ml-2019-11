@@ -5,6 +5,7 @@ from .unit import load as load_units
 from .staff import load as load_staff
 from .skill import load as load_skills
 from .project import load as load_projects
+from .activity import load as load_activities # noqa
 
 
 def load_data(filename):
