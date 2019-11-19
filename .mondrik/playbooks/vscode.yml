@@ -55,6 +55,7 @@
                   - conda-forge
                 dependencies:
                   - jupyter
+                  - requests
               pip:
                 - mimesis
                 - Faker
