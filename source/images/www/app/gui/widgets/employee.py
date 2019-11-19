@@ -76,7 +76,7 @@ def skill(window, person):
             })
         return experts
 
-    send_to = window.text_input("Рекомендации отправить по электронной почте", "kulikov@sarov.info", key="email")
+    send_to = window.text_input("Рекомендации отправить по электронной почте", f"{person.contacts.email}", key="email")
     find_experts_button = window.button("Подобрать экспертов", key="find_experts")
     if find_experts_button:
         for skill_name, experts_ in get_experts(person).items():

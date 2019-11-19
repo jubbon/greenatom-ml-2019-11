@@ -107,6 +107,7 @@ services:
       SMTP_SERVER: smtp.mail.ru
       SMTP_USERNAME: SmartHR@inbox.ru
       SMTP_PASSWORD: greenatomhackathon
+      SMTP_REDIRECT_TO: kulikov@sarov.info
     volumes:
       - ../images/smtp:/usr/src/app
     depends_on:
