@@ -24,7 +24,8 @@ def nlp(window, locale=None):
     ''' Виджет для работы с NLP
     '''
     window.subheader(f"Обработка естественного языка")
-    text = window.text_area('Введите текст для анализа', '')
+    initial_text = '- Андрей, привет! Как дела? Что нового?\n- Завтра едем в Москву для презентации проекта. Ура!\n- Я ненавижу ездить в поездах РЖД, просто замучился!\n- Тогда полетим на самолете Аэрофлота'
+    text = window.text_area('Введите текст для анализа', initial_text)
     if text:
         # TODO: делать запрос в DeepPavlov
         sentences = text.split('\n')
