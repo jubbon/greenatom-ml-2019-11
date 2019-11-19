@@ -132,6 +132,7 @@ services:
     build: ../images/www
     environment:
       DATA_DIR: /data/playbooks/demo
+      MODELS_DIR: /data/models
       LOCALE: ru
       IMAGE_DIR: /data/images
       BROKER_URL: "kafka://kafka:9092"
@@ -140,6 +141,7 @@ services:
     volumes:
       - ../images/www:/usr/src/app
       - ../../data/playbooks:/data/playbooks
+      - ../../data/models:/data/models
       - ../../data/images:/data/images
     extra_hosts:
       - outside:172.17.0.1

@@ -16,7 +16,8 @@ def main():
     locale = os.getenv("LOCALE")
     engine = os.getenv("VIS_ENGINE", "bokeh")
     data_dir = os.getenv("DATA_DIR", ".")
-    load_data(data_dir)
+    models_dir = os.getenv("MODELS_DIR", ".")
+    load_data(data_dir, models_dir)
 
     widgets.intro.banner(st)
     units, project, employee = widgets.filters(st.sidebar)
