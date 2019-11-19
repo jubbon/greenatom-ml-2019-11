@@ -120,3 +120,9 @@ def load_graphs(uids: list):
         config = GRAPHS[uid]
         graph = load_graph(uid, config)
         yield uid, config.get("title", uid), copy.deepcopy(graph)
+
+
+def available_graphs():
+    '''
+    '''
+    return list(GRAPHS.keys())

@@ -8,6 +8,7 @@ import streamlit as st
 
 from gui import widgets
 from data import load_data
+from graph import available_graphs
 
 
 def main():
@@ -16,11 +17,12 @@ def main():
     locale = os.getenv("LOCALE")
     engine = os.getenv("VIS_ENGINE", "bokeh")
     data_dir = os.getenv("DATA_DIR", ".")
-    load_data(data_dir)
+    models_dir = os.getenv("MODELS_DIR", ".")
+    load_data(data_dir, models_dir)
 
     widgets.intro.banner(st)
     units, project, employee = widgets.filters(st.sidebar)
-    graph_names = ["skill-staff-unit", "staff-unit", "staff-skill", "project-staff"]
+    graph_names = available_graphs()
     if employee:
         # Выбран сотрудник
         st.title("Информация о сотруднике")

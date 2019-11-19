@@ -33,14 +33,14 @@ def info(window, person, locale=None):
         data.values(),
         index=data.keys(),
         columns=["", ])
-    window.dataframe(df)
+    window.table(df)
 
 
 def family_and_living(window, person, locale=None):
     ''' Семейное положение и бытовые условия
     '''
     assert person
-    window.subheader("Семейное положение  и бытовые условия")
+    window.subheader("Семейное положение и бытовые условия")
 
     data = dict()
     data.update(person.family.to_dict(locale))
@@ -49,7 +49,7 @@ def family_and_living(window, person, locale=None):
         data.values(),
         index=data.keys(),
         columns=["", ])
-    window.dataframe(df)
+    window.table(df)
 
 
 def skill(window, person):
@@ -63,7 +63,7 @@ def skill(window, person):
         person_skills.values(),
         index=person_skills.keys(),
         columns=["Уровень", ])
-    window.dataframe(df_skills)
+    window.table(df_skills)
 
     def get_experts(person):
         experts = dict()
@@ -82,7 +82,7 @@ def skill(window, person):
         for skill_name, experts_ in get_experts(person).items():
             window.text(f"Эксперты по {skill_name}")
             df_experts = pd.DataFrame(experts_)
-            window.dataframe(df_experts)
+            window.table(df_experts)
         if send_to:
             subject = "[SmartHR] Рекомендованные эксперты"
             # TODO: отформатировать текст
