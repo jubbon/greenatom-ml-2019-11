@@ -4,6 +4,7 @@
 import pandas as pd
 
 from smart_hr.data.unit import units as get_units
+from smart_hr.data.unit import get_unit
 from smart_hr.data.unit import get_employees
 
 
@@ -12,8 +13,11 @@ def info(window, units, locale=None):
     '''
     assert units
     window.subheader("Общая информация")
+    unit = get_unit(units[-1])
     employees_ = list(get_employees(unit=units[-1]))
     window.markdown(f"Общее количество сотрудников: **{len(employees_)}**")
+    window.markdown(f"Руководитель: **{unit.head.fullname}**")
+
     # data = person.to_dict(locale)
     # df = pd.DataFrame(
     #     data.values(),
