@@ -5,6 +5,7 @@ import pandas as pd
 from pandas import ExcelWriter
 from pandas import ExcelFile
 from catboost import Pool, CatBoostClassifier
+from catboost.utils import eval_metric
 import math
 import random
 import os
@@ -179,6 +180,8 @@ def main():
 
         preds_proba = model.predict_proba(datalist20)
         print ( 'ROC AUC Score: {}'.format( roc_auc_score(test_label, preds_proba[:, 1] )), flush=True)
+
+        #print ( model.eval_metrics(train_dataset, metrics=['Precision', 'Logloss', 'AUC', 'Recall', 'Accuracy']), flush=True)
 
         print('Подготовка списка важности признаков', flush=True)
         feature_importances = model.get_feature_importance(train_dataset)
