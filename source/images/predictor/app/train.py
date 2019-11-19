@@ -187,13 +187,13 @@ def main():
         print('Подготовка списка важности признаков', flush=True)
         feature_importances = model.get_feature_importance(train_dataset)
         feature_names = columnNames
-        with open(demoFilePath + '/feature_importance.csv', mode='w') as csv_file:
+        with open(modelsDirPath + '/feature_importance.csv', mode='w') as csv_file:
             csv_file.write('Наименование колонки,Важность\n')
             for score, name in sorted(zip(feature_importances, feature_names), reverse=True):
                 csv_file.write(name + ',' + str(score) + '\n')
             csv_file.close()
 
-        with open(demoFilePath + '/columnNames', 'wb') as fp:
+        with open(modelsDirPath + '/columnNames', 'wb') as fp:
             pickle.dump(columnNames, fp)
 
         print(f"Обучение модели завершено", flush=True)

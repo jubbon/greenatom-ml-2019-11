@@ -76,7 +76,7 @@ def main():
         demo_persons.drop(['Табельный номер' ], axis=1, inplace = True)
 
         columnNames = list ()
-        with open (demoFilePath + '/columnNames', 'rb') as fp:
+        with open (modelsDirPath + '/columnNames', 'rb') as fp:
             columnNames = pickle.load(fp)
 
         # Обнуление несуществующих колонок
