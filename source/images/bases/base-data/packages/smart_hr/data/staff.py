@@ -104,6 +104,7 @@ class Person:
     job: str
     is_head: bool
     status: int
+    promotion_workingday: date
     image_number: int
 
     # Вовлеченность в проекты
@@ -156,7 +157,7 @@ class Person:
         if feature_name == "Ипотека":
             return "Наличие ипотеки", self.living.mortgage
         elif feature_name == "Дата последнего повышения":
-            return "Дата последнего повышения", ""
+            return "Дата последнего повышения", f"{self.promotion_workingday:%d.%m.%Y}"
         elif feature_name == "Должность":
             return "Должность", self.job
         elif feature_name == "count_early_from_work_1m":
@@ -344,6 +345,7 @@ def load(filename):
             firstname=person['Имя'],
             patronymic=person['Отчество'],
             birthday=date.fromisoformat(person['Дата рождения']),
+            promotion_workingday=date.fromisoformat(person['Дата последнего повышения']),
             gender=person['Пол'],
             unit=person['Подразделение'],
             job=person['Должность'],
